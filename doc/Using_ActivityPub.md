@@ -1,5 +1,6 @@
 # Using ActivityPub
 
+```clojure
 user=> (require '[clj-activitypub.core :as activitypub])
 nil
 user=> (require '[clj-activitypub.webfinger :as webfinger])
@@ -108,3 +109,4 @@ user=> (pprint sb)
    :name "Home Page",
    :value
    "<a href=\"https://www.journeyman.cc/~simon/\" target=\"_blank\" rel=\"nofollow noopener noreferrer me\"><span class=\"invisible\">https://www.</span><span class=\"\">journeyman.cc/~simon/</span><span class=\"invisible\"></span></a>"}]}
+```
