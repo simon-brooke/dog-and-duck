@@ -43,3 +43,5 @@
             (count objects) 
             (map :type objects))))
  (file-seq (file "resources/activitystreams-test-documents")))
+
+(-> "resources/activitystreams-test-documents/simple0020.json" slurp clean first :actor)

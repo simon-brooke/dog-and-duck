@@ -112,7 +112,19 @@
    true))
 
 (defn activity?
-  "`true` iff `x` quacks like an activity, else false."
+  "`true` iff `x` quacks like an activity, else false.
+   
+   **NOTE THAT** [Section 4.1 of the spec]
+   (https://www.w3.org/TR/activitypub/#actor-objects) says explicitly that
+   
+   >  Actor objects MUST have, in addition to the properties mandated by 3.1 Object Identifiers, the following properties:
+   >
+   >  inbox
+   >    A reference to an [ActivityStreams] OrderedCollection comprised of all the messages received by the actor; see 5.2 Inbox. 
+   > outbox
+   >    An [ActivityStreams] OrderedCollection comprised of all the messages produced by the actor; see 5.1 Outbox. 
+   
+   However, none of the provided examples in the [activitystreams-test-documents repository]() does in fact have these properties"
   [x]
   (try
     (and (object? x)

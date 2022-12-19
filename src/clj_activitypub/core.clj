@@ -1,4 +1,7 @@
 (ns clj-activitypub.core
+  "copied from [Jahfer's clj-activitypub library](https://github.com/jahfer/clj-activitypub). 
+   If and when Jahfer issues a release of that library, this directory will be deleted and a 
+   dependency on that library will be added to the project."
   (:require [clj-activitypub.internal.crypto :as crypto]
             [clj-activitypub.internal.thread-cache :as thread-cache]
             [clj-activitypub.internal.http-util :as http]
