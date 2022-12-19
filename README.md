@@ -12,7 +12,11 @@ Good.
 
 Let us proceed.
 
-**The Old Dog and Duck** is intended to be a set of libraries to enable people to build stuff which interacts with ActivityPub. It isn't intended to be a replacement for, or clone of, Mastodon. I do think I might implement my own ActivityPub server on top of The Old Dog and Duck, that specifically might allow for user-pluggable feed-sorting algorithms and with my own user interface/user experience take, but that project is not this project.
+**The Old Dog and Duck** is intended to be a set of libraries to enable people to build stuff which interacts with ActivityPub. It isn't intended to be a replacement for, or clone of, Mastodon. I do think I might implement my own ActivityPub server on top of The Old Dog and Duck, that specifically might allow for user-pluggable feed-sorting algorithms and with my own user interface/user experience take, but that project is not (yet, at any rate) this project.
+
+## Status
+
+This is a long way pre-alpha. Everything will change. Feel free to play, but do so at your own risk. Contributions welcome.
 
 ## Architecture
 
@@ -47,17 +51,31 @@ Where deliveries are ordered and arrive; and from where deliveries onwards are d
 
 Duck-typing for ActivityStreams objects.
 
+As of version 0.1.0, this is substantially the only part that is yet at all useful, and it is still a long way from finished or robust.
+
 ### Scratch
 
 What the dog does when bored. Essentially, a place where I can learn how to make this stuff work, but perhaps eventually an ActivityPub server in its own right.
 
 ## Usage
 
-FIXME
+At present, only the duck-typing functions work. To play with them, use
+
+```clojure
+(require '[dog-and-duck.quack.quack :as q])
+```
+
+## Testing
+
+Prior to testing, you should clone [activitystreams-test-documents](https://github.com/w3c-social/activitystreams-test-documents) into the `resources` directory. You can then test with
+
+```bash
+lein test
+```
 
 ## License
 
-Copyright © Simon Brooke, 2022 
+Copyright © Simon Brooke, 2022.
 
 This program and the accompanying materials are made available under the
 terms of the GNU General Public License as published by the Free Software Foundation, either version 2 of the License, or (at your
