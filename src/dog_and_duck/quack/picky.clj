@@ -117,46 +117,44 @@
          :fault fault
          :narrative (messages fault)))
 
+(defmacro nil-if-empty
+  "if `x` is an empty collection, return `nil`; else return `x`."
+  [x]
+  `(if (coll? ~x)
+     (if (empty? ~x) nil ~x)
+     ~x))
+
 (defn object-faults
   "Return a list of faults found in object `x`, or `nil` if none are."
   [x]
-  (let [faults (remove
-                empty?
-                (list
-                 (when-not (map? x)
-                   (make-fault-object
-                    :critical
-                    :not-an-object))
-                 (when-not
-                  (has-context? x)
-                   (make-fault-object
-                    :should
-                    :no-context))
-                 (when-not (:type x)
-                   (make-fault-object
-                    :minor
-                    :no-type))
-                 (when-not (and (map? x) (contains? x :id))
-                   (make-fault-object
-                    :minor
-                    :no-id-transient))))]
-    (if (empty? faults) nil faults)))
+  (nil-if-empty
+   (remove empty?
+           (list
+            (when-not (map? x)
+              (make-fault-object :critical :not-an-object))
+            (when-not
+             (has-context? x)
+              (make-fault-object :should :no-context))
+            (when-not (:type x)
+              (make-fault-object :minor :no-type))
+            (when-not (and (map? x) (contains? x :id))
+              (make-fault-object :minor :no-id-transient))))))
 
 (defn persistent-object-faults
   "Return a list of faults found in persistent object `x`, or `nil` if none are."
   [x]
-  (let [faults (concat
-                (object-faults x)
-                (remove empty?
-                        (list
-                         (if (contains? x :id)
-                           (try (let [id (URI. (:id x))]
-                                  (when-not (= (.getScheme id) "https")
-                                    (make-fault-object :should :id-not-https)))
-                                (catch URISyntaxException _
-                                  (make-fault-object :must :id-not-uri))
-                                (catch NullPointerException _
-                                  (make-fault-object :must :null-id-persistent)))
-                           (make-fault-object :must :no-id-persistent)))))]
-    (if (empty? faults) nil faults)))
+  (nil-if-empty
+   (remove empty?
+           (concat
+            (object-faults x)
+            (list
+             (if (contains? x :id)
+               (try (let [id (URI. (:id x))]
+                      (when-not (= (.getScheme id) "https")
+                        (make-fault-object :should :id-not-https)))
+                    (catch URISyntaxException _
+                      (make-fault-object :must :id-not-uri))
+                    (catch NullPointerException _
+                      (make-fault-object :must :null-id-persistent)))
+               (make-fault-object :must :no-id-persistent)))))))
 
