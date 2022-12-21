@@ -1,8 +1,10 @@
-# The Old Dog and Duck
+# Introduction
+
+## The Old Dog and Duck
 
 A Clojure library designed to implement the ActivityPub protocol, obviously.
 
-## Introduction
+![The Dog and Duck, Derby](../images/dog-and-duck-beverley.jpg)
 
 The Old Dog and Duck is clearly a pub, and it's a pub related to an activity; to whit, hunting ducks with dogs. Yes, of course one could also hunt dogs with ducks, but in practice that doesn't work so well. The point isn't whether or not I approve of hunting ducks with dogs (or vice versa); to be clear, I don't. The point is that it's a pub related to an activity, and is therefore an [ActivityPub](https://www.w3.org/TR/activitypub/).
 
