@@ -1,6 +1,21 @@
 (ns dog-and-duck.quack.quack
-  "Validator for ActivityPub objects: if it walks like a duck, and it quacks like a duck..."
+  "Validator for ActivityPub objects: if it walks like a duck, and it quacks 
+   like a duck...
+   
+   **NOTE THAT the ActivityPub spec 
+   [says](https://www.w3.org/TR/activitypub/#obj)
+   
+   > Servers SHOULD validate the content they receive to avoid content 
+   > spoofing attacks
+   
+   but in practice ActivityPub content collected in the wild bears only 
+   a hazy relationship to the spec, so this is difficult. I suspect that
+   I may have to implement a `*strict*` dynamic variable, so that users can 
+   toggle some checks off."
+  
   ;;(:require [clojure.spec.alpha as s])
+  (:require [dog-and-duck.quack.picky :refer [filter-severity has-context? 
+                                              object-faults]])
   (:import [java.net URI URISyntaxException]))
 
 ;;;     Copyright (C) Simon Brooke, 2022
@@ -30,9 +45,18 @@
    But we are *just not having that*, because otherwise we're flying blind.
    We *shall* reject objects lacking at least `:type`. Missing `:id` keys are
    tolerable because they represent transient objects, which we expect to 
-   handle."
-  [x]
+   handle.
+   
+   **NOTE THAT** The ActivityPub spec [says](https://www.w3.org/TR/activitypub/#obj)
+   
+   > Implementers SHOULD include the ActivityPub context in their object 
+   > definitions
+   
+   but in samples found in the wild they typically don't."
+  ([x]
   (and (map? x) (:type x) true))
+  ([x severity]
+   (empty? (filter-severity (object-faults x) severity))))
 
 (defn persistent-object?
   "`true` iff `x` is a persistent object.
@@ -44,7 +68,7 @@
     (and (object? x) (uri? (URI. (:id x))))
     (catch URISyntaxException _ false)))
 
-(persistent-object? {:type "test" :id "https://mastodon.scot/@barfilfarm"})
+;; (persistent-object? {:type "test" :id "https://mastodon.scot/@barfilfarm"})
 
 (def ^:const actor-types
   "The set of types we will accept as actors.
@@ -57,10 +81,12 @@
     "Person"
     "Service"})
 
-(defn actor-type?
-  ;; TODO: better as a macro
-  [x]
-  (if (actor-types x) true false))
+(defmacro actor-type?
+  "Return `true` iff the `x` is a recognised actor type, else `false`."
+  [^String x]
+  `(if (actor-types ~x) true false))
+
+;; (actor-type? "Group")
 
 (def ^:const verb-types
   "The set of types we will accept as verbs.
@@ -72,47 +98,14 @@
     "Offer" "Question" "Reject" "Read" "Remove" "TentativeAccept"
     "TentativeReject" "Travel" "Undo" "Update" "View"})
 
-(defn verb-type?
+(defmacro verb-type?
   ;; TODO: better as a macro
-  [x]
-  (if (verb-types x) true false))
+  [^String x]
+  `(if (verb-types ~x) true false))
 
-(def ^:const activitystreams-context-uri
-  "The URI of the context of an ActivityStreams object is expected to be this
-   literal string."
-  "https://www.w3.org/ns/activitystreams")
-
-(defn context?
-  "Returns `true` iff `x` quacks like an ActivityStreams context, else false.
-   
-   A context is either
-   1. the URI (actually an IRI) `activitystreams-context-uri`, or
-   2. a collection comprising that URI and a map."
-  [x]
-  (cond
-    (nil? x) false
-    (string? x) (and (= x activitystreams-context-uri) true)
-    (coll? x) (and (context? (first (remove map? x))) 
-                   (= (count x) 2)
-                   true)
-    :else false))
-
-(defmacro has-context? [x]
-  `(context? ((keyword "@context") ~x)))
 
 (defn actor?
-  "Returns `true` if `x` quacks like an actor, else false."
-  [x]
-  (and
-   (object? x)
-   (has-context? x)
-   (uri? (URI. (:inbox x)))
-   (uri? (URI. (:outbox x)))
-   (actor-type? (:type x))
-   true))
-
-(defn activity?
-  "`true` iff `x` quacks like an activity, else false.
+  "Returns `true` if `x` quacks like an actor, else false.
    
    **NOTE THAT** [Section 4.1 of the spec]
    (https://www.w3.org/TR/activitypub/#actor-objects) says explicitly that
@@ -126,11 +119,35 @@
    
    However, none of the provided examples in the [activitystreams-test-documents repository]() does in fact have these properties"
   [x]
+  (and
+   (object? x)
+   (has-context? x)
+   (uri? (URI. (:inbox x)))
+   (uri? (URI. (:outbox x)))
+   (actor-type? (:type x))
+   true))
+
+(defn actor-or-uri?
+  "`true` if `x` is either a URI or an actor.
+   
+   **TODO**: I need to decide about whether to reify referenced objects
+   before validation or after. After reification, every reference to an actor
+   *must be* to an actor object, but before, may only be to a URI pointing to 
+   one."
+  [x]
+  (and 
+   (cond (string? x) (uri? (URI. x))
+        :else (actor? x)) 
+       true))
+
+(defn activity?
+  "`true` iff `x` quacks like an activity, else false."
+  [x]
   (try
     (and (object? x)
          (has-context? x)
          (string? (:summary x))
-         (actor? (:actor x))
+         (actor-or-uri? (:actor x))
          (verb-type? (:type x))
          (or (object? (:object x)) (uri? (URI. (:object x))))
          true)
@@ -156,35 +173,46 @@
    true))
 
 (defn collection?
-  "`true` iff `x` quacks like a collection of type `type`, else `false`.
+  "`true` iff `x` quacks like a collection of type `object-type`, else `false`.
    
    With one argument, will recognise plain collections and ordered collections,
    but (currently) not collection pages."
-  ([x type]
+  ([x ^String object-type]
    (let [items (or (:items x) (:orderedItems x))]
      (and
       (cond
         (:items x) (nil? (:orderedItems x))
-        (:orderedItems x) (nil? (:items x))) ;; can't have both properties
+        (:orderedItems x) (nil? (:items x)) ;; can't have both properties
+        (integer? (:totalItems x)) true ;; can have neither, provided it has totalItems.
+        :else false) 
       (object? x)
-      (= (:type x) type)
-      (coll? items)
-      (every? object? items)
-      (integer? (:totalItems x))
-      true)))
+      (= (:type x) object-type)
+      (if items
+        (and (coll? items)
+             (every? object? items) ;; if there are items, they must form a
+                                    ;; collection of objects.
+             true)
+        true) ;; but it's OK if there aren't.
+      true)
+     ;; test for totalItems not done here, because collection pages don't
+     ;; have it.
+     ))
   ([x]
-   (or (collection? x "Collection")
-       (collection? x "OrderedCollection"))))
+   (and
+    (or (collection? x "Collection")
+        (collection? x "OrderedCollection"))
+    (integer? (:totalItems x))
+    true)))
 
 (defn unordered-collection?
   "`true` iff `x` quacks like an unordered collection, else `false`."
   [x]
-  (collection? x "Collection"))
+  (and (collection? x "Collection") (integer? (:totalItems x)) true))
 
 (defn ordered-collection?
   "`true` iff `x` quacks like an ordered collection, else `false`."
   [x]
-  (collection? x "OrderedCollection"))
+  (and (collection? x "OrderedCollection") (integer? (:totalItems x)) true))
 
 (defn collection-page?
   "`true` iff `x` quacks like a page in a paged collection, else `false`."

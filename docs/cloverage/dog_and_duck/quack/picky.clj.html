@@ -1,0 +1,437 @@
+<html>
+ <head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="../../coverage.css"/>  <title> dog_and_duck/quack/picky.clj </title>
+ </head>
+ <body>
+<span class="covered" title="1 out of 1 forms covered">
+                001&nbsp;&nbsp;(ns&nbsp;dog-and-duck.quack.picky&nbsp;&quot;Fault-finder&nbsp;for&nbsp;ActivityPub&nbsp;documents.&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                002&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generally,&nbsp;each&nbsp;`-faults`&nbsp;function&nbsp;will&nbsp;return:
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;`nil`&nbsp;if&nbsp;no&nbsp;faults&nbsp;were&nbsp;found;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                005&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;a&nbsp;sequence&nbsp;of&nbsp;fault&nbsp;objects&nbsp;if&nbsp;faults&nbsp;were&nbsp;found.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                006&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                007&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Each&nbsp;fault&nbsp;object&nbsp;shall&nbsp;have&nbsp;the&nbsp;properties:
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                008&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;`:@context`&nbsp;whose&nbsp;value&nbsp;shall&nbsp;be&nbsp;the&nbsp;URL&nbsp;of&nbsp;a&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                009&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;document&nbsp;specifying&nbsp;this&nbsp;vocabulary;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                010&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;`:type`&nbsp;whose&nbsp;value&nbsp;shall&nbsp;be&nbsp;`Fault`;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                011&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.&nbsp;`:severity`&nbsp;whose&nbsp;value&nbsp;shall&nbsp;be&nbsp;one&nbsp;of&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                012&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`minor`,&nbsp;`should`,&nbsp;`must`&nbsp;or&nbsp;`critical`;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                013&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.&nbsp;`:fault`&nbsp;whose&nbsp;value&nbsp;shall&nbsp;be&nbsp;a&nbsp;unique&nbsp;token
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                014&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;representing&nbsp;the&nbsp;particular&nbsp;fault&nbsp;type;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                015&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.&nbsp;`:narrative`&nbsp;whose&nbsp;value&nbsp;shall&nbsp;be&nbsp;a&nbsp;natural
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                016&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;language&nbsp;description&nbsp;of&nbsp;the&nbsp;fault&nbsp;type.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                017&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                018&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Note&nbsp;that&nbsp;the&nbsp;reason&nbsp;for&nbsp;the&nbsp;`:fault`&nbsp;property&nbsp;is
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                019&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;be&nbsp;able&nbsp;to&nbsp;have&nbsp;a&nbsp;well&nbsp;known&nbsp;place,&nbsp;linked&nbsp;to
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;the&nbsp;@context&nbsp;URL,&nbsp;which&nbsp;allows&nbsp;narratives&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                021&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;each&nbsp;fault&nbsp;type&nbsp;to&nbsp;be&nbsp;served&nbsp;in&nbsp;as&nbsp;many
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                022&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;natural&nbsp;languages&nbsp;as&nbsp;possible.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                023&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;idea&nbsp;further&nbsp;is&nbsp;that&nbsp;it&nbsp;should&nbsp;ultimately&nbsp;be
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                025&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;possible&nbsp;to&nbsp;serialise&nbsp;a&nbsp;fault&nbsp;report&nbsp;as&nbsp;a&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;document&nbsp;which&nbsp;in&nbsp;its&nbsp;own&nbsp;right&nbsp;conforms&nbsp;to&nbsp;the
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                027&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ActivityStreams&nbsp;spec.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                028&nbsp;&nbsp;&nbsp;(:require&nbsp;[dog-and-duck.utils.process&nbsp;:refer&nbsp;[pid]]))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                029&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                030&nbsp;&nbsp;(def&nbsp;^:const&nbsp;severity
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                031&nbsp;&nbsp;&nbsp;&nbsp;&quot;Severity&nbsp;of&nbsp;faults&nbsp;found,&nbsp;as&nbsp;follows:
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                033&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;`:minor`&nbsp;things&nbsp;which&nbsp;I&nbsp;consider&nbsp;to&nbsp;be&nbsp;faults,&nbsp;but&nbsp;which&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                034&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;don&#x27;t&nbsp;actually&nbsp;breach&nbsp;the&nbsp;spec;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                035&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;`:should`&nbsp;instances&nbsp;where&nbsp;the&nbsp;spec&nbsp;says&nbsp;something&nbsp;SHOULD
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                036&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;done,&nbsp;which&nbsp;isn&#x27;t;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                037&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.&nbsp;`:must`&nbsp;instances&nbsp;where&nbsp;the&nbsp;spec&nbsp;says&nbsp;something&nbsp;MUST
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                038&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;done,&nbsp;which&nbsp;isn&#x27;t;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                039&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.&nbsp;`:critical`&nbsp;instances&nbsp;where&nbsp;I&nbsp;believe&nbsp;the&nbsp;fault&nbsp;means&nbsp;that
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                040&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;object&nbsp;cannot&nbsp;be&nbsp;meaningfully&nbsp;processed.&quot;
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                041&nbsp;&nbsp;&nbsp;&nbsp;#{:minor&nbsp;:should&nbsp;:must&nbsp;:critical})
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                042&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                043&nbsp;&nbsp;(def&nbsp;^:const&nbsp;severity-filters
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                044&nbsp;&nbsp;&nbsp;&nbsp;&quot;Hack&nbsp;for&nbsp;implementing&nbsp;a&nbsp;severity&nbsp;hierarchy&quot;
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                045&nbsp;&nbsp;&nbsp;&nbsp;{:all&nbsp;#{}
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                046&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:minor&nbsp;#{:minor}
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                047&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:should&nbsp;#{:minor&nbsp;:should}
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                048&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:must&nbsp;#{:minor&nbsp;:should&nbsp;:must}
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                049&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:critical&nbsp;severity})
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                050&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                051&nbsp;&nbsp;(defn&nbsp;filter-severity
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                052&nbsp;&nbsp;&nbsp;&nbsp;&quot;Return&nbsp;a&nbsp;list&nbsp;of&nbsp;reports&nbsp;taken&nbsp;from&nbsp;these&nbsp;`reports`&nbsp;where&nbsp;the&nbsp;severity
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                053&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;report&nbsp;is&nbsp;greater&nbsp;than&nbsp;this&nbsp;`severity`.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                054&nbsp;&nbsp;&nbsp;&nbsp;[reports&nbsp;severity]
+                </span><br/>
+<span class="not-covered" title="0 out of 11 forms covered">
+                055&nbsp;&nbsp;&nbsp;&nbsp;(assert&nbsp;
+                </span><br/>
+<span class="not-covered" title="0 out of 10 forms covered">
+                056&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                057&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(coll?&nbsp;reports)&nbsp;
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                058&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(every?&nbsp;map?&nbsp;reports)&nbsp;
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                059&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(every?&nbsp;:severity&nbsp;reports)))
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                060&nbsp;&nbsp;&nbsp;&nbsp;(remove&nbsp;
+                </span><br/>
+<span class="not-covered" title="0 out of 7 forms covered">
+                061&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#((severity-filters&nbsp;severity)&nbsp;(:severity&nbsp;%))
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                062&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reports))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                063&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                064&nbsp;&nbsp;(def&nbsp;^:const&nbsp;activitystreams-context-uri
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                065&nbsp;&nbsp;&nbsp;&nbsp;&quot;The&nbsp;URI&nbsp;of&nbsp;the&nbsp;context&nbsp;of&nbsp;an&nbsp;ActivityStreams&nbsp;object&nbsp;is&nbsp;expected&nbsp;to&nbsp;be&nbsp;this
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                066&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;literal&nbsp;string.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                067&nbsp;&nbsp;&nbsp;&nbsp;&quot;https:&#x2F;&#x2F;www.w3.org&#x2F;ns&#x2F;activitystreams&quot;)
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                068&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                069&nbsp;&nbsp;(def&nbsp;^:const&nbsp;validation-fault-context-uri
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                070&nbsp;&nbsp;&nbsp;&nbsp;&quot;The&nbsp;URI&nbsp;of&nbsp;the&nbsp;context&nbsp;of&nbsp;a&nbsp;validation&nbsp;fault&nbsp;report&nbsp;object&nbsp;shall&nbsp;be&nbsp;this
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                071&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;literal&nbsp;string.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                072&nbsp;&nbsp;&nbsp;&nbsp;&quot;https:&#x2F;&#x2F;simon-brooke.github.io&#x2F;dog-and-duck&#x2F;codox&#x2F;Validation_Faults.html&quot;)
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                073&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                074&nbsp;&nbsp;(defn&nbsp;context?
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                075&nbsp;&nbsp;&nbsp;&nbsp;&quot;Returns&nbsp;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;an&nbsp;ActivityStreams&nbsp;context,&nbsp;else&nbsp;false.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                076&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                077&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;context&nbsp;is&nbsp;either
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                078&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;the&nbsp;URI&nbsp;(actually&nbsp;an&nbsp;IRI)&nbsp;`activitystreams-context-uri`,&nbsp;or
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                079&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;a&nbsp;collection&nbsp;comprising&nbsp;that&nbsp;URI&nbsp;and&nbsp;a&nbsp;map.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                080&nbsp;&nbsp;&nbsp;&nbsp;[x]
+                </span><br/>
+<span class="partial" title="4 out of 6 forms covered">
+                081&nbsp;&nbsp;&nbsp;&nbsp;(cond
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                082&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(nil?&nbsp;x)&nbsp;false
+                </span><br/>
+<span class="covered" title="11 out of 11 forms covered">
+                083&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(string?&nbsp;x)&nbsp;(and&nbsp;(=&nbsp;x&nbsp;activitystreams-context-uri)&nbsp;true)
+                </span><br/>
+<span class="partial" title="19 out of 20 forms covered">
+                084&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(coll?&nbsp;x)&nbsp;(and&nbsp;(context?&nbsp;(first&nbsp;(remove&nbsp;map?&nbsp;x)))
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                085&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;(count&nbsp;x)&nbsp;2)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                086&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                087&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:else&nbsp;false))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                088&nbsp;&nbsp;
+                </span><br/>
+<span class="partial" title="38 out of 40 forms covered">
+                089&nbsp;&nbsp;(defmacro&nbsp;has-context?
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                090&nbsp;&nbsp;&nbsp;&nbsp;&quot;True&nbsp;if&nbsp;`x`&nbsp;is&nbsp;an&nbsp;ActivityStreams&nbsp;object&nbsp;with&nbsp;a&nbsp;valid&nbsp;context,&nbsp;else&nbsp;`false`.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                091&nbsp;&nbsp;&nbsp;&nbsp;[x]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                092&nbsp;&nbsp;&nbsp;&nbsp;`(context?&nbsp;((keyword&nbsp;&quot;@context&quot;)&nbsp;~x)))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                093&nbsp;&nbsp;
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                094&nbsp;&nbsp;
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                095&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                096&nbsp;&nbsp;(defn&nbsp;make-fault-object
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                097&nbsp;&nbsp;&nbsp;&nbsp;&quot;Return&nbsp;a&nbsp;fault&nbsp;object&nbsp;with&nbsp;these&nbsp;`severity`,&nbsp;`fault`&nbsp;and&nbsp;`narrative`&nbsp;values.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                098&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                099&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An&nbsp;ActivityPub&nbsp;object&nbsp;MUST&nbsp;have&nbsp;a&nbsp;globally&nbsp;unique&nbsp;ID.&nbsp;Whether&nbsp;this&nbsp;is&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;meaningful&nbsp;depends&nbsp;on&nbsp;whether&nbsp;we&nbsp;persist&nbsp;fault&nbsp;report&nbsp;objects&nbsp;and&nbsp;serve
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                101&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;them,&nbsp;which&nbsp;at&nbsp;present&nbsp;I&nbsp;have&nbsp;no&nbsp;plans&nbsp;to&nbsp;do.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                102&nbsp;&nbsp;&nbsp;&nbsp;[severity&nbsp;fault&nbsp;narrative]
+                </span><br/>
+<span class="not-covered" title="0 out of 9 forms covered">
+                103&nbsp;&nbsp;&nbsp;&nbsp;(assoc&nbsp;{}
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                104&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(keyword&nbsp;&quot;@context&quot;)&nbsp;validation-fault-context-uri
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                105&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:id&nbsp;(str&nbsp;&quot;https:&#x2F;&#x2F;&quot;
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                106&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(..&nbsp;java.net.InetAddress&nbsp;getLocalHost&nbsp;getHostName)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                107&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;&#x2F;fault&#x2F;&quot;
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                108&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pid
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                109&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;:&quot;
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                110&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(inst-ms&nbsp;(java.util.Date.)))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                111&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:type&nbsp;&quot;Fault&quot;
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                112&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:severity&nbsp;severity
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                113&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:fault&nbsp;fault
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                114&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:narrative&nbsp;narrative))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                115&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                116&nbsp;&nbsp;(defn&nbsp;object-faults
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                117&nbsp;&nbsp;&nbsp;&nbsp;[x]
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                118&nbsp;&nbsp;&nbsp;&nbsp;(remove&nbsp;
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                119&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;empty?
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                120&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                121&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when-not
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                122&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(has-context?&nbsp;x)
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                123&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-fault-object&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                124&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:should&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                125&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:no-context&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                126&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Section&nbsp;3&nbsp;of&nbsp;the&nbsp;ActivityPub&nbsp;specification&nbsp;states&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                127&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`Implementers&nbsp;SHOULD&nbsp;include&nbsp;the&nbsp;ActivityPub&nbsp;context&nbsp;in&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;their&nbsp;object&nbsp;definitions`.&quot;)
+                </span><br/>
+<span class="not-covered" title="0 out of 6 forms covered">
+                129&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when-not&nbsp;(:type&nbsp;x)&nbsp;
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                130&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-fault-object&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                131&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:minor&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                132&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:no-type
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                133&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;The&nbsp;ActivityPub&nbsp;specification&nbsp;states&nbsp;that&nbsp;the&nbsp;`type`&nbsp;field&nbsp;is
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                134&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optional,&nbsp;but&nbsp;it&nbsp;is&nbsp;hard&nbsp;to&nbsp;process&nbsp;objects&nbsp;with&nbsp;no&nbsp;known&nbsp;type.&quot;))
+                </span><br/>
+<span class="not-covered" title="0 out of 7 forms covered">
+                135&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when-not&nbsp;(contains?&nbsp;x&nbsp;:id)
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                136&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-fault-object
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                137&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:minor
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                138&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:no-id-transient
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                139&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;The&nbsp;ActivityPub&nbsp;specification&nbsp;allows&nbsp;objects&nbsp;without&nbsp;`id`&nbsp;fields
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                140&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;only&nbsp;if&nbsp;they&nbsp;are&nbsp;intentionally&nbsp;transient;&nbsp;even&nbsp;so&nbsp;it&nbsp;is&nbsp;preferred
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                141&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;that&nbsp;the&nbsp;object&nbsp;should&nbsp;have&nbsp;an&nbsp;explicit&nbsp;null&nbsp;id.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                142&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                143&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;))))
+                </span><br/>
+ </body>
+</html>

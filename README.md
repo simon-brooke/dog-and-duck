@@ -65,6 +65,10 @@ At present, only the duck-typing functions work. To play with them, use
 (require '[dog-and-duck.quack.quack :as q])
 ```
 
+## Documentation
+
+Full documentation is [here](https://simon-brooke.github.io/dog-and-duck/).
+
 ## Testing
 
 Prior to testing, you should clone [activitystreams-test-documents](https://github.com/w3c-social/activitystreams-test-documents) into the `resources` directory. You can then test with

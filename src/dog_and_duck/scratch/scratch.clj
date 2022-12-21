@@ -42,7 +42,7 @@
       (apply webfinger/fetch-user-id (map handle [:domain :username]))))))
 
 ;;; examine what you got back!
-(:outbox account)
+(:inbox account)
 
 
 (def rsa (pgp-gen/rsa-keypair-generator 2048))

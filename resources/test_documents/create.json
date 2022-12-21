@@ -1,0 +1,63 @@
+{
+    "id": "https://mastodon.scot/users/simon_brooke/statuses/109545806233872328/activity",
+    "type": "Create",
+    "actor": "https://mastodon.scot/users/simon_brooke",
+    "published": "2022-12-20T11:39:10Z",
+    "to": [
+        "https://www.w3.org/ns/activitystreams#Public"
+    ],
+    "cc": [
+        "https://mastodon.scot/users/simon_brooke/followers"
+    ],
+    "object": {
+        "inReplyTo": null,
+        "content": "<p>I&#39;m still looking for a repository of <a href=\"https://mastodon.scot/tags/ActivityPub\" class=\"mention hashtag\" rel=\"tag\">#<span>ActivityPub</span></a> sample documents to run tests against. There&#39;s one of <a href=\"https://mastodon.scot/tags/ActivityStreams\" class=\"mention hashtag\" rel=\"tag\">#<span>ActivityStreams</span></a> documents here</p><p><a href=\"https://github.com/w3c-social/activitystreams-test-documents\" target=\"_blank\" rel=\"nofollow noopener noreferrer\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">github.com/w3c-social/activity</span><span class=\"invisible\">streams-test-documents</span></a></p><p>but they don&#39;t conform to the ActivityPub specification. Please, has anyone got pointers?</p><p>Captures of actual live interchanges between ActivityPub servers would be especially useful.</p><p><a href=\"https://mastodon.scot/tags/ActivityPubInClojure\" class=\"mention hashtag\" rel=\"tag\">#<span>ActivityPubInClojure</span></a></p>",
+        "sensitive": false,
+        "cc": [
+            "https://mastodon.scot/users/simon_brooke/followers"
+        ],
+        "type": "Note",
+        "attributedTo": "https://mastodon.scot/users/simon_brooke",
+        "summary": null,
+        "replies": {
+            "id": "https://mastodon.scot/users/simon_brooke/statuses/109545806233872328/replies",
+            "type": "Collection",
+            "first": {
+                "type": "CollectionPage",
+                "next": "https://mastodon.scot/users/simon_brooke/statuses/109545806233872328/replies?only_other_accounts=true&page=true",
+                "partOf": "https://mastodon.scot/users/simon_brooke/statuses/109545806233872328/replies",
+                "items": []
+            }
+        },
+        "id": "https://mastodon.scot/users/simon_brooke/statuses/109545806233872328",
+        "contentMap": {
+            "en": "<p>I&#39;m still looking for a repository of <a href=\"https://mastodon.scot/tags/ActivityPub\" class=\"mention hashtag\" rel=\"tag\">#<span>ActivityPub</span></a> sample documents to run tests against. There&#39;s one of <a href=\"https://mastodon.scot/tags/ActivityStreams\" class=\"mention hashtag\" rel=\"tag\">#<span>ActivityStreams</span></a> documents here</p><p><a href=\"https://github.com/w3c-social/activitystreams-test-documents\" target=\"_blank\" rel=\"nofollow noopener noreferrer\"><span class=\"invisible\">https://</span><span class=\"ellipsis\">github.com/w3c-social/activity</span><span class=\"invisible\">streams-test-documents</span></a></p><p>but they don&#39;t conform to the ActivityPub specification. Please, has anyone got pointers?</p><p>Captures of actual live interchanges between ActivityPub servers would be especially useful.</p><p><a href=\"https://mastodon.scot/tags/ActivityPubInClojure\" class=\"mention hashtag\" rel=\"tag\">#<span>ActivityPubInClojure</span></a></p>"
+        },
+        "conversation": "tag:mastodon.scot,2022-12-20:objectId=39176769:objectType=Conversation",
+        "url": "https://mastodon.scot/@simon_brooke/109545806233872328",
+        "inReplyToAtomUri": null,
+        "tag": [
+            {
+                "type": "Hashtag",
+                "href": "https://mastodon.scot/tags/activitypubinclojure",
+                "name": "#activitypubinclojure"
+            },
+            {
+                "type": "Hashtag",
+                "href": "https://mastodon.scot/tags/activitystreams",
+                "name": "#activitystreams"
+            },
+            {
+                "type": "Hashtag",
+                "href": "https://mastodon.scot/tags/activitypub",
+                "name": "#activitypub"
+            }
+        ],
+        "atomUri": "https://mastodon.scot/users/simon_brooke/statuses/109545806233872328",
+        "published": "2022-12-20T11:39:10Z",
+        "attachment": [],
+        "to": [
+            "https://www.w3.org/ns/activitystreams#Public"
+        ]
+    }
+}

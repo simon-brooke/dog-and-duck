@@ -1,0 +1,8 @@
+{
+    "@context": "https://www.w3.org/ns/activitystreams",
+    "id": "https://mastodon.scot/users/simon_brooke/outbox",
+    "type": "OrderedCollection",
+    "totalItems": 2881,
+    "first": "https://mastodon.scot/users/simon_brooke/outbox?page=true",
+    "last": "https://mastodon.scot/users/simon_brooke/outbox?min_id=0\u0026page=true"
+}

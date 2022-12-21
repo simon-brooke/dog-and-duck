@@ -5,136 +5,145 @@
  </head>
  <body>
 <span class="covered" title="1 out of 1 forms covered">
-                001&nbsp;&nbsp;(ns&nbsp;clj-activitypub.internal.thread-cache)
-                </span><br/>
-<span class="blank" title="0 out of 0 forms covered">
-                002&nbsp;&nbsp;
-                </span><br/>
-<span class="covered" title="1 out of 1 forms covered">
-                003&nbsp;&nbsp;(defn-&nbsp;current-time&nbsp;
+                001&nbsp;&nbsp;(ns&nbsp;clj-activitypub.internal.thread-cache
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                004&nbsp;&nbsp;&nbsp;&nbsp;&quot;Returns&nbsp;current&nbsp;time&nbsp;using&nbsp;UNIX&nbsp;epoch.&quot;
+                002&nbsp;&nbsp;&nbsp;&nbsp;&quot;copied&nbsp;from&nbsp;[Jahfer&#x27;s&nbsp;clj-activitypub&nbsp;library](https:&#x2F;&#x2F;github.com&#x2F;jahfer&#x2F;clj-activitypub).&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                005&nbsp;&nbsp;&nbsp;&nbsp;[]
+                003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;and&nbsp;when&nbsp;Jahfer&nbsp;issues&nbsp;a&nbsp;release&nbsp;of&nbsp;that&nbsp;library,&nbsp;this&nbsp;directory&nbsp;will&nbsp;be&nbsp;deleted&nbsp;and&nbsp;a&nbsp;
                 </span><br/>
-<span class="covered" title="1 out of 1 forms covered">
-                006&nbsp;&nbsp;&nbsp;&nbsp;(System&#x2F;currentTimeMillis))
+<span class="not-tracked" title="0 out of 0 forms covered">
+                004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dependency&nbsp;on&nbsp;that&nbsp;library&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;project.&quot;)
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                007&nbsp;&nbsp;
+                005&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                008&nbsp;&nbsp;(defn-&nbsp;update-read-at&nbsp;[store&nbsp;k&nbsp;v]
+                006&nbsp;&nbsp;(defn-&nbsp;current-time
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                007&nbsp;&nbsp;&nbsp;&nbsp;&quot;Returns&nbsp;current&nbsp;time&nbsp;using&nbsp;UNIX&nbsp;epoch.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                008&nbsp;&nbsp;&nbsp;&nbsp;[]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                009&nbsp;&nbsp;&nbsp;&nbsp;(System&#x2F;currentTimeMillis))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                010&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                011&nbsp;&nbsp;(defn-&nbsp;update-read-at&nbsp;[store&nbsp;k&nbsp;v]
                 </span><br/>
 <span class="covered" title="2 out of 2 forms covered">
-                009&nbsp;&nbsp;&nbsp;&nbsp;(dosync
+                012&nbsp;&nbsp;&nbsp;&nbsp;(dosync
                 </span><br/>
 <span class="covered" title="5 out of 5 forms covered">
-                010&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(commute&nbsp;store&nbsp;assoc&nbsp;k
+                013&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(commute&nbsp;store&nbsp;assoc&nbsp;k
                 </span><br/>
 <span class="covered" title="7 out of 7 forms covered">
-                011&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(merge&nbsp;v&nbsp;{:read-at&nbsp;(current-time)}))))
+                014&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(merge&nbsp;v&nbsp;{:read-at&nbsp;(current-time)}))))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                012&nbsp;&nbsp;
+                015&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                013&nbsp;&nbsp;(defn&nbsp;make&nbsp;
+                016&nbsp;&nbsp;(defn&nbsp;make
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                014&nbsp;&nbsp;&nbsp;&nbsp;&quot;Creates&nbsp;a&nbsp;thread-local&nbsp;cache.&quot;
+                017&nbsp;&nbsp;&nbsp;&nbsp;&quot;Creates&nbsp;a&nbsp;thread-local&nbsp;cache.&quot;
                 </span><br/>
 <span class="covered" title="3 out of 3 forms covered">
-                015&nbsp;&nbsp;&nbsp;&nbsp;([]&nbsp;(make&nbsp;false))
+                018&nbsp;&nbsp;&nbsp;&nbsp;([]&nbsp;(make&nbsp;false))
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                016&nbsp;&nbsp;&nbsp;&nbsp;([cache-if-nil]
+                019&nbsp;&nbsp;&nbsp;&nbsp;([cache-if-nil]
                 </span><br/>
 <span class="covered" title="4 out of 4 forms covered">
-                017&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[store&nbsp;(ref&nbsp;{})]
+                020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[store&nbsp;(ref&nbsp;{})]
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                018&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(letfn&nbsp;[(cache-kv&nbsp;([k&nbsp;v]
+                021&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(letfn&nbsp;[(cache-kv&nbsp;([k&nbsp;v]
                 </span><br/>
 <span class="covered" title="2 out of 2 forms covered">
-                019&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(dosync
+                022&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(dosync
                 </span><br/>
 <span class="covered" title="5 out of 5 forms covered">
-                020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(commute&nbsp;store&nbsp;assoc&nbsp;k
+                023&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(commute&nbsp;store&nbsp;assoc&nbsp;k
                 </span><br/>
 <span class="covered" title="6 out of 6 forms covered">
-                021&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:write-at&nbsp;(current-time)&nbsp;
+                024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:write-at&nbsp;(current-time)
                 </span><br/>
 <span class="covered" title="2 out of 2 forms covered">
-                022&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:read-at&nbsp;(current-time)&nbsp;
+                025&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:read-at&nbsp;(current-time)
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                023&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:value&nbsp;v})
+                026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:value&nbsp;v})
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v)))
+                027&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v)))
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                025&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(get-v&nbsp;([k]
+                028&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(get-v&nbsp;([k]
                 </span><br/>
 <span class="covered" title="11 out of 11 forms covered">
-                026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when-let&nbsp;[data&nbsp;(get&nbsp;@store&nbsp;k)]
+                029&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when-let&nbsp;[data&nbsp;(get&nbsp;@store&nbsp;k)]
                 </span><br/>
 <span class="covered" title="5 out of 5 forms covered">
-                027&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(update-read-at&nbsp;store&nbsp;k&nbsp;data)
+                030&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(update-read-at&nbsp;store&nbsp;k&nbsp;data)
                 </span><br/>
 <span class="covered" title="3 out of 3 forms covered">
-                028&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(:value&nbsp;data)))
+                031&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(:value&nbsp;data)))
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                029&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;([k&nbsp;compute-fn]
+                032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;([k&nbsp;compute-fn]
                 </span><br/>
 <span class="covered" title="4 out of 4 forms covered">
-                030&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[storage&nbsp;@store]
+                033&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[storage&nbsp;@store]
                 </span><br/>
 <span class="covered" title="5 out of 5 forms covered">
-                031&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(contains?&nbsp;storage&nbsp;k)
+                034&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(contains?&nbsp;storage&nbsp;k)
                 </span><br/>
 <span class="covered" title="3 out of 3 forms covered">
-                032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(get-v&nbsp;k)
+                035&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(get-v&nbsp;k)
                 </span><br/>
 <span class="covered" title="3 out of 3 forms covered">
-                033&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[v&nbsp;(compute-fn)]
+                036&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[v&nbsp;(compute-fn)]
                 </span><br/>
 <span class="partial" title="11 out of 12 forms covered">
-                034&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(or&nbsp;(not&nbsp;(nil?&nbsp;v))&nbsp;cache-if-nil)
+                037&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(or&nbsp;(not&nbsp;(nil?&nbsp;v))&nbsp;cache-if-nil)
                 </span><br/>
 <span class="covered" title="4 out of 4 forms covered">
-                035&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cache-kv&nbsp;k&nbsp;v)
+                038&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cache-kv&nbsp;k&nbsp;v)
                 </span><br/>
 <span class="covered" title="3 out of 3 forms covered">
-                036&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(get-v&nbsp;k)))))))
+                039&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(get-v&nbsp;k)))))))
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                037&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lru&nbsp;([]
+                040&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lru&nbsp;([]
                 </span><br/>
 <span class="not-covered" title="0 out of 2 forms covered">
-                038&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(mapv
+                041&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(mapv
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                039&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fn&nbsp;[[k&nbsp;v]]&nbsp;[k&nbsp;(:value&nbsp;v)])
+                042&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fn&nbsp;[[k&nbsp;v]]&nbsp;[k&nbsp;(:value&nbsp;v)])
                 </span><br/>
 <span class="not-covered" title="0 out of 12 forms covered">
-                040&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(sort-by&nbsp;#(-&gt;&nbsp;%&nbsp;val&nbsp;:read-at)&nbsp;&lt;&nbsp;@store))))]
+                043&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(sort-by&nbsp;#(-&gt;&nbsp;%&nbsp;val&nbsp;:read-at)&nbsp;&lt;&nbsp;@store))))]
                 </span><br/>
 <span class="covered" title="6 out of 6 forms covered">
-                041&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:cache-kv&nbsp;cache-kv&nbsp;
+                044&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:cache-kv&nbsp;cache-kv
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                042&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:get-v&nbsp;get-v
+                045&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:get-v&nbsp;get-v
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                043&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:cache-if-nil&nbsp;cache-if-nil
+                046&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:cache-if-nil&nbsp;cache-if-nil
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                044&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:lru&nbsp;lru}))))
+                047&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:lru&nbsp;lru}))))
                 </span><br/>
  </body>
 </html>

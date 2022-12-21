@@ -8,109 +8,118 @@
                 001&nbsp;&nbsp;(ns&nbsp;clj-activitypub.internal.crypto
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                002&nbsp;&nbsp;&nbsp;&nbsp;(:require&nbsp;[clojure.java.io&nbsp;:as&nbsp;io])
+                002&nbsp;&nbsp;&nbsp;&nbsp;&quot;copied&nbsp;from&nbsp;[Jahfer&#x27;s&nbsp;clj-activitypub&nbsp;library](https:&#x2F;&#x2F;github.com&#x2F;jahfer&#x2F;clj-activitypub).&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                003&nbsp;&nbsp;&nbsp;&nbsp;(:import&nbsp;(java.util&nbsp;Base64)
+                003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;and&nbsp;when&nbsp;Jahfer&nbsp;issues&nbsp;a&nbsp;release&nbsp;of&nbsp;that&nbsp;library,&nbsp;this&nbsp;directory&nbsp;will&nbsp;be&nbsp;deleted&nbsp;and&nbsp;a&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(java.security&nbsp;MessageDigest&nbsp;SecureRandom&nbsp;Signature)))
+                004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dependency&nbsp;on&nbsp;that&nbsp;library&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;project.&quot;
                 </span><br/>
-<span class="blank" title="0 out of 0 forms covered">
-                005&nbsp;&nbsp;
+<span class="not-tracked" title="0 out of 0 forms covered">
+                005&nbsp;&nbsp;&nbsp;&nbsp;(:require&nbsp;[clojure.java.io&nbsp;:as&nbsp;io])
                 </span><br/>
-<span class="covered" title="1 out of 1 forms covered">
-                006&nbsp;&nbsp;(java.security.Security&#x2F;addProvider
+<span class="not-tracked" title="0 out of 0 forms covered">
+                006&nbsp;&nbsp;&nbsp;&nbsp;(:import&nbsp;(java.util&nbsp;Base64)
                 </span><br/>
-<span class="covered" title="1 out of 1 forms covered">
-                007&nbsp;&nbsp;&nbsp;(org.bouncycastle.jce.provider.BouncyCastleProvider.))
+<span class="not-tracked" title="0 out of 0 forms covered">
+                007&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(java.security&nbsp;MessageDigest&nbsp;SecureRandom&nbsp;Signature)))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
                 008&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                009&nbsp;&nbsp;(defn-&nbsp;keydata&nbsp;[reader]
+                009&nbsp;&nbsp;(java.security.Security&#x2F;addProvider
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                010&nbsp;&nbsp;&nbsp;(org.bouncycastle.jce.provider.BouncyCastleProvider.))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                011&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                012&nbsp;&nbsp;(defn-&nbsp;keydata&nbsp;[reader]
                 </span><br/>
 <span class="not-covered" title="0 out of 2 forms covered">
-                010&nbsp;&nbsp;&nbsp;&nbsp;(-&gt;&gt;&nbsp;reader
+                013&nbsp;&nbsp;&nbsp;&nbsp;(-&gt;&gt;&nbsp;reader
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                011&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(org.bouncycastle.openssl.PEMParser.)
+                014&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(org.bouncycastle.openssl.PEMParser.)
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                012&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.readObject)))
+                015&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.readObject)))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                013&nbsp;&nbsp;
+                016&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                014&nbsp;&nbsp;(defn-&nbsp;pem-string-&gt;key-pair&nbsp;[string]
+                017&nbsp;&nbsp;(defn-&nbsp;pem-string-&gt;key-pair&nbsp;[string]
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                015&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[kd&nbsp;(keydata&nbsp;(io&#x2F;reader&nbsp;(.getBytes&nbsp;string)))]
+                018&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[kd&nbsp;(keydata&nbsp;(io&#x2F;reader&nbsp;(.getBytes&nbsp;string)))]
                 </span><br/>
 <span class="not-covered" title="0 out of 3 forms covered">
-                016&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.getKeyPair&nbsp;(org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter.)&nbsp;kd)))
+                019&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.getKeyPair&nbsp;(org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter.)&nbsp;kd)))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                017&nbsp;&nbsp;
+                020&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                018&nbsp;&nbsp;(defn&nbsp;private-key&nbsp;[private-pem-str]
+                021&nbsp;&nbsp;(defn&nbsp;private-key&nbsp;[private-pem-str]
                 </span><br/>
 <span class="not-covered" title="0 out of 2 forms covered">
-                019&nbsp;&nbsp;&nbsp;&nbsp;(-&gt;&nbsp;private-pem-str
+                022&nbsp;&nbsp;&nbsp;&nbsp;(-&gt;&nbsp;private-pem-str
                 </span><br/>
 <span class="not-covered" title="0 out of 2 forms covered">
-                020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(pem-string-&gt;key-pair)
+                023&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(pem-string-&gt;key-pair)
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                021&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.getPrivate)))
-                </span><br/>
-<span class="blank" title="0 out of 0 forms covered">
-                022&nbsp;&nbsp;
-                </span><br/>
-<span class="covered" title="1 out of 1 forms covered">
-                023&nbsp;&nbsp;(defn&nbsp;base64-encode&nbsp;[bytes]
-                </span><br/>
-<span class="not-covered" title="0 out of 3 forms covered">
-                024&nbsp;&nbsp;&nbsp;&nbsp;(.encodeToString&nbsp;(Base64&#x2F;getEncoder)&nbsp;bytes))
+                024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.getPrivate)))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
                 025&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                026&nbsp;&nbsp;(defn&nbsp;sha256-base64&nbsp;[data]
-                </span><br/>
-<span class="not-covered" title="0 out of 5 forms covered">
-                027&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[digest&nbsp;(.digest&nbsp;(MessageDigest&#x2F;getInstance&nbsp;&quot;SHA-256&quot;)&nbsp;(.getBytes&nbsp;data))]
+                026&nbsp;&nbsp;(defn&nbsp;base64-encode&nbsp;[bytes]
                 </span><br/>
 <span class="not-covered" title="0 out of 3 forms covered">
-                028&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(base64-encode&nbsp;digest)))
+                027&nbsp;&nbsp;&nbsp;&nbsp;(.encodeToString&nbsp;(Base64&#x2F;getEncoder)&nbsp;bytes))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                029&nbsp;&nbsp;
+                028&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                030&nbsp;&nbsp;(defn&nbsp;sign&nbsp;[data&nbsp;private-key]&nbsp;
+                029&nbsp;&nbsp;(defn&nbsp;sha256-base64&nbsp;[data]
                 </span><br/>
-<span class="not-covered" title="0 out of 2 forms covered">
-                031&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[bytes&nbsp;(.getBytes&nbsp;data)
-                </span><br/>
-<span class="not-covered" title="0 out of 4 forms covered">
-                032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;signer&nbsp;(doto&nbsp;(Signature&#x2F;getInstance&nbsp;&quot;SHA256withRSA&quot;)
+<span class="not-covered" title="0 out of 5 forms covered">
+                030&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[digest&nbsp;(.digest&nbsp;(MessageDigest&#x2F;getInstance&nbsp;&quot;SHA-256&quot;)&nbsp;(.getBytes&nbsp;data))]
                 </span><br/>
 <span class="not-covered" title="0 out of 3 forms covered">
-                033&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.initSign&nbsp;private-key&nbsp;(SecureRandom.))
-                </span><br/>
-<span class="not-covered" title="0 out of 2 forms covered">
-                034&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.update&nbsp;bytes))]
-                </span><br/>
-<span class="not-covered" title="0 out of 1 forms covered">
-                035&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.sign&nbsp;signer)))
+                031&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(base64-encode&nbsp;digest)))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                036&nbsp;&nbsp;
+                032&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                033&nbsp;&nbsp;(defn&nbsp;sign&nbsp;[data&nbsp;private-key]
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                034&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[bytes&nbsp;(.getBytes&nbsp;data)
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                035&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;signer&nbsp;(doto&nbsp;(Signature&#x2F;getInstance&nbsp;&quot;SHA256withRSA&quot;)
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                036&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.initSign&nbsp;private-key&nbsp;(SecureRandom.))
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                037&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.update&nbsp;bytes))]
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                038&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(.sign&nbsp;signer)))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                039&nbsp;&nbsp;
                 </span><br/>
  </body>
 </html>

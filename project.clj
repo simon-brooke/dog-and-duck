@@ -6,8 +6,7 @@
                      :doc/format :markdown}
           :output-path "docs/codox"
           :source-uri "https://github.com/simon-brooke/dog-and-duck/blob/master/{filepath}#L{line}"}
-
-  :description "A Clojure library designed to implement the ActivityPub protocol."
+  :description "A playground for hacking ActivityPub stuff."
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [org.clojure/data.json "2.4.0"]
                  [org.clojure/math.numeric-tower "0.0.5"]

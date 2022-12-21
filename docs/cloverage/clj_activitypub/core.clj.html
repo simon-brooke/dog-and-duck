@@ -8,442 +8,451 @@
                 001&nbsp;&nbsp;(ns&nbsp;clj-activitypub.core
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                002&nbsp;&nbsp;&nbsp;&nbsp;(:require&nbsp;[clj-activitypub.internal.crypto&nbsp;:as&nbsp;crypto]
+                002&nbsp;&nbsp;&nbsp;&nbsp;&quot;copied&nbsp;from&nbsp;[Jahfer&#x27;s&nbsp;clj-activitypub&nbsp;library](https:&#x2F;&#x2F;github.com&#x2F;jahfer&#x2F;clj-activitypub).&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clj-activitypub.internal.thread-cache&nbsp;:as&nbsp;thread-cache]
+                003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;and&nbsp;when&nbsp;Jahfer&nbsp;issues&nbsp;a&nbsp;release&nbsp;of&nbsp;that&nbsp;library,&nbsp;this&nbsp;directory&nbsp;will&nbsp;be&nbsp;deleted&nbsp;and&nbsp;a&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clj-activitypub.internal.http-util&nbsp;:as&nbsp;http]
+                004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dependency&nbsp;on&nbsp;that&nbsp;library&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;project.&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                005&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clj-http.client&nbsp;:as&nbsp;client]
+                005&nbsp;&nbsp;&nbsp;&nbsp;(:require&nbsp;[clj-activitypub.internal.crypto&nbsp;:as&nbsp;crypto]
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                006&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clojure.string&nbsp;:as&nbsp;str]))
+                006&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clj-activitypub.internal.thread-cache&nbsp;:as&nbsp;thread-cache]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                007&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clj-activitypub.internal.http-util&nbsp;:as&nbsp;http]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                008&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clj-http.client&nbsp;:as&nbsp;client]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                009&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clojure.string&nbsp;:as&nbsp;str]))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                007&nbsp;&nbsp;
+                010&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                008&nbsp;&nbsp;(defn&nbsp;config
+                011&nbsp;&nbsp;(defn&nbsp;config
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                009&nbsp;&nbsp;&nbsp;&nbsp;&quot;Creates&nbsp;hash&nbsp;of&nbsp;computed&nbsp;data&nbsp;relevant&nbsp;for&nbsp;most&nbsp;ActivityPub&nbsp;utilities.&quot;
+                012&nbsp;&nbsp;&nbsp;&nbsp;&quot;Creates&nbsp;hash&nbsp;of&nbsp;computed&nbsp;data&nbsp;relevant&nbsp;for&nbsp;most&nbsp;ActivityPub&nbsp;utilities.&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                010&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[domain&nbsp;username&nbsp;username-route&nbsp;public-key&nbsp;private-key]
+                013&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[domain&nbsp;username&nbsp;username-route&nbsp;public-key&nbsp;private-key]
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                011&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:or&nbsp;{username-route&nbsp;&quot;&#x2F;users&#x2F;&quot;
+                014&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:or&nbsp;{username-route&nbsp;&quot;&#x2F;users&#x2F;&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                012&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public-key&nbsp;nil
+                015&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public-key&nbsp;nil
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                013&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;private-key&nbsp;nil}}]
+                016&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;private-key&nbsp;nil}}]
                 </span><br/>
 <span class="not-covered" title="0 out of 5 forms covered">
-                014&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[base-url&nbsp;(str&nbsp;&quot;https:&#x2F;&#x2F;&quot;&nbsp;domain)]
+                017&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[base-url&nbsp;(str&nbsp;&quot;https:&#x2F;&#x2F;&quot;&nbsp;domain)]
                 </span><br/>
 <span class="not-covered" title="0 out of 8 forms covered">
-                015&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:domain&nbsp;domain
+                018&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:domain&nbsp;domain
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                016&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:base-url&nbsp;base-url
+                019&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:base-url&nbsp;base-url
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                017&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:username&nbsp;username
+                020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:username&nbsp;username
                 </span><br/>
 <span class="not-covered" title="0 out of 5 forms covered">
-                018&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:user-id&nbsp;(str&nbsp;base-url&nbsp;username-route&nbsp;username)
+                021&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:user-id&nbsp;(str&nbsp;base-url&nbsp;username-route&nbsp;username)
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                019&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:public-key&nbsp;public-key
+                022&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:public-key&nbsp;public-key
                 </span><br/>
 <span class="not-covered" title="0 out of 3 forms covered">
-                020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:private-key&nbsp;(when&nbsp;private-key
+                023&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:private-key&nbsp;(when&nbsp;private-key
                 </span><br/>
 <span class="not-covered" title="0 out of 3 forms covered">
-                021&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(crypto&#x2F;private-key&nbsp;private-key))}))
+                024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(crypto&#x2F;private-key&nbsp;private-key))}))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                022&nbsp;&nbsp;
+                025&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                023&nbsp;&nbsp;(defn&nbsp;parse-account
+                026&nbsp;&nbsp;(defn&nbsp;parse-account
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                024&nbsp;&nbsp;&nbsp;&nbsp;&quot;Given&nbsp;an&nbsp;ActivityPub&nbsp;handle&nbsp;(e.g.&nbsp;@jahfer@mastodon.social),&nbsp;produces
+                027&nbsp;&nbsp;&nbsp;&nbsp;&quot;Given&nbsp;an&nbsp;ActivityPub&nbsp;handle&nbsp;(e.g.&nbsp;@jahfer@mastodon.social),&nbsp;produces
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                025&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;map&nbsp;containing&nbsp;{:domain&nbsp;...&nbsp;:username&nbsp;...}.&quot;
+                028&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;map&nbsp;containing&nbsp;{:domain&nbsp;...&nbsp;:username&nbsp;...}.&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                026&nbsp;&nbsp;&nbsp;&nbsp;[handle]
+                029&nbsp;&nbsp;&nbsp;&nbsp;[handle]
                 </span><br/>
 <span class="covered" title="9 out of 9 forms covered">
-                027&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[[username&nbsp;domain]&nbsp;(filter&nbsp;#(not&nbsp;(str&#x2F;blank?&nbsp;%))
+                030&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[[username&nbsp;domain]&nbsp;(filter&nbsp;#(not&nbsp;(str&#x2F;blank?&nbsp;%))
                 </span><br/>
 <span class="covered" title="4 out of 4 forms covered">
-                028&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(str&#x2F;split&nbsp;handle&nbsp;#&quot;@&quot;))]
+                031&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(str&#x2F;split&nbsp;handle&nbsp;#&quot;@&quot;))]
                 </span><br/>
 <span class="covered" title="5 out of 5 forms covered">
-                029&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:domain&nbsp;domain&nbsp;:username&nbsp;username}))
+                032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:domain&nbsp;domain&nbsp;:username&nbsp;username}))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                030&nbsp;&nbsp;
+                033&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="3 out of 3 forms covered">
-                031&nbsp;&nbsp;(def&nbsp;^:private&nbsp;user-cache&nbsp;(thread-cache&#x2F;make))
+                034&nbsp;&nbsp;(def&nbsp;^:private&nbsp;user-cache&nbsp;(thread-cache&#x2F;make))
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                032&nbsp;&nbsp;(defn&nbsp;fetch-user
+                035&nbsp;&nbsp;(defn&nbsp;fetch-user
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                033&nbsp;&nbsp;&nbsp;&nbsp;&quot;Fetches&nbsp;the&nbsp;customer&nbsp;account&nbsp;details&nbsp;located&nbsp;at&nbsp;user-id&nbsp;from&nbsp;a&nbsp;remote
+                036&nbsp;&nbsp;&nbsp;&nbsp;&quot;Fetches&nbsp;the&nbsp;customer&nbsp;account&nbsp;details&nbsp;located&nbsp;at&nbsp;user-id&nbsp;from&nbsp;a&nbsp;remote
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                034&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server.&nbsp;Will&nbsp;return&nbsp;cached&nbsp;results&nbsp;if&nbsp;they&nbsp;exist&nbsp;in&nbsp;memory.&quot;
+                037&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server.&nbsp;Will&nbsp;return&nbsp;cached&nbsp;results&nbsp;if&nbsp;they&nbsp;exist&nbsp;in&nbsp;memory.&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                035&nbsp;&nbsp;&nbsp;&nbsp;[user-id]
+                038&nbsp;&nbsp;&nbsp;&nbsp;[user-id]
                 </span><br/>
 <span class="covered" title="5 out of 5 forms covered">
-                036&nbsp;&nbsp;&nbsp;&nbsp;((:get-v&nbsp;user-cache)
+                039&nbsp;&nbsp;&nbsp;&nbsp;((:get-v&nbsp;user-cache)
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                037&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user-id
+                040&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user-id
                 </span><br/>
 <span class="covered" title="2 out of 2 forms covered">
-                038&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#(:body
+                041&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#(:body
                 </span><br/>
 <span class="covered" title="11 out of 11 forms covered">
-                039&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(client&#x2F;get&nbsp;user-id&nbsp;{:as&nbsp;:json-string-keys
+                042&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(client&#x2F;get&nbsp;user-id&nbsp;{:as&nbsp;:json-string-keys
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                040&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:throw-exceptions&nbsp;false
+                043&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:throw-exceptions&nbsp;false
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                041&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:ignore-unknown-host?&nbsp;true
+                044&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:ignore-unknown-host?&nbsp;true
                 </span><br/>
 <span class="covered" title="3 out of 3 forms covered">
-                042&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:headers&nbsp;{&quot;Accept&quot;&nbsp;&quot;application&#x2F;activity+json&quot;}}))))
+                045&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:headers&nbsp;{&quot;Accept&quot;&nbsp;&quot;application&#x2F;activity+json&quot;}}))))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                043&nbsp;&nbsp;
+                046&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                044&nbsp;&nbsp;(defn&nbsp;actor
+                047&nbsp;&nbsp;(defn&nbsp;actor
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                045&nbsp;&nbsp;&nbsp;&nbsp;&quot;Accepts&nbsp;a&nbsp;config,&nbsp;and&nbsp;returns&nbsp;a&nbsp;map&nbsp;in&nbsp;the&nbsp;form&nbsp;expected&nbsp;by&nbsp;the&nbsp;ActivityPub
+                048&nbsp;&nbsp;&nbsp;&nbsp;&quot;Accepts&nbsp;a&nbsp;config,&nbsp;and&nbsp;returns&nbsp;a&nbsp;map&nbsp;in&nbsp;the&nbsp;form&nbsp;expected&nbsp;by&nbsp;the&nbsp;ActivityPub
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                046&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;spec.&nbsp;See&nbsp;https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitypub&#x2F;#actor-objects&nbsp;for&nbsp;reference.&quot;
+                049&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;spec.&nbsp;See&nbsp;https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitypub&#x2F;#actor-objects&nbsp;for&nbsp;reference.&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                047&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[user-id&nbsp;username&nbsp;public-key]}]
+                050&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[user-id&nbsp;username&nbsp;public-key]}]
                 </span><br/>
 <span class="not-covered" title="0 out of 12 forms covered">
-                048&nbsp;&nbsp;&nbsp;&nbsp;{&quot;@context&quot;&nbsp;[&quot;https:&#x2F;&#x2F;www.w3.org&#x2F;ns&#x2F;activitystreams&quot;
+                051&nbsp;&nbsp;&nbsp;&nbsp;{&quot;@context&quot;&nbsp;[&quot;https:&#x2F;&#x2F;www.w3.org&#x2F;ns&#x2F;activitystreams&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                049&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;https:&#x2F;&#x2F;w3id.org&#x2F;security&#x2F;v1&quot;]
+                052&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;https:&#x2F;&#x2F;w3id.org&#x2F;security&#x2F;v1&quot;]
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                050&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:id&nbsp;user-id
+                053&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:id&nbsp;user-id
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                051&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:type&nbsp;&quot;Person&quot;
+                054&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:type&nbsp;&quot;Person&quot;
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                052&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:preferredUsername&nbsp;username
+                055&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:preferredUsername&nbsp;username
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                053&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:inbox&nbsp;(str&nbsp;user-id&nbsp;&quot;&#x2F;inbox&quot;)
+                056&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:inbox&nbsp;(str&nbsp;user-id&nbsp;&quot;&#x2F;inbox&quot;)
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                054&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:outbox&nbsp;(str&nbsp;user-id&nbsp;&quot;&#x2F;outbox&quot;)
+                057&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:outbox&nbsp;(str&nbsp;user-id&nbsp;&quot;&#x2F;outbox&quot;)
                 </span><br/>
 <span class="not-covered" title="0 out of 8 forms covered">
-                055&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:publicKey&nbsp;{:id&nbsp;(str&nbsp;user-id&nbsp;&quot;#main-key&quot;)
+                058&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:publicKey&nbsp;{:id&nbsp;(str&nbsp;user-id&nbsp;&quot;#main-key&quot;)
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                056&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:owner&nbsp;user-id
+                059&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:owner&nbsp;user-id
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                057&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:publicKeyPem&nbsp;(or&nbsp;public-key&nbsp;&quot;&quot;)}})
+                060&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:publicKeyPem&nbsp;(or&nbsp;public-key&nbsp;&quot;&quot;)}})
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                058&nbsp;&nbsp;
+                061&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="6 out of 6 forms covered">
-                059&nbsp;&nbsp;(def&nbsp;signature-headers&nbsp;[&quot;(request-target)&quot;&nbsp;&quot;host&quot;&nbsp;&quot;date&quot;&nbsp;&quot;digest&quot;])
+                062&nbsp;&nbsp;(def&nbsp;signature-headers&nbsp;[&quot;(request-target)&quot;&nbsp;&quot;host&quot;&nbsp;&quot;date&quot;&nbsp;&quot;digest&quot;])
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                060&nbsp;&nbsp;
+                063&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                061&nbsp;&nbsp;(defn-&nbsp;str-for-signature&nbsp;[headers]
+                064&nbsp;&nbsp;(defn-&nbsp;str-for-signature&nbsp;[headers]
                 </span><br/>
 <span class="not-covered" title="0 out of 3 forms covered">
-                062&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[headers-xf&nbsp;(reduce-kv
+                065&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[headers-xf&nbsp;(reduce-kv
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                063&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fn&nbsp;[m&nbsp;k&nbsp;v]
+                066&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fn&nbsp;[m&nbsp;k&nbsp;v]
                 </span><br/>
 <span class="not-covered" title="0 out of 9 forms covered">
-                064&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assoc&nbsp;m&nbsp;(str&#x2F;lower-case&nbsp;k)&nbsp;v))&nbsp;{}&nbsp;headers)]
+                067&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assoc&nbsp;m&nbsp;(str&#x2F;lower-case&nbsp;k)&nbsp;v))&nbsp;{}&nbsp;headers)]
                 </span><br/>
 <span class="not-covered" title="0 out of 2 forms covered">
-                065&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-&gt;&gt;&nbsp;signature-headers
+                068&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-&gt;&gt;&nbsp;signature-headers
                 </span><br/>
 <span class="not-covered" title="0 out of 3 forms covered">
-                066&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(select-keys&nbsp;headers-xf)
+                069&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(select-keys&nbsp;headers-xf)
                 </span><br/>
 <span class="not-covered" title="0 out of 12 forms covered">
-                067&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reduce-kv&nbsp;(fn&nbsp;[coll&nbsp;k&nbsp;v]&nbsp;(conj&nbsp;coll&nbsp;(str&nbsp;k&nbsp;&quot;:&nbsp;&quot;&nbsp;v)))&nbsp;[])
+                070&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reduce-kv&nbsp;(fn&nbsp;[coll&nbsp;k&nbsp;v]&nbsp;(conj&nbsp;coll&nbsp;(str&nbsp;k&nbsp;&quot;:&nbsp;&quot;&nbsp;v)))&nbsp;[])
                 </span><br/>
 <span class="not-covered" title="0 out of 3 forms covered">
-                068&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(interpose&nbsp;&quot;\n&quot;)
+                071&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(interpose&nbsp;&quot;\n&quot;)
                 </span><br/>
 <span class="not-covered" title="0 out of 2 forms covered">
-                069&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(apply&nbsp;str))))
+                072&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(apply&nbsp;str))))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                070&nbsp;&nbsp;
+                073&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                071&nbsp;&nbsp;(defn&nbsp;gen-signature-header
+                074&nbsp;&nbsp;(defn&nbsp;gen-signature-header
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                072&nbsp;&nbsp;&nbsp;&nbsp;&quot;Generates&nbsp;a&nbsp;HTTP&nbsp;Signature&nbsp;string&nbsp;based&nbsp;on&nbsp;the&nbsp;provided&nbsp;map&nbsp;of&nbsp;headers.&quot;
+                075&nbsp;&nbsp;&nbsp;&nbsp;&quot;Generates&nbsp;a&nbsp;HTTP&nbsp;Signature&nbsp;string&nbsp;based&nbsp;on&nbsp;the&nbsp;provided&nbsp;map&nbsp;of&nbsp;headers.&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                073&nbsp;&nbsp;&nbsp;&nbsp;[config&nbsp;headers]
+                076&nbsp;&nbsp;&nbsp;&nbsp;[config&nbsp;headers]
                 </span><br/>
 <span class="not-covered" title="0 out of 2 forms covered">
-                074&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[{:keys&nbsp;[user-id&nbsp;private-key]}&nbsp;config
+                077&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[{:keys&nbsp;[user-id&nbsp;private-key]}&nbsp;config
                 </span><br/>
 <span class="not-covered" title="0 out of 3 forms covered">
-                075&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string-to-sign&nbsp;(str-for-signature&nbsp;headers)
+                078&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string-to-sign&nbsp;(str-for-signature&nbsp;headers)
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                076&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;signature&nbsp;(crypto&#x2F;base64-encode&nbsp;(crypto&#x2F;sign&nbsp;string-to-sign&nbsp;private-key))
+                079&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;signature&nbsp;(crypto&#x2F;base64-encode&nbsp;(crypto&#x2F;sign&nbsp;string-to-sign&nbsp;private-key))
                 </span><br/>
 <span class="not-covered" title="0 out of 5 forms covered">
-                077&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sig-header-keys&nbsp;{&quot;keyId&quot;&nbsp;user-id
+                080&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sig-header-keys&nbsp;{&quot;keyId&quot;&nbsp;user-id
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                078&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;headers&quot;&nbsp;(str&#x2F;join&nbsp;&quot;&nbsp;&quot;&nbsp;signature-headers)
+                081&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;headers&quot;&nbsp;(str&#x2F;join&nbsp;&quot;&nbsp;&quot;&nbsp;signature-headers)
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                079&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;signature&quot;&nbsp;signature}]
+                082&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;signature&quot;&nbsp;signature}]
                 </span><br/>
 <span class="not-covered" title="0 out of 2 forms covered">
-                080&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-&gt;&gt;&nbsp;sig-header-keys
+                083&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-&gt;&gt;&nbsp;sig-header-keys
                 </span><br/>
 <span class="not-covered" title="0 out of 3 forms covered">
-                081&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reduce-kv&nbsp;(fn&nbsp;[m&nbsp;k&nbsp;v]
+                084&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reduce-kv&nbsp;(fn&nbsp;[m&nbsp;k&nbsp;v]
                 </span><br/>
 <span class="not-covered" title="0 out of 11 forms covered">
-                082&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(conj&nbsp;m&nbsp;(str&nbsp;k&nbsp;&quot;=&quot;&nbsp;&quot;\&quot;&quot;&nbsp;v&nbsp;&quot;\&quot;&quot;)))&nbsp;[])
+                085&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(conj&nbsp;m&nbsp;(str&nbsp;k&nbsp;&quot;=&quot;&nbsp;&quot;\&quot;&quot;&nbsp;v&nbsp;&quot;\&quot;&quot;)))&nbsp;[])
                 </span><br/>
 <span class="not-covered" title="0 out of 3 forms covered">
-                083&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(interpose&nbsp;&quot;,&quot;)
+                086&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(interpose&nbsp;&quot;,&quot;)
                 </span><br/>
 <span class="not-covered" title="0 out of 2 forms covered">
-                084&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(apply&nbsp;str))))
+                087&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(apply&nbsp;str))))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                085&nbsp;&nbsp;
+                088&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                086&nbsp;&nbsp;(defn&nbsp;auth-headers
+                089&nbsp;&nbsp;(defn&nbsp;auth-headers
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                087&nbsp;&nbsp;&nbsp;&nbsp;&quot;Given&nbsp;a&nbsp;config&nbsp;and&nbsp;request&nbsp;map&nbsp;of&nbsp;{:body&nbsp;...&nbsp;:headers&nbsp;...},&nbsp;returns&nbsp;the
+                090&nbsp;&nbsp;&nbsp;&nbsp;&quot;Given&nbsp;a&nbsp;config&nbsp;and&nbsp;request&nbsp;map&nbsp;of&nbsp;{:body&nbsp;...&nbsp;:headers&nbsp;...},&nbsp;returns&nbsp;the
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                088&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;original&nbsp;set&nbsp;of&nbsp;headers&nbsp;with&nbsp;Signature&nbsp;and&nbsp;Digest&nbsp;attributes&nbsp;appended.&quot;
+                091&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;original&nbsp;set&nbsp;of&nbsp;headers&nbsp;with&nbsp;Signature&nbsp;and&nbsp;Digest&nbsp;attributes&nbsp;appended.&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                089&nbsp;&nbsp;&nbsp;&nbsp;[config&nbsp;{:keys&nbsp;[body&nbsp;headers]}]
+                092&nbsp;&nbsp;&nbsp;&nbsp;[config&nbsp;{:keys&nbsp;[body&nbsp;headers]}]
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                090&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[digest&nbsp;(http&#x2F;digest&nbsp;body)
+                093&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[digest&nbsp;(http&#x2F;digest&nbsp;body)
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                091&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h&nbsp;(-&gt;&nbsp;headers
+                094&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h&nbsp;(-&gt;&nbsp;headers
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                092&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assoc&nbsp;&quot;Digest&quot;&nbsp;digest)
+                095&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assoc&nbsp;&quot;Digest&quot;&nbsp;digest)
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                093&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assoc&nbsp;&quot;(request-target)&quot;&nbsp;&quot;post&nbsp;&#x2F;inbox&quot;))]
+                096&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assoc&nbsp;&quot;(request-target)&quot;&nbsp;&quot;post&nbsp;&#x2F;inbox&quot;))]
                 </span><br/>
 <span class="not-covered" title="0 out of 5 forms covered">
-                094&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assoc&nbsp;headers
+                097&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assoc&nbsp;headers
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                095&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Signature&quot;&nbsp;(gen-signature-header&nbsp;config&nbsp;h)
+                098&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Signature&quot;&nbsp;(gen-signature-header&nbsp;config&nbsp;h)
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                096&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Digest&quot;&nbsp;digest)))
+                099&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Digest&quot;&nbsp;digest)))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                097&nbsp;&nbsp;
+                100&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                098&nbsp;&nbsp;(defmulti&nbsp;obj
+                101&nbsp;&nbsp;(defmulti&nbsp;obj
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                099&nbsp;&nbsp;&nbsp;&nbsp;&quot;Produces&nbsp;a&nbsp;map&nbsp;representing&nbsp;an&nbsp;ActivityPub&nbsp;object&nbsp;which&nbsp;can&nbsp;be&nbsp;serialized
+                102&nbsp;&nbsp;&nbsp;&nbsp;&quot;Produces&nbsp;a&nbsp;map&nbsp;representing&nbsp;an&nbsp;ActivityPub&nbsp;object&nbsp;which&nbsp;can&nbsp;be&nbsp;serialized
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;directly&nbsp;to&nbsp;JSON&nbsp;in&nbsp;the&nbsp;form&nbsp;expected&nbsp;by&nbsp;the&nbsp;ActivityStreams&nbsp;2.0&nbsp;spec.
+                103&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;directly&nbsp;to&nbsp;JSON&nbsp;in&nbsp;the&nbsp;form&nbsp;expected&nbsp;by&nbsp;the&nbsp;ActivityStreams&nbsp;2.0&nbsp;spec.
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                101&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitystreams-vocabulary&#x2F;&nbsp;for&nbsp;reference.&quot;
+                104&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitystreams-vocabulary&#x2F;&nbsp;for&nbsp;reference.&quot;
                 </span><br/>
 <span class="partial" title="1 out of 4 forms covered">
-                102&nbsp;&nbsp;&nbsp;&nbsp;(fn&nbsp;[_config&nbsp;object-data]&nbsp;(:type&nbsp;object-data)))
+                105&nbsp;&nbsp;&nbsp;&nbsp;(fn&nbsp;[_config&nbsp;object-data]&nbsp;(:type&nbsp;object-data)))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                103&nbsp;&nbsp;
+                106&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="3 out of 3 forms covered">
-                104&nbsp;&nbsp;(defmethod&nbsp;obj&nbsp;:note
+                107&nbsp;&nbsp;(defmethod&nbsp;obj&nbsp;:note
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                105&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[user-id]}
+                108&nbsp;&nbsp;&nbsp;&nbsp;[{:keys&nbsp;[user-id]}
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                106&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:keys&nbsp;[id&nbsp;published&nbsp;inReplyTo&nbsp;content&nbsp;to]
+                109&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:keys&nbsp;[id&nbsp;published&nbsp;inReplyTo&nbsp;content&nbsp;to]
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                107&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:or&nbsp;{published&nbsp;(http&#x2F;date)
+                110&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:or&nbsp;{published&nbsp;(http&#x2F;date)
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                108&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inReplyTo&nbsp;&quot;&quot;
+                111&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inReplyTo&nbsp;&quot;&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                109&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;&quot;https:&#x2F;&#x2F;www.w3.org&#x2F;ns&#x2F;activitystreams#Public&quot;}}]
+                112&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;&quot;https:&#x2F;&#x2F;www.w3.org&#x2F;ns&#x2F;activitystreams#Public&quot;}}]
                 </span><br/>
 <span class="not-covered" title="0 out of 14 forms covered">
-                110&nbsp;&nbsp;&nbsp;&nbsp;{&quot;id&quot;&nbsp;(str&nbsp;user-id&nbsp;&quot;&#x2F;notes&#x2F;&quot;&nbsp;id)
+                113&nbsp;&nbsp;&nbsp;&nbsp;{&quot;id&quot;&nbsp;(str&nbsp;user-id&nbsp;&quot;&#x2F;notes&#x2F;&quot;&nbsp;id)
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                111&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot;&nbsp;&quot;Note&quot;
+                114&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot;&nbsp;&quot;Note&quot;
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                112&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;published&quot;&nbsp;published
+                115&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;published&quot;&nbsp;published
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                113&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;attributedTo&quot;&nbsp;user-id
+                116&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;attributedTo&quot;&nbsp;user-id
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                114&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;inReplyTo&quot;&nbsp;inReplyTo
+                117&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;inReplyTo&quot;&nbsp;inReplyTo
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                115&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;content&quot;&nbsp;content
+                118&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;content&quot;&nbsp;content
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                116&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;to&quot;&nbsp;to})
+                119&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;to&quot;&nbsp;to})
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                117&nbsp;&nbsp;
+                120&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                118&nbsp;&nbsp;(defmulti&nbsp;activity
+                121&nbsp;&nbsp;(defmulti&nbsp;activity
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                119&nbsp;&nbsp;&nbsp;&nbsp;&quot;Produces&nbsp;a&nbsp;map&nbsp;representing&nbsp;an&nbsp;ActivityPub&nbsp;activity&nbsp;which&nbsp;can&nbsp;be&nbsp;serialized
+                122&nbsp;&nbsp;&nbsp;&nbsp;&quot;Produces&nbsp;a&nbsp;map&nbsp;representing&nbsp;an&nbsp;ActivityPub&nbsp;activity&nbsp;which&nbsp;can&nbsp;be&nbsp;serialized
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                120&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;directly&nbsp;to&nbsp;JSON&nbsp;in&nbsp;the&nbsp;form&nbsp;expected&nbsp;by&nbsp;the&nbsp;ActivityStreams&nbsp;2.0&nbsp;spec.
+                123&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;directly&nbsp;to&nbsp;JSON&nbsp;in&nbsp;the&nbsp;form&nbsp;expected&nbsp;by&nbsp;the&nbsp;ActivityStreams&nbsp;2.0&nbsp;spec.
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                121&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitystreams-vocabulary&#x2F;&nbsp;for&nbsp;reference.&quot;
+                124&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;See&nbsp;https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitystreams-vocabulary&#x2F;&nbsp;for&nbsp;reference.&quot;
                 </span><br/>
 <span class="partial" title="1 out of 2 forms covered">
-                122&nbsp;&nbsp;&nbsp;&nbsp;(fn&nbsp;[_config&nbsp;activity-type&nbsp;_data]&nbsp;activity-type))
+                125&nbsp;&nbsp;&nbsp;&nbsp;(fn&nbsp;[_config&nbsp;activity-type&nbsp;_data]&nbsp;activity-type))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                123&nbsp;&nbsp;
+                126&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="3 out of 3 forms covered">
-                124&nbsp;&nbsp;(defmethod&nbsp;activity&nbsp;:create&nbsp;[{:keys&nbsp;[user-id]}&nbsp;_&nbsp;data]
+                127&nbsp;&nbsp;(defmethod&nbsp;activity&nbsp;:create&nbsp;[{:keys&nbsp;[user-id]}&nbsp;_&nbsp;data]
                 </span><br/>
 <span class="not-covered" title="0 out of 9 forms covered">
-                125&nbsp;&nbsp;&nbsp;&nbsp;{&quot;@context&quot;&nbsp;[&quot;https:&#x2F;&#x2F;www.w3.org&#x2F;ns&#x2F;activitystreams&quot;
+                128&nbsp;&nbsp;&nbsp;&nbsp;{&quot;@context&quot;&nbsp;[&quot;https:&#x2F;&#x2F;www.w3.org&#x2F;ns&#x2F;activitystreams&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                126&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;https:&#x2F;&#x2F;w3id.org&#x2F;security&#x2F;v1&quot;]
+                129&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;https:&#x2F;&#x2F;w3id.org&#x2F;security&#x2F;v1&quot;]
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                127&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot;&nbsp;&quot;Create&quot;
+                130&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot;&nbsp;&quot;Create&quot;
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;actor&quot;&nbsp;user-id
+                131&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;actor&quot;&nbsp;user-id
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                129&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;object&quot;&nbsp;data})
+                132&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;object&quot;&nbsp;data})
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                130&nbsp;&nbsp;
+                133&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="3 out of 3 forms covered">
-                131&nbsp;&nbsp;(defmethod&nbsp;activity&nbsp;:delete&nbsp;[{:keys&nbsp;[user-id]}&nbsp;_&nbsp;data]
+                134&nbsp;&nbsp;(defmethod&nbsp;activity&nbsp;:delete&nbsp;[{:keys&nbsp;[user-id]}&nbsp;_&nbsp;data]
                 </span><br/>
 <span class="not-covered" title="0 out of 9 forms covered">
-                132&nbsp;&nbsp;&nbsp;&nbsp;{&quot;@context&quot;&nbsp;[&quot;https:&#x2F;&#x2F;www.w3.org&#x2F;ns&#x2F;activitystreams&quot;
+                135&nbsp;&nbsp;&nbsp;&nbsp;{&quot;@context&quot;&nbsp;[&quot;https:&#x2F;&#x2F;www.w3.org&#x2F;ns&#x2F;activitystreams&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                133&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;https:&#x2F;&#x2F;w3id.org&#x2F;security&#x2F;v1&quot;]
+                136&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;https:&#x2F;&#x2F;w3id.org&#x2F;security&#x2F;v1&quot;]
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                134&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot;&nbsp;&quot;Delete&quot;
+                137&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot;&nbsp;&quot;Delete&quot;
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                135&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;actor&quot;&nbsp;user-id
+                138&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;actor&quot;&nbsp;user-id
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                136&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;object&quot;&nbsp;data})
+                139&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;object&quot;&nbsp;data})
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                137&nbsp;&nbsp;
+                140&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                138&nbsp;&nbsp;(defn&nbsp;with-config
+                141&nbsp;&nbsp;(defn&nbsp;with-config
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                139&nbsp;&nbsp;&nbsp;&nbsp;&quot;Returns&nbsp;curried&nbsp;forms&nbsp;of&nbsp;the&nbsp;#activity&nbsp;and&nbsp;#obj&nbsp;multimethods&nbsp;in&nbsp;the&nbsp;form
+                142&nbsp;&nbsp;&nbsp;&nbsp;&quot;Returns&nbsp;curried&nbsp;forms&nbsp;of&nbsp;the&nbsp;#activity&nbsp;and&nbsp;#obj&nbsp;multimethods&nbsp;in&nbsp;the&nbsp;form
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                140&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:activity&nbsp;...&nbsp;:obj&nbsp;...},&nbsp;with&nbsp;the&nbsp;initial&nbsp;parameter&nbsp;set&nbsp;to&nbsp;config.&quot;
+                143&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:activity&nbsp;...&nbsp;:obj&nbsp;...},&nbsp;with&nbsp;the&nbsp;initial&nbsp;parameter&nbsp;set&nbsp;to&nbsp;config.&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                141&nbsp;&nbsp;&nbsp;&nbsp;[config]
+                144&nbsp;&nbsp;&nbsp;&nbsp;[config]
                 </span><br/>
 <span class="not-covered" title="0 out of 5 forms covered">
-                142&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[f&nbsp;(juxt
+                145&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[f&nbsp;(juxt
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                143&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#(partial&nbsp;activity&nbsp;%)
+                146&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#(partial&nbsp;activity&nbsp;%)
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                144&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#(partial&nbsp;obj&nbsp;%))
+                147&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#(partial&nbsp;obj&nbsp;%))
                 </span><br/>
 <span class="not-covered" title="0 out of 3 forms covered">
-                145&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[activity-fn&nbsp;obj-fn]&nbsp;(f&nbsp;config)]
+                148&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[activity-fn&nbsp;obj-fn]&nbsp;(f&nbsp;config)]
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                146&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:activity&nbsp;activity-fn
+                149&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:activity&nbsp;activity-fn
                 </span><br/>
 <span class="not-covered" title="0 out of 1 forms covered">
-                147&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:obj&nbsp;obj-fn}))
+                150&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:obj&nbsp;obj-fn}))
                 </span><br/>
  </body>
 </html>

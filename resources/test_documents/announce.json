@@ -1,0 +1,14 @@
+{
+    "id": "https://mastodon.scot/users/simon_brooke/statuses/109545810804143431/activity",
+    "type": "Announce",
+    "actor": "https://mastodon.scot/users/simon_brooke",
+    "published": "2022-12-20T11:40:19Z",
+    "to": [
+        "https://www.w3.org/ns/activitystreams#Public"
+    ],
+    "cc": [
+        "https://mastodon.social/users/borkdude",
+        "https://mastodon.scot/users/simon_brooke/followers"
+    ],
+    "object": "https://mastodon.social/users/borkdude/statuses/109545794618575668"
+}

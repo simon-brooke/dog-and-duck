@@ -8,562 +8,682 @@
                 001&nbsp;&nbsp;(ns&nbsp;dog-and-duck.quack.quack
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                002&nbsp;&nbsp;&nbsp;&nbsp;&quot;Validator&nbsp;for&nbsp;ActivityPub&nbsp;objects:&nbsp;if&nbsp;it&nbsp;walks&nbsp;like&nbsp;a&nbsp;duck,&nbsp;and&nbsp;it&nbsp;quacks&nbsp;like&nbsp;a&nbsp;duck...&quot;
+                002&nbsp;&nbsp;&nbsp;&nbsp;&quot;Validator&nbsp;for&nbsp;ActivityPub&nbsp;objects:&nbsp;if&nbsp;it&nbsp;walks&nbsp;like&nbsp;a&nbsp;duck,&nbsp;and&nbsp;it&nbsp;quacks&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                003&nbsp;&nbsp;&nbsp;&nbsp;;;(:require&nbsp;[clojure.spec.alpha&nbsp;as&nbsp;s])
+                003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;like&nbsp;a&nbsp;duck...
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                004&nbsp;&nbsp;&nbsp;&nbsp;(:import&nbsp;[java.net&nbsp;URI&nbsp;URISyntaxException]))
+                004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                005&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**NOTE&nbsp;THAT&nbsp;the&nbsp;ActivityPub&nbsp;spec&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                006&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[says](https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitypub&#x2F;#obj)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                007&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                008&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;Servers&nbsp;SHOULD&nbsp;validate&nbsp;the&nbsp;content&nbsp;they&nbsp;receive&nbsp;to&nbsp;avoid&nbsp;content&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                009&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;spoofing&nbsp;attacks
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                010&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                011&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;but&nbsp;in&nbsp;practice&nbsp;ActivityPub&nbsp;content&nbsp;collected&nbsp;in&nbsp;the&nbsp;wild&nbsp;bears&nbsp;only&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                012&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;hazy&nbsp;relationship&nbsp;to&nbsp;the&nbsp;spec,&nbsp;so&nbsp;this&nbsp;is&nbsp;difficult.&nbsp;I&nbsp;suspect&nbsp;that
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                013&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I&nbsp;may&nbsp;have&nbsp;to&nbsp;implement&nbsp;a&nbsp;`*strict*`&nbsp;dynamic&nbsp;variable,&nbsp;so&nbsp;that&nbsp;users&nbsp;can&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                014&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toggle&nbsp;some&nbsp;checks&nbsp;off.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                015&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                016&nbsp;&nbsp;&nbsp;&nbsp;;;(:require&nbsp;[clojure.spec.alpha&nbsp;as&nbsp;s])
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                017&nbsp;&nbsp;&nbsp;&nbsp;(:require&nbsp;[dog-and-duck.quack.picky&nbsp;:refer&nbsp;[filter-severity&nbsp;has-context?&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                018&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;object-faults]])
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                019&nbsp;&nbsp;&nbsp;&nbsp;(:import&nbsp;[java.net&nbsp;URI&nbsp;URISyntaxException]))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                005&nbsp;&nbsp;
+                020&nbsp;&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                006&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copyright&nbsp;(C)&nbsp;Simon&nbsp;Brooke,&nbsp;2022
+                021&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copyright&nbsp;(C)&nbsp;Simon&nbsp;Brooke,&nbsp;2022
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                007&nbsp;&nbsp;
+                022&nbsp;&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                008&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;program&nbsp;is&nbsp;free&nbsp;software;&nbsp;you&nbsp;can&nbsp;redistribute&nbsp;it&nbsp;and&#x2F;or
+                023&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;program&nbsp;is&nbsp;free&nbsp;software;&nbsp;you&nbsp;can&nbsp;redistribute&nbsp;it&nbsp;and&#x2F;or
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                009&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;modify&nbsp;it&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License
+                024&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;modify&nbsp;it&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                010&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;published&nbsp;by&nbsp;the&nbsp;Free&nbsp;Software&nbsp;Foundation;&nbsp;either&nbsp;version&nbsp;2
+                025&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;published&nbsp;by&nbsp;the&nbsp;Free&nbsp;Software&nbsp;Foundation;&nbsp;either&nbsp;version&nbsp;2
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                011&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;License,&nbsp;or&nbsp;(at&nbsp;your&nbsp;option)&nbsp;any&nbsp;later&nbsp;version.
+                026&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;License,&nbsp;or&nbsp;(at&nbsp;your&nbsp;option)&nbsp;any&nbsp;later&nbsp;version.
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                012&nbsp;&nbsp;
+                027&nbsp;&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                013&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;program&nbsp;is&nbsp;distributed&nbsp;in&nbsp;the&nbsp;hope&nbsp;that&nbsp;it&nbsp;will&nbsp;be&nbsp;useful,
+                028&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;program&nbsp;is&nbsp;distributed&nbsp;in&nbsp;the&nbsp;hope&nbsp;that&nbsp;it&nbsp;will&nbsp;be&nbsp;useful,
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                014&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;but&nbsp;WITHOUT&nbsp;ANY&nbsp;WARRANTY;&nbsp;without&nbsp;even&nbsp;the&nbsp;implied&nbsp;warranty&nbsp;of
+                029&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;but&nbsp;WITHOUT&nbsp;ANY&nbsp;WARRANTY;&nbsp;without&nbsp;even&nbsp;the&nbsp;implied&nbsp;warranty&nbsp;of
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                015&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MERCHANTABILITY&nbsp;or&nbsp;FITNESS&nbsp;FOR&nbsp;A&nbsp;PARTICULAR&nbsp;PURPOSE.&nbsp;&nbsp;See&nbsp;the
+                030&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MERCHANTABILITY&nbsp;or&nbsp;FITNESS&nbsp;FOR&nbsp;A&nbsp;PARTICULAR&nbsp;PURPOSE.&nbsp;&nbsp;See&nbsp;the
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                016&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License&nbsp;for&nbsp;more&nbsp;details.
+                031&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License&nbsp;for&nbsp;more&nbsp;details.
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                017&nbsp;&nbsp;
+                032&nbsp;&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                018&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You&nbsp;should&nbsp;have&nbsp;received&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License
+                033&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You&nbsp;should&nbsp;have&nbsp;received&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                019&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;along&nbsp;with&nbsp;this&nbsp;program;&nbsp;if&nbsp;not,&nbsp;write&nbsp;to&nbsp;the&nbsp;Free&nbsp;Software
+                034&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;along&nbsp;with&nbsp;this&nbsp;program;&nbsp;if&nbsp;not,&nbsp;write&nbsp;to&nbsp;the&nbsp;Free&nbsp;Software
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                020&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Foundation,&nbsp;Inc.,&nbsp;51&nbsp;Franklin&nbsp;Street,&nbsp;Fifth&nbsp;Floor,&nbsp;Boston,&nbsp;MA&nbsp;&nbsp;02110-1301,&nbsp;USA.
-                </span><br/>
-<span class="blank" title="0 out of 0 forms covered">
-                021&nbsp;&nbsp;
-                </span><br/>
-<span class="covered" title="1 out of 1 forms covered">
-                022&nbsp;&nbsp;(defn&nbsp;object?
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                023&nbsp;&nbsp;&nbsp;&nbsp;&quot;Returns&nbsp;`true`&nbsp;iff&nbsp;`x`&nbsp;is&nbsp;recognisably&nbsp;an&nbsp;ActivityStreams&nbsp;object.
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                025&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**NOTE&nbsp;THAT**&nbsp;The&nbsp;ActivityStreams&nbsp;spec&nbsp;
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[says](https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitystreams-core&#x2F;#object):
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                027&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                028&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;All&nbsp;properties&nbsp;are&nbsp;optional&nbsp;(including&nbsp;the&nbsp;id&nbsp;and&nbsp;type)
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                029&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                030&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;But&nbsp;we&nbsp;are&nbsp;*just&nbsp;not&nbsp;having&nbsp;that*,&nbsp;because&nbsp;otherwise&nbsp;we&#x27;re&nbsp;flying&nbsp;blind.
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                031&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;We&nbsp;*shall*&nbsp;reject&nbsp;objects&nbsp;lacking&nbsp;at&nbsp;least&nbsp;`:type`.&nbsp;Missing&nbsp;`:id`&nbsp;keys&nbsp;are
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tolerable&nbsp;because&nbsp;they&nbsp;represent&nbsp;transient&nbsp;objects,&nbsp;which&nbsp;we&nbsp;expect&nbsp;to&nbsp;
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                033&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;handle.&quot;
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                034&nbsp;&nbsp;&nbsp;&nbsp;[x]
-                </span><br/>
-<span class="covered" title="15 out of 15 forms covered">
-                035&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(map?&nbsp;x)&nbsp;(:type&nbsp;x)&nbsp;true))
+                035&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Foundation,&nbsp;Inc.,&nbsp;51&nbsp;Franklin&nbsp;Street,&nbsp;Fifth&nbsp;Floor,&nbsp;Boston,&nbsp;MA&nbsp;&nbsp;02110-1301,&nbsp;USA.
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
                 036&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                037&nbsp;&nbsp;(defn&nbsp;persistent-object?
+                037&nbsp;&nbsp;(defn&nbsp;object?
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                038&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;is&nbsp;a&nbsp;persistent&nbsp;object.
-                </span><br/>
-<span class="blank" title="0 out of 0 forms covered">
-                039&nbsp;&nbsp;
+                038&nbsp;&nbsp;&nbsp;&nbsp;&quot;Returns&nbsp;`true`&nbsp;iff&nbsp;`x`&nbsp;is&nbsp;recognisably&nbsp;an&nbsp;ActivityStreams&nbsp;object.
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                040&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Transient&nbsp;objects&nbsp;in&nbsp;ActivityPub&nbsp;are&nbsp;not&nbsp;required&nbsp;to&nbsp;have&nbsp;an&nbsp;`id`&nbsp;key,&nbsp;but&nbsp;persistent
+                039&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                041&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ones&nbsp;must&nbsp;have&nbsp;a&nbsp;key,&nbsp;and&nbsp;it&nbsp;must&nbsp;be&nbsp;an&nbsp;IRI&nbsp;(but&nbsp;normally&nbsp;a&nbsp;URI).&quot;
+                040&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**NOTE&nbsp;THAT**&nbsp;The&nbsp;ActivityStreams&nbsp;spec&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                042&nbsp;&nbsp;&nbsp;&nbsp;[x]
-                </span><br/>
-<span class="partial" title="1 out of 2 forms covered">
-                043&nbsp;&nbsp;&nbsp;&nbsp;(try
-                </span><br/>
-<span class="covered" title="13 out of 13 forms covered">
-                044&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(object?&nbsp;x)&nbsp;(uri?&nbsp;(URI.&nbsp;(:id&nbsp;x))))
+                041&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[says](https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitystreams-core&#x2F;#object):
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                045&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(catch&nbsp;URISyntaxException&nbsp;_&nbsp;false)))
-                </span><br/>
-<span class="blank" title="0 out of 0 forms covered">
-                046&nbsp;&nbsp;
-                </span><br/>
-<span class="covered" title="7 out of 7 forms covered">
-                047&nbsp;&nbsp;(persistent-object?&nbsp;{:type&nbsp;&quot;test&quot;&nbsp;:id&nbsp;&quot;https:&#x2F;&#x2F;mastodon.scot&#x2F;@barfilfarm&quot;})
-                </span><br/>
-<span class="blank" title="0 out of 0 forms covered">
-                048&nbsp;&nbsp;
-                </span><br/>
-<span class="covered" title="1 out of 1 forms covered">
-                049&nbsp;&nbsp;(def&nbsp;^:const&nbsp;actor-types
+                042&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                050&nbsp;&nbsp;&nbsp;&nbsp;&quot;The&nbsp;set&nbsp;of&nbsp;types&nbsp;we&nbsp;will&nbsp;accept&nbsp;as&nbsp;actors.
+                043&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;All&nbsp;properties&nbsp;are&nbsp;optional&nbsp;(including&nbsp;the&nbsp;id&nbsp;and&nbsp;type)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                044&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                045&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;But&nbsp;we&nbsp;are&nbsp;*just&nbsp;not&nbsp;having&nbsp;that*,&nbsp;because&nbsp;otherwise&nbsp;we&#x27;re&nbsp;flying&nbsp;blind.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                046&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;We&nbsp;*shall*&nbsp;reject&nbsp;objects&nbsp;lacking&nbsp;at&nbsp;least&nbsp;`:type`.&nbsp;Missing&nbsp;`:id`&nbsp;keys&nbsp;are
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                047&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tolerable&nbsp;because&nbsp;they&nbsp;represent&nbsp;transient&nbsp;objects,&nbsp;which&nbsp;we&nbsp;expect&nbsp;to&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                048&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;handle.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                049&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                050&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**NOTE&nbsp;THAT**&nbsp;The&nbsp;ActivityPub&nbsp;spec&nbsp;[says](https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitypub&#x2F;#obj)
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
                 051&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                052&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There&#x27;s&nbsp;an&nbsp;[explicit&nbsp;set&nbsp;of&nbsp;allowed&nbsp;actor&nbsp;types]
+                052&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;Implementers&nbsp;SHOULD&nbsp;include&nbsp;the&nbsp;ActivityPub&nbsp;context&nbsp;in&nbsp;their&nbsp;object&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                053&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitystreams-vocabulary&#x2F;#actor-types).&quot;
-                </span><br/>
-<span class="covered" title="6 out of 6 forms covered">
-                054&nbsp;&nbsp;&nbsp;&nbsp;#{&quot;Application&quot;
+                053&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;definitions
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                055&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Group&quot;
+                054&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                056&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Organization&quot;
+                055&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;but&nbsp;in&nbsp;samples&nbsp;found&nbsp;in&nbsp;the&nbsp;wild&nbsp;they&nbsp;typically&nbsp;don&#x27;t.&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                057&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Person&quot;
+                056&nbsp;&nbsp;&nbsp;&nbsp;([x]
+                </span><br/>
+<span class="covered" title="15 out of 15 forms covered">
+                057&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(map?&nbsp;x)&nbsp;(:type&nbsp;x)&nbsp;true))
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                058&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Service&quot;})
+                058&nbsp;&nbsp;&nbsp;&nbsp;([x&nbsp;severity]
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                059&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(empty?&nbsp;(filter-severity&nbsp;(object-faults&nbsp;x)&nbsp;severity))))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                059&nbsp;&nbsp;
+                060&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                060&nbsp;&nbsp;(defn&nbsp;actor-type?
+                061&nbsp;&nbsp;(defn&nbsp;persistent-object?
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                061&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;TODO:&nbsp;better&nbsp;as&nbsp;a&nbsp;macro
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                062&nbsp;&nbsp;&nbsp;&nbsp;[x]
-                </span><br/>
-<span class="covered" title="6 out of 6 forms covered">
-                063&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(actor-types&nbsp;x)&nbsp;true&nbsp;false))
+                062&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;is&nbsp;a&nbsp;persistent&nbsp;object.
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                064&nbsp;&nbsp;
+                063&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                064&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Transient&nbsp;objects&nbsp;in&nbsp;ActivityPub&nbsp;are&nbsp;not&nbsp;required&nbsp;to&nbsp;have&nbsp;an&nbsp;`id`&nbsp;key,&nbsp;but&nbsp;persistent
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                065&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ones&nbsp;must&nbsp;have&nbsp;a&nbsp;key,&nbsp;and&nbsp;it&nbsp;must&nbsp;be&nbsp;an&nbsp;IRI&nbsp;(but&nbsp;normally&nbsp;a&nbsp;URI).&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                066&nbsp;&nbsp;&nbsp;&nbsp;[x]
+                </span><br/>
+<span class="partial" title="1 out of 2 forms covered">
+                067&nbsp;&nbsp;&nbsp;&nbsp;(try
+                </span><br/>
+<span class="covered" title="13 out of 13 forms covered">
+                068&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(object?&nbsp;x)&nbsp;(uri?&nbsp;(URI.&nbsp;(:id&nbsp;x))))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                069&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(catch&nbsp;URISyntaxException&nbsp;_&nbsp;false)))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                070&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                071&nbsp;&nbsp;;;&nbsp;(persistent-object?&nbsp;{:type&nbsp;&quot;test&quot;&nbsp;:id&nbsp;&quot;https:&#x2F;&#x2F;mastodon.scot&#x2F;@barfilfarm&quot;})
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                072&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                065&nbsp;&nbsp;(def&nbsp;^:const&nbsp;verb-types
+                073&nbsp;&nbsp;(def&nbsp;^:const&nbsp;actor-types
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                066&nbsp;&nbsp;&nbsp;&nbsp;&quot;The&nbsp;set&nbsp;of&nbsp;types&nbsp;we&nbsp;will&nbsp;accept&nbsp;as&nbsp;verbs.
+                074&nbsp;&nbsp;&nbsp;&nbsp;&quot;The&nbsp;set&nbsp;of&nbsp;types&nbsp;we&nbsp;will&nbsp;accept&nbsp;as&nbsp;actors.
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                067&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                075&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                068&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There&#x27;s&nbsp;an&nbsp;[explicit&nbsp;set&nbsp;of&nbsp;allowed&nbsp;verb&nbsp;types]
+                076&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There&#x27;s&nbsp;an&nbsp;[explicit&nbsp;set&nbsp;of&nbsp;allowed&nbsp;actor&nbsp;types]
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                069&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitystreams-vocabulary&#x2F;#activity-types).&quot;
+                077&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitystreams-vocabulary&#x2F;#actor-types).&quot;
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                078&nbsp;&nbsp;&nbsp;&nbsp;#{&quot;Application&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                079&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Group&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                080&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Organization&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                081&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Person&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                082&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Service&quot;})
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                083&nbsp;&nbsp;
+                </span><br/>
+<span class="partial" title="33 out of 34 forms covered">
+                084&nbsp;&nbsp;(defmacro&nbsp;actor-type?
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                085&nbsp;&nbsp;&nbsp;&nbsp;&quot;Return&nbsp;`true`&nbsp;iff&nbsp;the&nbsp;`x`&nbsp;is&nbsp;a&nbsp;recognised&nbsp;actor&nbsp;type,&nbsp;else&nbsp;`false`.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                086&nbsp;&nbsp;&nbsp;&nbsp;[^String&nbsp;x]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                087&nbsp;&nbsp;&nbsp;&nbsp;`(if&nbsp;(actor-types&nbsp;~x)&nbsp;true&nbsp;false))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                088&nbsp;&nbsp;
+                </span><br/>
+<span class="partial" title="2 out of 4 forms covered">
+                089&nbsp;&nbsp;;;&nbsp;(actor-type?&nbsp;&quot;Group&quot;)
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                090&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                091&nbsp;&nbsp;(def&nbsp;^:const&nbsp;verb-types
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                092&nbsp;&nbsp;&nbsp;&nbsp;&quot;The&nbsp;set&nbsp;of&nbsp;types&nbsp;we&nbsp;will&nbsp;accept&nbsp;as&nbsp;verbs.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                093&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                094&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There&#x27;s&nbsp;an&nbsp;[explicit&nbsp;set&nbsp;of&nbsp;allowed&nbsp;verb&nbsp;types]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                095&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitystreams-vocabulary&#x2F;#activity-types).&quot;
                 </span><br/>
 <span class="covered" title="29 out of 29 forms covered">
-                070&nbsp;&nbsp;&nbsp;&nbsp;#{&quot;Accept&quot;&nbsp;&quot;Add&quot;&nbsp;&quot;Announce&quot;&nbsp;&quot;Arrive&quot;&nbsp;&quot;Block&quot;&nbsp;&quot;Create&quot;&nbsp;&quot;Delete&quot;&nbsp;&quot;Dislike&quot;
+                096&nbsp;&nbsp;&nbsp;&nbsp;#{&quot;Accept&quot;&nbsp;&quot;Add&quot;&nbsp;&quot;Announce&quot;&nbsp;&quot;Arrive&quot;&nbsp;&quot;Block&quot;&nbsp;&quot;Create&quot;&nbsp;&quot;Delete&quot;&nbsp;&quot;Dislike&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                071&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Flag&quot;&nbsp;&quot;Follow&quot;&nbsp;&quot;Ignore&quot;&nbsp;&quot;Invite&quot;&nbsp;&quot;Join&quot;&nbsp;&quot;Leave&quot;&nbsp;&quot;Like&quot;&nbsp;&quot;Listen&quot;&nbsp;&quot;Move&quot;
+                097&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Flag&quot;&nbsp;&quot;Follow&quot;&nbsp;&quot;Ignore&quot;&nbsp;&quot;Invite&quot;&nbsp;&quot;Join&quot;&nbsp;&quot;Leave&quot;&nbsp;&quot;Like&quot;&nbsp;&quot;Listen&quot;&nbsp;&quot;Move&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                072&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Offer&quot;&nbsp;&quot;Question&quot;&nbsp;&quot;Reject&quot;&nbsp;&quot;Read&quot;&nbsp;&quot;Remove&quot;&nbsp;&quot;TentativeAccept&quot;
+                098&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Offer&quot;&nbsp;&quot;Question&quot;&nbsp;&quot;Reject&quot;&nbsp;&quot;Read&quot;&nbsp;&quot;Remove&quot;&nbsp;&quot;TentativeAccept&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                073&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;TentativeReject&quot;&nbsp;&quot;Travel&quot;&nbsp;&quot;Undo&quot;&nbsp;&quot;Update&quot;&nbsp;&quot;View&quot;})
+                099&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;TentativeReject&quot;&nbsp;&quot;Travel&quot;&nbsp;&quot;Undo&quot;&nbsp;&quot;Update&quot;&nbsp;&quot;View&quot;})
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                074&nbsp;&nbsp;
+                100&nbsp;&nbsp;
+                </span><br/>
+<span class="partial" title="33 out of 34 forms covered">
+                101&nbsp;&nbsp;(defmacro&nbsp;verb-type?
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                102&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;TODO:&nbsp;better&nbsp;as&nbsp;a&nbsp;macro
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                103&nbsp;&nbsp;&nbsp;&nbsp;[^String&nbsp;x]
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                075&nbsp;&nbsp;(defn&nbsp;verb-type?
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                076&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;TODO:&nbsp;better&nbsp;as&nbsp;a&nbsp;macro
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                077&nbsp;&nbsp;&nbsp;&nbsp;[x]
-                </span><br/>
-<span class="covered" title="6 out of 6 forms covered">
-                078&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(verb-types&nbsp;x)&nbsp;true&nbsp;false))
+                104&nbsp;&nbsp;&nbsp;&nbsp;`(if&nbsp;(verb-types&nbsp;~x)&nbsp;true&nbsp;false))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                079&nbsp;&nbsp;
-                </span><br/>
-<span class="covered" title="2 out of 2 forms covered">
-                080&nbsp;&nbsp;(def&nbsp;^:const&nbsp;activitystreams-context-uri
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                081&nbsp;&nbsp;&nbsp;&nbsp;&quot;The&nbsp;URI&nbsp;of&nbsp;the&nbsp;context&nbsp;of&nbsp;an&nbsp;ActivityStreams&nbsp;object&nbsp;is&nbsp;expected&nbsp;to&nbsp;be&nbsp;this
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                082&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;literal&nbsp;string.&quot;
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                083&nbsp;&nbsp;&nbsp;&nbsp;&quot;https:&#x2F;&#x2F;www.w3.org&#x2F;ns&#x2F;activitystreams&quot;)
+                105&nbsp;&nbsp;
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                084&nbsp;&nbsp;
+                106&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                085&nbsp;&nbsp;(defn&nbsp;context?
+                107&nbsp;&nbsp;(defn&nbsp;actor?
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                086&nbsp;&nbsp;&nbsp;&nbsp;&quot;Returns&nbsp;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;an&nbsp;ActivityStreams&nbsp;context,&nbsp;else&nbsp;false.
+                108&nbsp;&nbsp;&nbsp;&nbsp;&quot;Returns&nbsp;`true`&nbsp;if&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;an&nbsp;actor,&nbsp;else&nbsp;false.
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                087&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                109&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                088&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;context&nbsp;is&nbsp;either
+                110&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**NOTE&nbsp;THAT**&nbsp;[Section&nbsp;4.1&nbsp;of&nbsp;the&nbsp;spec]
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                089&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;the&nbsp;URI&nbsp;(actually&nbsp;an&nbsp;IRI)&nbsp;`activitystreams-context-uri`,&nbsp;or
+                111&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitypub&#x2F;#actor-objects)&nbsp;says&nbsp;explicitly&nbsp;that
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                090&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;a&nbsp;collection&nbsp;comprising&nbsp;that&nbsp;URI&nbsp;and&nbsp;a&nbsp;map.&quot;
+                112&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                091&nbsp;&nbsp;&nbsp;&nbsp;[x]
-                </span><br/>
-<span class="partial" title="4 out of 6 forms covered">
-                092&nbsp;&nbsp;&nbsp;&nbsp;(cond
-                </span><br/>
-<span class="covered" title="3 out of 3 forms covered">
-                093&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(nil?&nbsp;x)&nbsp;false
-                </span><br/>
-<span class="covered" title="11 out of 11 forms covered">
-                094&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(string?&nbsp;x)&nbsp;(and&nbsp;(=&nbsp;x&nbsp;activitystreams-context-uri)&nbsp;true)
-                </span><br/>
-<span class="partial" title="19 out of 20 forms covered">
-                095&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(coll?&nbsp;x)&nbsp;(and&nbsp;(context?&nbsp;(first&nbsp;(remove&nbsp;map?&nbsp;x)))&nbsp;
-                </span><br/>
-<span class="covered" title="4 out of 4 forms covered">
-                096&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;(count&nbsp;x)&nbsp;2)
+                113&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;&nbsp;Actor&nbsp;objects&nbsp;MUST&nbsp;have,&nbsp;in&nbsp;addition&nbsp;to&nbsp;the&nbsp;properties&nbsp;mandated&nbsp;by&nbsp;3.1&nbsp;Object&nbsp;Identifiers,&nbsp;the&nbsp;following&nbsp;properties:
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                097&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true)
+                114&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                098&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:else&nbsp;false))
-                </span><br/>
-<span class="blank" title="0 out of 0 forms covered">
-                099&nbsp;&nbsp;
-                </span><br/>
-<span class="partial" title="40 out of 42 forms covered">
-                100&nbsp;&nbsp;(defmacro&nbsp;has-context?&nbsp;[x]
-                </span><br/>
-<span class="covered" title="1 out of 1 forms covered">
-                101&nbsp;&nbsp;&nbsp;&nbsp;`(context?&nbsp;((keyword&nbsp;&quot;@context&quot;)&nbsp;~x)))
-                </span><br/>
-<span class="blank" title="0 out of 0 forms covered">
-                102&nbsp;&nbsp;
-                </span><br/>
-<span class="covered" title="1 out of 1 forms covered">
-                103&nbsp;&nbsp;(defn&nbsp;actor?
+                115&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;&nbsp;inbox
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                104&nbsp;&nbsp;&nbsp;&nbsp;&quot;Returns&nbsp;`true`&nbsp;if&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;an&nbsp;actor,&nbsp;else&nbsp;false.&quot;
+                116&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;reference&nbsp;to&nbsp;an&nbsp;[ActivityStreams]&nbsp;OrderedCollection&nbsp;comprised&nbsp;of&nbsp;all&nbsp;the&nbsp;messages&nbsp;received&nbsp;by&nbsp;the&nbsp;actor;&nbsp;see&nbsp;5.2&nbsp;Inbox.&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                105&nbsp;&nbsp;&nbsp;&nbsp;[x]
+                117&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;outbox
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                118&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;&nbsp;&nbsp;&nbsp;An&nbsp;[ActivityStreams]&nbsp;OrderedCollection&nbsp;comprised&nbsp;of&nbsp;all&nbsp;the&nbsp;messages&nbsp;produced&nbsp;by&nbsp;the&nbsp;actor;&nbsp;see&nbsp;5.1&nbsp;Outbox.&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                119&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                120&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;However,&nbsp;none&nbsp;of&nbsp;the&nbsp;provided&nbsp;examples&nbsp;in&nbsp;the&nbsp;[activitystreams-test-documents&nbsp;repository]()&nbsp;does&nbsp;in&nbsp;fact&nbsp;have&nbsp;these&nbsp;properties&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                121&nbsp;&nbsp;&nbsp;&nbsp;[x]
                 </span><br/>
 <span class="partial" title="7 out of 21 forms covered">
-                106&nbsp;&nbsp;&nbsp;&nbsp;(and
+                122&nbsp;&nbsp;&nbsp;&nbsp;(and
                 </span><br/>
 <span class="covered" title="3 out of 3 forms covered">
-                107&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object?&nbsp;x)
+                123&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object?&nbsp;x)
                 </span><br/>
 <span class="covered" title="5 out of 5 forms covered">
-                108&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(has-context?&nbsp;x)
+                124&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(has-context?&nbsp;x)
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                109&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(uri?&nbsp;(URI.&nbsp;(:inbox&nbsp;x)))
+                125&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(uri?&nbsp;(URI.&nbsp;(:inbox&nbsp;x)))
                 </span><br/>
 <span class="not-covered" title="0 out of 6 forms covered">
-                110&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(uri?&nbsp;(URI.&nbsp;(:outbox&nbsp;x)))
+                126&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(uri?&nbsp;(URI.&nbsp;(:outbox&nbsp;x)))
                 </span><br/>
-<span class="not-covered" title="0 out of 5 forms covered">
-                111&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(actor-type?&nbsp;(:type&nbsp;x))
+<span class="not-covered" title="0 out of 7 forms covered">
+                127&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(actor-type?&nbsp;(:type&nbsp;x))
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                112&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true))
+                128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                113&nbsp;&nbsp;
+                129&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                114&nbsp;&nbsp;(defn&nbsp;activity?
+                130&nbsp;&nbsp;(defn&nbsp;actor-or-uri?
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                115&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;an&nbsp;activity,&nbsp;else&nbsp;false.&quot;
+                131&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;if&nbsp;`x`&nbsp;is&nbsp;either&nbsp;a&nbsp;URI&nbsp;or&nbsp;an&nbsp;actor.
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                116&nbsp;&nbsp;&nbsp;&nbsp;[x]
+                132&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </span><br/>
-<span class="not-covered" title="0 out of 2 forms covered">
-                117&nbsp;&nbsp;&nbsp;&nbsp;(try
+<span class="not-tracked" title="0 out of 0 forms covered">
+                133&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**TODO**:&nbsp;I&nbsp;need&nbsp;to&nbsp;decide&nbsp;about&nbsp;whether&nbsp;to&nbsp;reify&nbsp;referenced&nbsp;objects
                 </span><br/>
-<span class="not-covered" title="0 out of 28 forms covered">
-                118&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(object?&nbsp;x)
+<span class="not-tracked" title="0 out of 0 forms covered">
+                134&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;before&nbsp;validation&nbsp;or&nbsp;after.&nbsp;After&nbsp;reification,&nbsp;every&nbsp;reference&nbsp;to&nbsp;an&nbsp;actor
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                135&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*must&nbsp;be*&nbsp;to&nbsp;an&nbsp;actor&nbsp;object,&nbsp;but&nbsp;before,&nbsp;may&nbsp;only&nbsp;be&nbsp;to&nbsp;a&nbsp;URI&nbsp;pointing&nbsp;to&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                136&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;one.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                137&nbsp;&nbsp;&nbsp;&nbsp;[x]
                 </span><br/>
 <span class="not-covered" title="0 out of 5 forms covered">
-                119&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(has-context?&nbsp;x)
-                </span><br/>
-<span class="not-covered" title="0 out of 5 forms covered">
-                120&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(string?&nbsp;(:summary&nbsp;x))
-                </span><br/>
-<span class="not-covered" title="0 out of 5 forms covered">
-                121&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(actor?&nbsp;(:actor&nbsp;x))
-                </span><br/>
-<span class="not-covered" title="0 out of 5 forms covered">
-                122&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(verb-type?&nbsp;(:type&nbsp;x))
-                </span><br/>
-<span class="not-covered" title="0 out of 15 forms covered">
-                123&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(or&nbsp;(object?&nbsp;(:object&nbsp;x))&nbsp;(uri?&nbsp;(URI.&nbsp;(:object&nbsp;x))))
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                124&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true)
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                125&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(catch&nbsp;URISyntaxException&nbsp;_&nbsp;false)))
-                </span><br/>
-<span class="blank" title="0 out of 0 forms covered">
-                126&nbsp;&nbsp;
-                </span><br/>
-<span class="covered" title="1 out of 1 forms covered">
-                127&nbsp;&nbsp;(defn&nbsp;link?
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                128&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;a&nbsp;link,&nbsp;else&nbsp;false.&quot;
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                129&nbsp;&nbsp;&nbsp;&nbsp;[x]
-                </span><br/>
-<span class="not-covered" title="0 out of 16 forms covered">
-                130&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(object?&nbsp;x)
-                </span><br/>
-<span class="not-covered" title="0 out of 5 forms covered">
-                131&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;(:type&nbsp;x)&nbsp;&quot;Link&quot;)
-                </span><br/>
-<span class="not-covered" title="0 out of 6 forms covered">
-                132&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(uri?&nbsp;(URI.&nbsp;(:href&nbsp;x)))
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                133&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true))
-                </span><br/>
-<span class="blank" title="0 out of 0 forms covered">
-                134&nbsp;&nbsp;
-                </span><br/>
-<span class="covered" title="1 out of 1 forms covered">
-                135&nbsp;&nbsp;(defn&nbsp;link-or-uri?
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                136&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;is&nbsp;either&nbsp;a&nbsp;URI&nbsp;or&nbsp;a&nbsp;link,&nbsp;else&nbsp;false.
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                137&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                138&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There&nbsp;are&nbsp;several&nbsp;points&nbsp;in&nbsp;the&nbsp;specification&nbsp;where&nbsp;e.g.&nbsp;the&nbsp;`:image`
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                139&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;property&nbsp;(if&nbsp;present)&nbsp;may&nbsp;be&nbsp;either&nbsp;a&nbsp;link&nbsp;or&nbsp;a&nbsp;URI.&quot;
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                140&nbsp;&nbsp;&nbsp;&nbsp;[x]
-                </span><br/>
-<span class="not-covered" title="0 out of 5 forms covered">
-                141&nbsp;&nbsp;&nbsp;&nbsp;(and
+                138&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;
                 </span><br/>
 <span class="not-covered" title="0 out of 9 forms covered">
-                142&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;(string?&nbsp;x)&nbsp;(uri?&nbsp;(URI.&nbsp;x))
+                139&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;(string?&nbsp;x)&nbsp;(uri?&nbsp;(URI.&nbsp;x))
                 </span><br/>
 <span class="not-covered" title="0 out of 3 forms covered">
-                143&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:else&nbsp;(link?&nbsp;x))
+                140&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:else&nbsp;(actor?&nbsp;x))&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                144&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true))
+                141&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                145&nbsp;&nbsp;
+                142&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                146&nbsp;&nbsp;(defn&nbsp;collection?
+                143&nbsp;&nbsp;(defn&nbsp;activity?
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                147&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;a&nbsp;collection&nbsp;of&nbsp;type&nbsp;`type`,&nbsp;else&nbsp;`false`.
+                144&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;an&nbsp;activity,&nbsp;else&nbsp;false.&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                148&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                149&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;With&nbsp;one&nbsp;argument,&nbsp;will&nbsp;recognise&nbsp;plain&nbsp;collections&nbsp;and&nbsp;ordered&nbsp;collections,
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                150&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;but&nbsp;(currently)&nbsp;not&nbsp;collection&nbsp;pages.&quot;
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                151&nbsp;&nbsp;&nbsp;&nbsp;([x&nbsp;type]
-                </span><br/>
-<span class="not-covered" title="0 out of 11 forms covered">
-                152&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[items&nbsp;(or&nbsp;(:items&nbsp;x)&nbsp;(:orderedItems&nbsp;x))]
-                </span><br/>
-<span class="not-covered" title="0 out of 25 forms covered">
-                153&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and
-                </span><br/>
-<span class="not-covered" title="0 out of 3 forms covered">
-                154&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond
-                </span><br/>
-<span class="not-covered" title="0 out of 8 forms covered">
-                155&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(:items&nbsp;x)&nbsp;(nil?&nbsp;(:orderedItems&nbsp;x))
-                </span><br/>
-<span class="not-covered" title="0 out of 8 forms covered">
-                156&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(:orderedItems&nbsp;x)&nbsp;(nil?&nbsp;(:items&nbsp;x)))&nbsp;;;&nbsp;can&#x27;t&nbsp;have&nbsp;both&nbsp;properties
-                </span><br/>
-<span class="not-covered" title="0 out of 3 forms covered">
-                157&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object?&nbsp;x)
-                </span><br/>
-<span class="not-covered" title="0 out of 5 forms covered">
-                158&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;(:type&nbsp;x)&nbsp;type)
-                </span><br/>
-<span class="not-covered" title="0 out of 3 forms covered">
-                159&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(coll?&nbsp;items)
-                </span><br/>
-<span class="not-covered" title="0 out of 4 forms covered">
-                160&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(every?&nbsp;object?&nbsp;items)
-                </span><br/>
-<span class="not-covered" title="0 out of 5 forms covered">
-                161&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(integer?&nbsp;(:totalItems&nbsp;x))
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                162&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true)))
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                163&nbsp;&nbsp;&nbsp;&nbsp;([x]
-                </span><br/>
-<span class="not-covered" title="0 out of 10 forms covered">
-                164&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(or&nbsp;(collection?&nbsp;x&nbsp;&quot;Collection&quot;)
+                145&nbsp;&nbsp;&nbsp;&nbsp;[x]
                 </span><br/>
 <span class="not-covered" title="0 out of 2 forms covered">
-                165&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(collection?&nbsp;x&nbsp;&quot;OrderedCollection&quot;))))
+                146&nbsp;&nbsp;&nbsp;&nbsp;(try
                 </span><br/>
-<span class="blank" title="0 out of 0 forms covered">
-                166&nbsp;&nbsp;
+<span class="not-covered" title="0 out of 28 forms covered">
+                147&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(object?&nbsp;x)
                 </span><br/>
-<span class="covered" title="1 out of 1 forms covered">
-                167&nbsp;&nbsp;(defn&nbsp;unordered-collection?
+<span class="not-covered" title="0 out of 5 forms covered">
+                148&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(has-context?&nbsp;x)
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                149&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(string?&nbsp;(:summary&nbsp;x))
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                150&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(actor-or-uri?&nbsp;(:actor&nbsp;x))
+                </span><br/>
+<span class="not-covered" title="0 out of 7 forms covered">
+                151&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(verb-type?&nbsp;(:type&nbsp;x))
+                </span><br/>
+<span class="not-covered" title="0 out of 15 forms covered">
+                152&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(or&nbsp;(object?&nbsp;(:object&nbsp;x))&nbsp;(uri?&nbsp;(URI.&nbsp;(:object&nbsp;x))))
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                168&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;an&nbsp;unordered&nbsp;collection,&nbsp;else&nbsp;`false`.&quot;
+                153&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                154&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(catch&nbsp;URISyntaxException&nbsp;_&nbsp;false)))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                155&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                156&nbsp;&nbsp;(defn&nbsp;link?
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                157&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;a&nbsp;link,&nbsp;else&nbsp;false.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                158&nbsp;&nbsp;&nbsp;&nbsp;[x]
+                </span><br/>
+<span class="not-covered" title="0 out of 16 forms covered">
+                159&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(object?&nbsp;x)
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                160&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;(:type&nbsp;x)&nbsp;&quot;Link&quot;)
+                </span><br/>
+<span class="not-covered" title="0 out of 6 forms covered">
+                161&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(uri?&nbsp;(URI.&nbsp;(:href&nbsp;x)))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                162&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                163&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                164&nbsp;&nbsp;(defn&nbsp;link-or-uri?
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                165&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;is&nbsp;either&nbsp;a&nbsp;URI&nbsp;or&nbsp;a&nbsp;link,&nbsp;else&nbsp;false.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                166&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                167&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There&nbsp;are&nbsp;several&nbsp;points&nbsp;in&nbsp;the&nbsp;specification&nbsp;where&nbsp;e.g.&nbsp;the&nbsp;`:image`
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                168&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;property&nbsp;(if&nbsp;present)&nbsp;may&nbsp;be&nbsp;either&nbsp;a&nbsp;link&nbsp;or&nbsp;a&nbsp;URI.&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
                 169&nbsp;&nbsp;&nbsp;&nbsp;[x]
                 </span><br/>
-<span class="not-covered" title="0 out of 4 forms covered">
-                170&nbsp;&nbsp;&nbsp;&nbsp;(collection?&nbsp;x&nbsp;&quot;Collection&quot;))
+<span class="not-covered" title="0 out of 5 forms covered">
+                170&nbsp;&nbsp;&nbsp;&nbsp;(and
+                </span><br/>
+<span class="not-covered" title="0 out of 9 forms covered">
+                171&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;(string?&nbsp;x)&nbsp;(uri?&nbsp;(URI.&nbsp;x))
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                172&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:else&nbsp;(link?&nbsp;x))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                173&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                171&nbsp;&nbsp;
+                174&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                172&nbsp;&nbsp;(defn&nbsp;ordered-collection?
+                175&nbsp;&nbsp;(defn&nbsp;collection?
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                173&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;an&nbsp;ordered&nbsp;collection,&nbsp;else&nbsp;`false`.&quot;
+                176&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;a&nbsp;collection&nbsp;of&nbsp;type&nbsp;`object-type`,&nbsp;else&nbsp;`false`.
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                174&nbsp;&nbsp;&nbsp;&nbsp;[x]
+                177&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </span><br/>
-<span class="not-covered" title="0 out of 4 forms covered">
-                175&nbsp;&nbsp;&nbsp;&nbsp;(collection?&nbsp;x&nbsp;&quot;OrderedCollection&quot;))
+<span class="not-tracked" title="0 out of 0 forms covered">
+                178&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;With&nbsp;one&nbsp;argument,&nbsp;will&nbsp;recognise&nbsp;plain&nbsp;collections&nbsp;and&nbsp;ordered&nbsp;collections,
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                179&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;but&nbsp;(currently)&nbsp;not&nbsp;collection&nbsp;pages.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                180&nbsp;&nbsp;&nbsp;&nbsp;([x&nbsp;^String&nbsp;object-type]
+                </span><br/>
+<span class="partial" title="10 out of 11 forms covered">
+                181&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[items&nbsp;(or&nbsp;(:items&nbsp;x)&nbsp;(:orderedItems&nbsp;x))]
+                </span><br/>
+<span class="partial" title="14 out of 17 forms covered">
+                182&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and
+                </span><br/>
+<span class="partial" title="5 out of 6 forms covered">
+                183&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond
+                </span><br/>
+<span class="partial" title="3 out of 8 forms covered">
+                184&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(:items&nbsp;x)&nbsp;(nil?&nbsp;(:orderedItems&nbsp;x))
+                </span><br/>
+<span class="covered" title="8 out of 8 forms covered">
+                185&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(:orderedItems&nbsp;x)&nbsp;(nil?&nbsp;(:items&nbsp;x))&nbsp;;;&nbsp;can&#x27;t&nbsp;have&nbsp;both&nbsp;properties
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                186&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(integer?&nbsp;(:totalItems&nbsp;x))&nbsp;true&nbsp;;;&nbsp;can&nbsp;have&nbsp;neither,&nbsp;provided&nbsp;it&nbsp;has&nbsp;totalItems.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                187&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:else&nbsp;false)&nbsp;
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                188&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object?&nbsp;x)
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                189&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;(:type&nbsp;x)&nbsp;object-type)
+                </span><br/>
+<span class="partial" title="2 out of 3 forms covered">
+                190&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;items
+                </span><br/>
+<span class="partial" title="10 out of 12 forms covered">
+                191&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(coll?&nbsp;items)
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                192&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(every?&nbsp;object?&nbsp;items)&nbsp;;;&nbsp;if&nbsp;there&nbsp;are&nbsp;items,&nbsp;they&nbsp;must&nbsp;form&nbsp;a
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                193&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;collection&nbsp;of&nbsp;objects.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                194&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                195&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true)&nbsp;;;&nbsp;but&nbsp;it&#x27;s&nbsp;OK&nbsp;if&nbsp;there&nbsp;aren&#x27;t.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                196&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                197&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;test&nbsp;for&nbsp;totalItems&nbsp;not&nbsp;done&nbsp;here,&nbsp;because&nbsp;collection&nbsp;pages&nbsp;don&#x27;t
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                198&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;have&nbsp;it.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                199&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                200&nbsp;&nbsp;&nbsp;&nbsp;([x]
+                </span><br/>
+<span class="not-covered" title="0 out of 9 forms covered">
+                201&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and
+                </span><br/>
+<span class="not-covered" title="0 out of 10 forms covered">
+                202&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(or&nbsp;(collection?&nbsp;x&nbsp;&quot;Collection&quot;)
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                203&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(collection?&nbsp;x&nbsp;&quot;OrderedCollection&quot;))
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                204&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(integer?&nbsp;(:totalItems&nbsp;x))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                205&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true)))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                176&nbsp;&nbsp;
+                206&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                177&nbsp;&nbsp;(defn&nbsp;collection-page?
+                207&nbsp;&nbsp;(defn&nbsp;unordered-collection?
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                178&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;a&nbsp;page&nbsp;in&nbsp;a&nbsp;paged&nbsp;collection,&nbsp;else&nbsp;`false`.&quot;
+                208&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;an&nbsp;unordered&nbsp;collection,&nbsp;else&nbsp;`false`.&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                179&nbsp;&nbsp;&nbsp;&nbsp;[x]
+                209&nbsp;&nbsp;&nbsp;&nbsp;[x]
                 </span><br/>
-<span class="not-covered" title="0 out of 4 forms covered">
-                180&nbsp;&nbsp;&nbsp;&nbsp;(collection?&nbsp;x&nbsp;&quot;CollectionPage&quot;))
+<span class="not-covered" title="0 out of 18 forms covered">
+                210&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(collection?&nbsp;x&nbsp;&quot;Collection&quot;)&nbsp;(integer?&nbsp;(:totalItems&nbsp;x))&nbsp;true))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                181&nbsp;&nbsp;
+                211&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                182&nbsp;&nbsp;(defn&nbsp;ordered-collection-page?
+                212&nbsp;&nbsp;(defn&nbsp;ordered-collection?
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                183&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;a&nbsp;page&nbsp;in&nbsp;an&nbsp;ordered&nbsp;paged&nbsp;collection,&nbsp;else&nbsp;`false`.&quot;
+                213&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;an&nbsp;ordered&nbsp;collection,&nbsp;else&nbsp;`false`.&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                184&nbsp;&nbsp;&nbsp;&nbsp;[x]
+                214&nbsp;&nbsp;&nbsp;&nbsp;[x]
+                </span><br/>
+<span class="not-covered" title="0 out of 18 forms covered">
+                215&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(collection?&nbsp;x&nbsp;&quot;OrderedCollection&quot;)&nbsp;(integer?&nbsp;(:totalItems&nbsp;x))&nbsp;true))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                216&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                217&nbsp;&nbsp;(defn&nbsp;collection-page?
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                218&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;a&nbsp;page&nbsp;in&nbsp;a&nbsp;paged&nbsp;collection,&nbsp;else&nbsp;`false`.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                219&nbsp;&nbsp;&nbsp;&nbsp;[x]
                 </span><br/>
 <span class="not-covered" title="0 out of 4 forms covered">
-                185&nbsp;&nbsp;&nbsp;&nbsp;(collection?&nbsp;x&nbsp;&quot;OrderedCollectionPage&quot;))
+                220&nbsp;&nbsp;&nbsp;&nbsp;(collection?&nbsp;x&nbsp;&quot;CollectionPage&quot;))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                186&nbsp;&nbsp;
+                221&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                222&nbsp;&nbsp;(defn&nbsp;ordered-collection-page?
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                223&nbsp;&nbsp;&nbsp;&nbsp;&quot;`true`&nbsp;iff&nbsp;`x`&nbsp;quacks&nbsp;like&nbsp;a&nbsp;page&nbsp;in&nbsp;an&nbsp;ordered&nbsp;paged&nbsp;collection,&nbsp;else&nbsp;`false`.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                224&nbsp;&nbsp;&nbsp;&nbsp;[x]
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                225&nbsp;&nbsp;&nbsp;&nbsp;(collection?&nbsp;x&nbsp;&quot;OrderedCollectionPage&quot;))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                187&nbsp;&nbsp;
+                226&nbsp;&nbsp;
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                227&nbsp;&nbsp;
                 </span><br/>
  </body>
 </html>

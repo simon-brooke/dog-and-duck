@@ -8,97 +8,106 @@
                 001&nbsp;&nbsp;(ns&nbsp;clj-activitypub.webfinger
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                002&nbsp;&nbsp;&nbsp;&nbsp;(:require&nbsp;[clj-http.client&nbsp;:as&nbsp;client]
+                002&nbsp;&nbsp;&nbsp;&nbsp;&quot;copied&nbsp;from&nbsp;[Jahfer&#x27;s&nbsp;clj-activitypub&nbsp;library](https:&#x2F;&#x2F;github.com&#x2F;jahfer&#x2F;clj-activitypub).&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clj-activitypub.internal.http-util&nbsp;:as&nbsp;http]
+                003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;and&nbsp;when&nbsp;Jahfer&nbsp;issues&nbsp;a&nbsp;release&nbsp;of&nbsp;that&nbsp;library,&nbsp;this&nbsp;directory&nbsp;will&nbsp;be&nbsp;deleted&nbsp;and&nbsp;a&nbsp;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clj-activitypub.internal.thread-cache&nbsp;:as&nbsp;thread-cache]))
+                004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dependency&nbsp;on&nbsp;that&nbsp;library&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;project.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                005&nbsp;&nbsp;&nbsp;&nbsp;(:require&nbsp;[clj-http.client&nbsp;:as&nbsp;client]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                006&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clj-activitypub.internal.http-util&nbsp;:as&nbsp;http]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                007&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clj-activitypub.internal.thread-cache&nbsp;:as&nbsp;thread-cache]))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                005&nbsp;&nbsp;
+                008&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="2 out of 2 forms covered">
-                006&nbsp;&nbsp;(def&nbsp;remote-uri-path&nbsp;&quot;&#x2F;.well-known&#x2F;webfinger&quot;)
-                </span><br/>
-<span class="blank" title="0 out of 0 forms covered">
-                007&nbsp;&nbsp;
-                </span><br/>
-<span class="covered" title="1 out of 1 forms covered">
-                008&nbsp;&nbsp;(defn-&nbsp;resource-str&nbsp;[domain&nbsp;username]
-                </span><br/>
-<span class="covered" title="6 out of 6 forms covered">
-                009&nbsp;&nbsp;&nbsp;&nbsp;(str&nbsp;&quot;acct:&quot;&nbsp;username&nbsp;&quot;@&quot;&nbsp;domain))
+                009&nbsp;&nbsp;(def&nbsp;remote-uri-path&nbsp;&quot;&#x2F;.well-known&#x2F;webfinger&quot;)
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
                 010&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                011&nbsp;&nbsp;(defn&nbsp;resource-url
+                011&nbsp;&nbsp;(defn-&nbsp;resource-str&nbsp;[domain&nbsp;username]
                 </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                012&nbsp;&nbsp;&nbsp;&nbsp;&quot;Builds&nbsp;a&nbsp;URL&nbsp;pointing&nbsp;to&nbsp;the&nbsp;user&#x27;s&nbsp;account&nbsp;on&nbsp;the&nbsp;remote&nbsp;server.&quot;
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                013&nbsp;&nbsp;&nbsp;&nbsp;[domain&nbsp;username&nbsp;&amp;&nbsp;[params]]
-                </span><br/>
-<span class="covered" title="5 out of 5 forms covered">
-                014&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[resource&nbsp;(resource-str&nbsp;domain&nbsp;username)
-                </span><br/>
-<span class="covered" title="8 out of 8 forms covered">
-                015&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;query-str&nbsp;(http&#x2F;encode-url-params&nbsp;(merge&nbsp;params&nbsp;{:resource&nbsp;resource}))]
-                </span><br/>
-<span class="covered" title="7 out of 7 forms covered">
-                016&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(str&nbsp;&quot;https:&#x2F;&#x2F;&quot;&nbsp;domain&nbsp;remote-uri-path&nbsp;&quot;?&quot;&nbsp;query-str)))
+<span class="covered" title="6 out of 6 forms covered">
+                012&nbsp;&nbsp;&nbsp;&nbsp;(str&nbsp;&quot;acct:&quot;&nbsp;username&nbsp;&quot;@&quot;&nbsp;domain))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
-                017&nbsp;&nbsp;
+                013&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                018&nbsp;&nbsp;(def&nbsp;^:private&nbsp;user-id-cache
+                014&nbsp;&nbsp;(defn&nbsp;resource-url
                 </span><br/>
-<span class="covered" title="2 out of 2 forms covered">
-                019&nbsp;&nbsp;&nbsp;&nbsp;(thread-cache&#x2F;make))
+<span class="not-tracked" title="0 out of 0 forms covered">
+                015&nbsp;&nbsp;&nbsp;&nbsp;&quot;Builds&nbsp;a&nbsp;URL&nbsp;pointing&nbsp;to&nbsp;the&nbsp;user&#x27;s&nbsp;account&nbsp;on&nbsp;the&nbsp;remote&nbsp;server.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                016&nbsp;&nbsp;&nbsp;&nbsp;[domain&nbsp;username&nbsp;&amp;&nbsp;[params]]
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                017&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[resource&nbsp;(resource-str&nbsp;domain&nbsp;username)
+                </span><br/>
+<span class="covered" title="8 out of 8 forms covered">
+                018&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;query-str&nbsp;(http&#x2F;encode-url-params&nbsp;(merge&nbsp;params&nbsp;{:resource&nbsp;resource}))]
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                019&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(str&nbsp;&quot;https:&#x2F;&#x2F;&quot;&nbsp;domain&nbsp;remote-uri-path&nbsp;&quot;?&quot;&nbsp;query-str)))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
                 020&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                021&nbsp;&nbsp;(defn&nbsp;fetch-user-id
+                021&nbsp;&nbsp;(def&nbsp;^:private&nbsp;user-id-cache
                 </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                022&nbsp;&nbsp;&nbsp;&nbsp;&quot;Follows&nbsp;the&nbsp;webfinger&nbsp;request&nbsp;to&nbsp;a&nbsp;remote&nbsp;domain,&nbsp;retrieving&nbsp;the&nbsp;ID&nbsp;of&nbsp;the&nbsp;requested
+<span class="covered" title="2 out of 2 forms covered">
+                022&nbsp;&nbsp;&nbsp;&nbsp;(thread-cache&#x2F;make))
                 </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                023&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;account.&nbsp;Typically&nbsp;returns&nbsp;a&nbsp;string&nbsp;in&nbsp;the&nbsp;form&nbsp;of&nbsp;a&nbsp;URL.&quot;
-                </span><br/>
-<span class="not-tracked" title="0 out of 0 forms covered">
-                024&nbsp;&nbsp;&nbsp;&nbsp;[domain&nbsp;username]
-                </span><br/>
-<span class="covered" title="4 out of 4 forms covered">
-                025&nbsp;&nbsp;&nbsp;&nbsp;((:get-v&nbsp;user-id-cache)
-                </span><br/>
-<span class="covered" title="5 out of 5 forms covered">
-                026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(str&nbsp;domain&nbsp;&quot;@&quot;&nbsp;username)&nbsp;;;&nbsp;cache&nbsp;key
+<span class="blank" title="0 out of 0 forms covered">
+                023&nbsp;&nbsp;
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                027&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fn&nbsp;[]
-                </span><br/>
-<span class="partial" title="15 out of 16 forms covered">
-                028&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[response&nbsp;(some-&gt;&nbsp;(resource-url&nbsp;domain&nbsp;username&nbsp;{:rel&nbsp;&quot;self&quot;})
-                </span><br/>
-<span class="covered" title="8 out of 8 forms covered">
-                029&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(client&#x2F;get&nbsp;{:as&nbsp;:json&nbsp;:throw-exceptions&nbsp;false&nbsp;:ignore-unknown-host?&nbsp;true}))]
-                </span><br/>
-<span class="partial" title="27 out of 31 forms covered">
-                030&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(some-&gt;&gt;&nbsp;response&nbsp;:body&nbsp;:links
-                </span><br/>
-<span class="covered" title="12 out of 12 forms covered">
-                031&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(some&nbsp;#(when&nbsp;(=&nbsp;(:type&nbsp;%)&nbsp;&quot;application&#x2F;activity+json&quot;)&nbsp;%))
+                024&nbsp;&nbsp;(defn&nbsp;fetch-user-id
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:href)))))
+                025&nbsp;&nbsp;&nbsp;&nbsp;&quot;Follows&nbsp;the&nbsp;webfinger&nbsp;request&nbsp;to&nbsp;a&nbsp;remote&nbsp;domain,&nbsp;retrieving&nbsp;the&nbsp;ID&nbsp;of&nbsp;the&nbsp;requested
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;account.&nbsp;Typically&nbsp;returns&nbsp;a&nbsp;string&nbsp;in&nbsp;the&nbsp;form&nbsp;of&nbsp;a&nbsp;URL.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                027&nbsp;&nbsp;&nbsp;&nbsp;[domain&nbsp;username]
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                028&nbsp;&nbsp;&nbsp;&nbsp;((:get-v&nbsp;user-id-cache)
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                029&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(str&nbsp;domain&nbsp;&quot;@&quot;&nbsp;username)&nbsp;;;&nbsp;cache&nbsp;key
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                030&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fn&nbsp;[]
+                </span><br/>
+<span class="partial" title="15 out of 16 forms covered">
+                031&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[response&nbsp;(some-&gt;&nbsp;(resource-url&nbsp;domain&nbsp;username&nbsp;{:rel&nbsp;&quot;self&quot;})
+                </span><br/>
+<span class="covered" title="8 out of 8 forms covered">
+                032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(client&#x2F;get&nbsp;{:as&nbsp;:json&nbsp;:throw-exceptions&nbsp;false&nbsp;:ignore-unknown-host?&nbsp;true}))]
+                </span><br/>
+<span class="partial" title="27 out of 31 forms covered">
+                033&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(some-&gt;&gt;&nbsp;response&nbsp;:body&nbsp;:links
+                </span><br/>
+<span class="covered" title="12 out of 12 forms covered">
+                034&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(some&nbsp;#(when&nbsp;(=&nbsp;(:type&nbsp;%)&nbsp;&quot;application&#x2F;activity+json&quot;)&nbsp;%))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                035&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:href)))))
                 </span><br/>
  </body>
 </html>

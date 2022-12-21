@@ -1,8 +1,10 @@
 (ns dog-and-duck.quack.quack-test
   (:require [clojure.test :refer [deftest is testing]]
-            [dog-and-duck.quack.quack :refer [activitystreams-context-uri
-                                              actor? actor-type? context? 
-                                              object? persistent-object? 
+            [dog-and-duck.quack.picky :refer [activitystreams-context-uri 
+                                              context?]]
+            [dog-and-duck.quack.quack :refer [actor? actor-type? 
+                                              object? ordered-collection-page?
+                                              persistent-object? 
                                               verb-type?]]
             [dog-and-duck.scratch.parser :refer [clean]]))
 
@@ -126,4 +128,14 @@
     (let [expected true
           actual (actor? (-> "resources/activitystreams-test-documents/simple0020.json" slurp clean first :actor))]
       (is (= actual expected) "A Person is an actor"))
+    ))
+
+(deftest ordered-collection-page-test
+  (testing "identification of ordered collection pages."
+    (let [expected false
+          actual (ordered-collection-page? (-> "resources/activitystreams-test-documents/simple0020.json" slurp clean first))]
+      (is (= actual expected) "A Note is not an ordered collection page."))
+(let [expected true
+      actual (ordered-collection-page? (-> "resources/test_documents/outbox_page.json" slurp clean first))]
+  (is (= actual expected) "A page from an outbox is an ordered collection page."))
     ))
