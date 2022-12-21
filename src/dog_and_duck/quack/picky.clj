@@ -1,10 +1,12 @@
 (ns dog-and-duck.quack.picky "Fault-finder for ActivityPub documents. 
                               
                               Generally, each `-faults` function will return:
+                              
                               1. `nil` if no faults were found;
                               2. a sequence of fault objects if faults were found.
                               
                               Each fault object shall have the properties:
+                              
                               1. `:@context` whose value shall be the URL of a 
                                  document specifying this vocabulary;
                               2. `:type` whose value shall be `Fault`;
