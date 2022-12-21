@@ -27,7 +27,9 @@
                               possible to serialise a fault report as a 
                               document which in its own right conforms to the
                               ActivityStreams spec."
- (:require [dog-and-duck.utils.process :refer [pid]]))
+    (:require [dog-and-duck.quack.fault-messages :refer [messages]]
+              [dog-and-duck.utils.process :refer [pid]])
+    (:import [java.net URI URISyntaxException]))
 
 (def ^:const severity
   "Severity of faults found, as follows:
@@ -54,12 +56,12 @@
   "Return a list of reports taken from these `reports` where the severity
    of the report is greater than this `severity`."
   [reports severity]
-  (assert 
-   (and 
-    (coll? reports) 
-    (every? map? reports) 
+  (assert
+   (and
+    (coll? reports)
+    (every? map? reports)
     (every? :severity reports)))
-  (remove 
+  (remove
    #((severity-filters severity) (:severity %))
    reports))
 
@@ -93,15 +95,15 @@
   [x]
   `(context? ((keyword "@context") ~x)))
 
-
-
 (defn make-fault-object
   "Return a fault object with these `severity`, `fault` and `narrative` values.
    
    An ActivityPub object MUST have a globally unique ID. Whether this is 
    meaningful depends on whether we persist fault report objects and serve
    them, which at present I have no plans to do."
-  [severity fault narrative]
+  ;; TODO: should not pass in the narrative; instead should use the :fault value
+  ;; to look up the narrative in a resource file.
+  [severity fault]
   (assoc {}
          (keyword "@context") validation-fault-context-uri
          :id (str "https://"
@@ -113,33 +115,48 @@
          :type "Fault"
          :severity severity
          :fault fault
-         :narrative narrative))
+         :narrative (messages fault)))
 
 (defn object-faults
+  "Return a list of faults found in object `x`, or `nil` if none are."
   [x]
-  (remove 
-   empty?
-   (list
-    (when-not
-     (has-context? x)
-      (make-fault-object 
-       :should 
-       :no-context 
-       "Section 3 of the ActivityPub specification states 
-        `Implementers SHOULD include the ActivityPub context in 
-        their object definitions`.")
-    (when-not (:type x) 
-      (make-fault-object 
-       :minor 
-       :no-type
-       "The ActivityPub specification states that the `type` field is
-        optional, but it is hard to process objects with no known type."))
-      (when-not (contains? x :id)
-        (make-fault-object
-         :minor
-         :no-id-transient
-         "The ActivityPub specification allows objects without `id` fields
-          only if they are intentionally transient; even so it is preferred
-          that the object should have an explicit null id."
-         ))
-    ))))
+  (let [faults (remove
+                empty?
+                (list
+                 (when-not (map? x)
+                   (make-fault-object
+                    :critical
+                    :not-an-object))
+                 (when-not
+                  (has-context? x)
+                   (make-fault-object
+                    :should
+                    :no-context))
+                 (when-not (:type x)
+                   (make-fault-object
+                    :minor
+                    :no-type))
+                 (when-not (and (map? x) (contains? x :id))
+                   (make-fault-object
+                    :minor
+                    :no-id-transient))))]
+    (if (empty? faults) nil faults)))
+
+(defn persistent-object-faults
+  "Return a list of faults found in persistent object `x`, or `nil` if none are."
+  [x]
+  (let [faults (concat
+                (object-faults x)
+                (remove empty?
+                        (list
+                         (if (contains? x :id)
+                           (try (let [id (URI. (:id x))]
+                                  (when-not (= (.getScheme id) "https")
+                                    (make-fault-object :should :id-not-https)))
+                                (catch URISyntaxException _
+                                  (make-fault-object :must :id-not-uri))
+                                (catch NullPointerException _
+                                  (make-fault-object :must :null-id-persistent)))
+                           (make-fault-object :must :no-id-persistent)))))]
+    (if (empty? faults) nil faults)))
+
