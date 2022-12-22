@@ -2,11 +2,8 @@
   "Scratchpad where I try to understand how to do this stuff."
   (:require [clj-activitypub.core :as activitypub]
             [clj-activitypub.webfinger :as webfinger]
-            [clj-pgp.core :as pgp]
-            [clj-pgp.keyring :as keyring]
             [clj-pgp.generate :as pgp-gen]
-            [clojure.walk :refer [keywordize-keys]]
-            [clojure.pprint :refer [pprint]]))
+            [clojure.walk :refer [keywordize-keys]]))
 
 ;;;     Copyright (C) Simon Brooke, 2022
 
@@ -44,9 +41,8 @@
 ;;; examine what you got back!
 (:inbox account)
 
-
-(def rsa (pgp-gen/rsa-keypair-generator 2048))
-(def kp (pgp-gen/generate-keypair rsa :rsa-general))
+;; (def rsa (pgp-gen/rsa-keypair-generator 2048))
+;; (def kp (pgp-gen/generate-keypair rsa :rsa-general))
 
 ;; how we make a public/private key pair. But this key pair is not the one 
 ;; known to mastodon.scot as my key pair, so that doesn't get us very far...

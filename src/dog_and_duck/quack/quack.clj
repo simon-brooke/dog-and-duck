@@ -12,10 +12,11 @@
    a hazy relationship to the spec, so this is difficult. I suspect that
    I may have to implement a `*strict*` dynamic variable, so that users can 
    toggle some checks off."
-  
-  ;;(:require [clojure.spec.alpha as s])
-  (:require [dog-and-duck.quack.picky :refer [filter-severity has-context? 
-                                              object-faults]])
+
+  (:require [dog-and-duck.quack.picky :refer [*reject-severity* actor-faults
+                                              filter-severity 
+                                              has-context?
+                                              object-faults persistent-object-faults]])
   (:import [java.net URI URISyntaxException]))
 
 ;;;     Copyright (C) Simon Brooke, 2022
@@ -54,7 +55,7 @@
    
    but in samples found in the wild they typically don't."
   ([x]
-  (and (map? x) (:type x) true))
+   (object? x *reject-severity*))
   ([x severity]
    (empty? (filter-severity (object-faults x) severity))))
 
@@ -63,69 +64,16 @@
 
    Transient objects in ActivityPub are not required to have an `id` key, but persistent
    ones must have a key, and it must be an IRI (but normally a URI)."
-  [x]
-  (try
-    (and (object? x) (uri? (URI. (:id x))))
-    (catch URISyntaxException _ false)))
-
-;; (persistent-object? {:type "test" :id "https://mastodon.scot/@barfilfarm"})
-
-(def ^:const actor-types
-  "The set of types we will accept as actors.
-   
-   There's an [explicit set of allowed actor types]
-   (https://www.w3.org/TR/activitystreams-vocabulary/#actor-types)."
-  #{"Application"
-    "Group"
-    "Organization"
-    "Person"
-    "Service"})
-
-(defmacro actor-type?
-  "Return `true` iff the `x` is a recognised actor type, else `false`."
-  [^String x]
-  `(if (actor-types ~x) true false))
-
-;; (actor-type? "Group")
-
-(def ^:const verb-types
-  "The set of types we will accept as verbs.
-   
-   There's an [explicit set of allowed verb types]
-   (https://www.w3.org/TR/activitystreams-vocabulary/#activity-types)."
-  #{"Accept" "Add" "Announce" "Arrive" "Block" "Create" "Delete" "Dislike"
-    "Flag" "Follow" "Ignore" "Invite" "Join" "Leave" "Like" "Listen" "Move"
-    "Offer" "Question" "Reject" "Read" "Remove" "TentativeAccept"
-    "TentativeReject" "Travel" "Undo" "Update" "View"})
-
-(defmacro verb-type?
-  ;; TODO: better as a macro
-  [^String x]
-  `(if (verb-types ~x) true false))
-
+  ([x]
+   (persistent-object? x *reject-severity*))
+  ([x severity]
+   (empty? (filter-severity (persistent-object-faults x) severity))))
 
 (defn actor?
-  "Returns `true` if `x` quacks like an actor, else false.
-   
-   **NOTE THAT** [Section 4.1 of the spec]
-   (https://www.w3.org/TR/activitypub/#actor-objects) says explicitly that
-   
-   >  Actor objects MUST have, in addition to the properties mandated by 3.1 Object Identifiers, the following properties:
-   >
-   >  inbox
-   >    A reference to an [ActivityStreams] OrderedCollection comprised of all the messages received by the actor; see 5.2 Inbox. 
-   > outbox
-   >    An [ActivityStreams] OrderedCollection comprised of all the messages produced by the actor; see 5.1 Outbox. 
-   
-   However, none of the provided examples in the [activitystreams-test-documents repository]() does in fact have these properties"
-  [x]
-  (and
-   (object? x)
-   (has-context? x)
-   (uri? (URI. (:inbox x)))
-   (uri? (URI. (:outbox x)))
-   (actor-type? (:type x))
-   true))
+  "Returns `true` if `x` quacks like an actor, else false."
+  ([x] (actor? x *reject-severity*))
+  ([x severity]
+   (empty? (filter-severity (actor-faults x) severity))))
 
 (defn actor-or-uri?
   "`true` if `x` is either a URI or an actor.
@@ -135,10 +83,10 @@
    *must be* to an actor object, but before, may only be to a URI pointing to 
    one."
   [x]
-  (and 
+  (and
    (cond (string? x) (uri? (URI. x))
-        :else (actor? x)) 
-       true))
+         :else (actor? x))
+   true))
 
 (defn activity?
   "`true` iff `x` quacks like an activity, else false."
@@ -184,7 +132,7 @@
         (:items x) (nil? (:orderedItems x))
         (:orderedItems x) (nil? (:items x)) ;; can't have both properties
         (integer? (:totalItems x)) true ;; can have neither, provided it has totalItems.
-        :else false) 
+        :else false)
       (object? x)
       (= (:type x) object-type)
       (if items

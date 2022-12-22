@@ -1,10 +1,10 @@
 (ns dog-and-duck.quack.quack-test
   (:require [clojure.test :refer [deftest is testing]]
-            [dog-and-duck.quack.picky :refer [activitystreams-context-uri 
-                                              context?]]
-            [dog-and-duck.quack.quack :refer [actor? actor-type? 
+            [dog-and-duck.quack.picky :refer [activitystreams-context-uri
+                                              context? context-key]]
+            [dog-and-duck.quack.quack :refer [actor? actor-type?
                                               object? ordered-collection-page?
-                                              persistent-object? 
+                                              persistent-object?
                                               verb-type?]]
             [dog-and-duck.scratch.parser :refer [clean]]))
 
@@ -32,7 +32,7 @@
     (let [expected true
           actual (object? {:type "Test"})]
       (is (= actual expected)))
-    (let [expected false
+    (let [expected true
           actual (object?
                   (first
                    (clean
@@ -117,25 +117,31 @@
     (let [expected true
           actual (context? [activitystreams-context-uri {:foo "bar"}])]
       (is (= actual expected)
-          "order of elements within a context should not matter"))
-    ))
+          "order of elements within a context should not matter"))))
 
 (deftest actor-test
   (testing "identification of actors"
     (let [expected false
           actual (actor? (-> "resources/activitystreams-test-documents/simple0008.json" slurp clean first))]
       (is (= actual expected) "A Note is not an actor"))
-    (let [expected true
+    (let [expected false
           actual (actor? (-> "resources/activitystreams-test-documents/simple0020.json" slurp clean first :actor))]
-      (is (= actual expected) "A Person is an actor"))
-    ))
+      (is (= actual expected) "The Person in this file is not valid as an actor, because it lacks a context."))
+    (let [o (assoc (-> "resources/activitystreams-test-documents/simple0020.json"
+                       slurp
+                       clean
+                       first
+                       :actor)
+                   context-key activitystreams-context-uri)
+          expected true
+          actual (actor? o)]
+      (is (= actual expected) (str "The Person from this file is now valid as an actor, because it has a context." o)))))
 
 (deftest ordered-collection-page-test
   (testing "identification of ordered collection pages."
     (let [expected false
           actual (ordered-collection-page? (-> "resources/activitystreams-test-documents/simple0020.json" slurp clean first))]
       (is (= actual expected) "A Note is not an ordered collection page."))
-(let [expected true
-      actual (ordered-collection-page? (-> "resources/test_documents/outbox_page.json" slurp clean first))]
-  (is (= actual expected) "A page from an outbox is an ordered collection page."))
-    ))
+    (let [expected true
+          actual (ordered-collection-page? (-> "resources/test_documents/outbox_page.json" slurp clean first))]
+      (is (= actual expected) "A page from an outbox is an ordered collection page."))))

@@ -35,7 +35,7 @@ The `Fault` object type is a novel object type introduced by this document to de
 The value of the `@context` field of a fault report object shall be the URL of this
 document, currently `https://simon-brooke.github.io/dog-and-duck/codox/Validation_Faults.html`.
 
-#### Type 
+#### Type
 
 The value of the `type` field of a fault report object MUST be `Fault`.
 
@@ -43,6 +43,8 @@ The value of the `type` field of a fault report object MUST be `Fault`.
 
 Each fault report object MUST have a `severity` field whose value MUST be one of
 
+   0. `:info` things which are not actuallys fault, but issues noted during
+      validation;
    1. `:minor` things which I consider to be faults, but which
       don't actually breach the spec;
    2. `:should` instances where the spec says something SHOULD
@@ -57,5 +59,3 @@ Each fault report object MUST have a `severity` field whose value MUST be one of
 Unique codes shall be assigned to each fault type, and shall be documented in this section.
 
 It is intended that there should ultimately be a well known site at which the fault codes can be resolved to natural language explanations in as many natural languages as possible of the nature of the particular fault.
-
-
