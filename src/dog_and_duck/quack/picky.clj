@@ -32,7 +32,8 @@
               [dog-and-duck.utils.process :refer [get-hostname get-pid]]
               [taoensso.timbre :as timbre
       ;; Optional, just refer what you like:
-               :refer [warn]])
+               :refer [warn]]
+              [clojure.data.json :as json])
     (:import [java.net URI URISyntaxException]))
 
 ;;;     Copyright (C) Simon Brooke, 2022
@@ -141,8 +142,12 @@
          (every? :severity reports)) (remove
                                       #((severity-filters severity) (:severity %))
                                       reports)
-        :else reports)) ;; TODO this actually shouldn't happen and we should
-                        ;; error if it does
+        :else
+        (throw
+         (ex-info
+          "Argument `reports` was not a collection of fault reports"
+          {:arguments {:reports reports
+                       :severity severity}}))))
 
 (def ^:const activitystreams-context-uri
   "The URI of the context of an ActivityStreams object is expected to be this
@@ -210,19 +215,25 @@
   "If object `x` has a `:type` value which is `acceptable`, return `nil`;
    else return a fault object with this `severity` and `token`.
    
-   `acceptable` may be passed as either a string, or as a set of strings."
+   `acceptable` may be passed as either nil, a string, or a set of strings.
+   If `acceptable` is `nil`, no type specific tests will be performed."
   [x acceptable severity token]
-  (let [tv (:type x)]
-    (when-not 
-     (cond 
-      (and (string? tv) (string? acceptable)) (= tv acceptable)
-      (and (string? tv) (set? acceptable)) (acceptable tv)
-      (and (coll? tv) (string? acceptable)) ((set tv) acceptable)
-      (and (coll? tv) (set? acceptable)) (not-empty 
-                                          (intersection (set tv) acceptable))
-      ;; TODO else should error
-      )
-      (make-fault-object severity token))))
+  (when acceptable
+    (let [tv (:type x)]
+      (when-not
+       (cond
+         (and (string? tv) (string? acceptable)) (= tv acceptable)
+         (and (string? tv) (set? acceptable)) (acceptable tv)
+         (and (coll? tv) (string? acceptable)) ((set tv) acceptable)
+         (and (coll? tv) (set? acceptable)) (not-empty
+                                             (intersection (set tv) acceptable))
+         :else
+         (throw (ex-info "Type value or `acceptable` argument not as expected."
+                         {:arguments {:x x
+                                      :acceptable acceptable
+                                      :severity severity
+                                      :token token}})))
+        (make-fault-object severity token)))))
 
 (defn object-faults
   "Return a list of faults found in object `x`, or `nil` if none are.
@@ -230,24 +241,24 @@
    If `expected-type` is also passed, verify that `x` has `expected-type`.
    `expected-type` may be passed as a string or as a set of strings."
   ([x]
-  (nil-if-empty
-   (remove empty?
-           (list
-            (when-not (map? x)
-              (make-fault-object :critical :not-an-object))
-            (when-not
-             (has-context? x)
-              (make-fault-object :should :no-context))
-            (when-not (:type x)
-              (make-fault-object :minor :no-type))
-            (when-not (and (map? x) (contains? x :id))
-              (make-fault-object :minor :no-id-transient))))))
+   (nil-if-empty
+    (remove empty?
+            (list
+             (when-not (map? x)
+               (make-fault-object :critical :not-an-object))
+             (when-not
+              (has-context? x)
+               (make-fault-object :should :no-context))
+             (when-not (:type x)
+               (make-fault-object :minor :no-type))
+             (when-not (and (map? x) (contains? x :id))
+               (make-fault-object :minor :no-id-transient))))))
   ([x expected-type]
    (nil-if-empty
     (remove empty?
-            (concat 
+            (concat
              (object-faults x)
-             (list 
+             (list
               ;; TODO: should resolve the correct `-faults`function for the
               ;; `expected-type` and call that; but that's for later.
               (has-type-or-fault x expected-type :critical :unexpected-type)))))))
@@ -256,13 +267,15 @@
   "If `u` is not a valid URI, return a fault object with this `severity` and 
    `if-invalid-token`. If it's `nil`, return a fault object with this `severity`
    and `if-missing-token`. Otherwise return nil."
-  [u severity if-missing-token if-invalid-token]
-  (try
-    (uri? (URI. u))
-    (catch URISyntaxException _
-      (make-fault-object severity if-invalid-token))
-    (catch NullPointerException _
-      (make-fault-object severity if-missing-token))))
+  ([u severity if-missing-token]
+   (uri-or-fault u severity if-missing-token if-missing-token))
+  ([u severity if-missing-token if-invalid-token]
+   (try
+     (uri? (URI. u))
+     (catch URISyntaxException _
+       (make-fault-object severity if-invalid-token))
+     (catch NullPointerException _
+       (make-fault-object severity if-missing-token)))))
 
 (defn persistent-object-faults
   "Return a list of faults found in persistent object `x`, or `nil` if none are."
@@ -316,9 +329,9 @@
                    (list
                     (when-not (has-actor-type? x)
                       (make-fault-object :must :not-actor-type))
-                    (uri-or-fault 
-                     (:inbox x) :must :no-inbox :invalid-inbox-uri) 
-                    (uri-or-fault 
+                    (uri-or-fault
+                     (:inbox x) :must :no-inbox :invalid-inbox-uri)
+                    (uri-or-fault
                      (:outbox x) :must :no-outbox :invalid-outbox-uri))))))
 
 (def ^:const verb-types
@@ -355,7 +368,7 @@
    (when-not (string? value) (make-fault-object severity token)))
   ([value severity token pattern]
    (when not (and (string? value) (re-matches pattern value))
-         (make-fault-object severity token))) )
+         (make-fault-object severity token))))
 
 (defn link-faults
   "A link object is required to have an `href` property. It may have all of
@@ -365,48 +378,169 @@
   (list
    (uri-or-fault
     (:href x) :must :no-href-uri :invalid-href-uri)
-   (string-or-fault (:mediaType x) :minor :no-media-type #"\w+\/[-+.\w]+")))
+   (string-or-fault (:mediaType x) :minor :no-media-type #"\w+\/[-+.\w]+")
+   ;; TODO: possibly more here. Audit against the specs
+   ))
 
-(defn object-reference-or-fault
+(defn object-reference-or-faults
   "If this `value` is either 
    
    1. an object of `expected-type`;
-   2. a URI; or
-   3. a link object
+   2. a URI referencing an object of  `expected-type`; or
+   3. a link object referencing an object of  `expected-type`
    
-   then return `nil`; else return a fault object with this `severity` and `token`.
+   and no faults are returned from validating the linked object, then return
+   `nil`; else return a sequence comprising a fault object with this `severity`
+   and `token`, prepended to the faults returned.
    
    As with `has-type-or-fault` (q.v.), `expected-type` may be passed as a
    string or as a set of strings.
    
-   **NOTE THAT** TODO if `*reify-refs*` is `true` and `value` is either a URI or
-   a link, the linked object should be checked and validated as an object of
-   `expected-type`."
+   **NOTE THAT** if `*reify-refs*` is `false`, referenced objects will not
+   actually be checked."
   [value expected-type severity token]
-  (cond TODO continue here in the morning))
+  (let [faults (cond
+                 (string? value) (try (let [uri (URI. value)
+                                            object (when *reify-refs*
+                                                     (json/read-str (slurp uri)))]
+                                        (when object
+                                          (object-faults object expected-type)))
+                                      (catch URISyntaxException _
+                                        (make-fault-object severity token)))
+                 (map? value) (if (has-type? value "Link")
+                                (cond
+                                  ;; if we were looking for a link and we've 
+                                  ;; found a link, that's OK.
+                                  (= expected-type "Link") nil
+                                  (and (set? expected-type) (expected-type "Link")) nil
+                                  :else
+                                  (object-reference-or-faults
+                                   (:href value) expected-type severity token))
+                                (object-faults value expected-type))
+                 :else (throw
+                        (ex-info
+                         "Argument `value` was not an object or a link to an object"
+                         {:arguments {:value value}
+                          :expected-type expected-type
+                          :severity severity
+                          :token token})))]
+    (when faults (cons (make-fault-object severity token) faults))))
+
+(defn link-faults
+  "Return a list of faults found in the link `x`, or `nil` if none are found."
+  [x]
+  (object-reference-or-faults x "Link" :critical :expected-link))
+
+(defn coll-object-reference-or-fault
+  "As object-reference-or-fault, except `value` argument may also be a list of
+   objects and/or object references."
+  [value expected-type severity token]
+  (cond
+    (map? value) (object-reference-or-faults value expected-type severity token)
+    (coll? value) (nil-if-empty
+                   (remove nil?
+                           (reduce concat
+                                   (map
+                                    #(object-reference-or-faults
+                                      % expected-type severity token)
+                                    value))))
+    :else (throw
+           (ex-info
+            "Argument `value` was not an object, a link to an object, nor a list of these."
+            {:arguments {:value value}
+             :expected-type expected-type
+             :severity severity
+             :token token}))))
+
+(def ^:const base-activity-required-properties
+  "Properties most activities should have. Values are validating functions, each.
+   
+   See https://www.w3.org/TR/activitystreams-vocabulary/#dfn-activity"
+  {:summary (fn [v] (when-not (string? v)
+                      (list (make-fault-object :should :no-summary))))
+   :actor (fn [v] (object-reference-or-faults v actor-types :must :no-actor))
+   :object (fn [v] (object-reference-or-faults v nil :must :no-object))})
+
+(def ^:const intransitive-activity-required-properties
+  "Properties intransitive activities should have.
+   
+   See https://www.w3.org/TR/activitystreams-vocabulary/#dfn-intransitiveactivity"
+  (dissoc base-activity-required-properties :object))
+
+(def ^:const accept-required-properties
+  "As base-activity-required-properties, except that the type of the object
+   is restricted."
+  (assoc base-activity-required-properties
+         :object
+         (fn [v]
+           (object-reference-or-faults v #{"Invite" "Person"}
+                                      :must
+                                      :bad-accept-target))))
+
+(def ^:const activity-required-properties
+  "Properties activities should have, keyed by activity type. Values are maps 
+   of the format of `base-activity-required-properties`, q.v."
+  {"Accept" accept-required-properties
+   "Add" base-activity-required-properties
+   "Announce" base-activity-required-properties
+   "Arrive" intransitive-activity-required-properties
+   ;; TODO: is `:location` required for arrive?
+   "Block" base-activity-required-properties
+   "Create" base-activity-required-properties
+   "Delete" base-activity-required-properties
+   "Dislike" base-activity-required-properties
+   "Flag" base-activity-required-properties
+   "Follow" base-activity-required-properties
+   ;; TODO: is `:object` required to be an actor?
+   "Ignore" base-activity-required-properties
+   "Invite" (assoc base-activity-required-properties :target
+                   (fn [v]
+                     (coll-object-reference-or-fault v #{"Event" "Group"}
+                                                     :must
+                                                     :bad-accept-target)))
+   ;; TODO: are here other things one could meaningfully be invited to?
+   "Join" base-activity-required-properties
+   "Leave" base-activity-required-properties
+   "Like" base-activity-required-properties
+   "Listen" base-activity-required-properties
+   "Move" base-activity-required-properties
+   "Offer" base-activity-required-properties
+   "Question" intransitive-activity-required-properties
+   "Reject" base-activity-required-properties
+   "Read" base-activity-required-properties
+   "Remove" base-activity-required-properties
+   "TentativeReject" base-activity-required-properties
+   "TentativeAccept" accept-required-properties
+   "Travel" base-activity-required-properties
+   "Undo" base-activity-required-properties
+   "Update" base-activity-required-properties
+   "View" base-activity-required-properties})
 
 (defn activity-type-faults
-  "Some specific activity types have specific requirements which are not
+  "Return a list of faults found in the activity `x`; if `type` is also 
+   specified, it should be a string naming a specific activity type for
+   which checks should be performed.
+   
+   Some specific activity types have specific requirements which are not
    requirements."
   ([x]
    (if (coll? (:type x))
      (map #(activity-type-faults x %) (:type x))
      (activity-type-faults x (:type x))))
-  ([x token]
-   (case token
-     "Link" (link-faults x)
-     )))
+  ([x type]
+   (let [checks (activity-required-properties type)]
+     (map
+      #(apply (checks %) (x %))
+      (keys checks)))))
 
 (defn activity-faults
   [x]
   (nil-if-empty
-     (remove empty?
+   (remove empty?
            (concat (persistent-object-faults x)
                    (activity-type-faults x)
                    (list
-                    (when-not 
-                     (has-activity-type? x) 
+                    (when-not
+                     (has-activity-type? x)
                       (make-fault-object :must :not-activity-type))
-                    (when-not (string? (:summary x)) (make-fault-object :should :no-summary))
-                    
-                    )))))
+                    (when-not (string? (:summary x)) (make-fault-object :should :no-summary)))))))

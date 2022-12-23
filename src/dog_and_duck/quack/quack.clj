@@ -13,11 +13,9 @@
    I may have to implement a `*strict*` dynamic variable, so that users can 
    toggle some checks off."
 
-  (:require [dog-and-duck.quack.picky :refer [*reject-severity* actor-faults
-                                              filter-severity 
-                                              has-context?
-                                              object-faults persistent-object-faults]])
-  (:import [java.net URI URISyntaxException]))
+  (:require [dog-and-duck.quack.picky :refer [*reject-severity* activity-faults
+                                              actor-faults filter-severity link-faults
+                                              object-faults persistent-object-faults]]))
 
 ;;;     Copyright (C) Simon Brooke, 2022
 
@@ -89,25 +87,16 @@
    true))
 
 (defn activity?
-  "`true` iff `x` quacks like an activity, else false."
-  [x]
-  (try
-    (and (object? x)
-         (has-context? x)
-         (string? (:summary x))
-         (actor-or-uri? (:actor x))
-         (verb-type? (:type x))
-         (or (object? (:object x)) (uri? (URI. (:object x))))
-         true)
-    (catch URISyntaxException _ false)))
+  "`true` iff `x` quacks like an activity, else false." 
+  ([x] (activity? x *reject-severity*))
+  ([x severity]
+   (empty? (filter-severity (activity-faults x) severity))))
 
 (defn link?
   "`true` iff `x` quacks like a link, else false."
-  [x]
-  (and (object? x)
-       (= (:type x) "Link")
-       (uri? (URI. (:href x)))
-       true))
+  ([x] (link? x *reject-severity*))
+  ([x severity]
+   (empty? (filter-severity (link-faults x) severity))))
 
 (defn link-or-uri?
   "`true` iff `x` is either a URI or a link, else false.

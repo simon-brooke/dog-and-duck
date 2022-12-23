@@ -15,7 +15,7 @@
                  [org.bouncycastle/bcpkix-jdk18on "1.72"] ;; required by clj-activitypub
                  [clj-http "3.12.3"] ;; required by clj-activitypub
                  [cheshire "5.11.0"] ;; if this is not present, clj-http/client errors with 'json-enabled?'
-                 ]
+                 [com.taoensso/timbre "6.0.4"]]
   :license {:name "GPL-2.0-or-later"
             :url "https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html"}
   :plugins [[lein-cloverage "1.2.2"]
