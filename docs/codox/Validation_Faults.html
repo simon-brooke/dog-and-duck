@@ -27,6 +27,7 @@
 <h4><a href="#severity" name="severity"></a>Severity</h4>
 <p>Each fault report object MUST have a <code>severity</code> field whose value MUST be one of</p>
 <ol>
+  <li><code>:info</code> things which are not actuallys fault, but issues noted during  validation;</li>
   <li><code>:minor</code> things which I consider to be faults, but which  don’t actually breach the spec;</li>
   <li><code>:should</code> instances where the spec says something SHOULD  be done, which isn’t;</li>
   <li><code>:must</code> instances where the spec says something MUST  be done, which isn’t;</li>
