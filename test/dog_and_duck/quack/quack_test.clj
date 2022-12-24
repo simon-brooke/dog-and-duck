@@ -1,11 +1,11 @@
 (ns dog-and-duck.quack.quack-test
   (:require [clojure.test :refer [deftest is testing]]
             [dog-and-duck.quack.picky :refer [activitystreams-context-uri
-                                              context? context-key]]
-            [dog-and-duck.quack.quack :refer [actor? actor-type?
-                                              object? ordered-collection-page?
-                                              persistent-object?
+                                              actor-type? context? context-key 
                                               verb-type?]]
+            [dog-and-duck.quack.quack :refer [actor? 
+                                              object? ordered-collection-page?
+                                              persistent-object?]]
             [dog-and-duck.scratch.parser :refer [clean]]))
 
 ;;;     Copyright (C) Simon Brooke, 2022
@@ -126,13 +126,16 @@
       (is (= actual expected) "A Note is not an actor"))
     (let [expected false
           actual (actor? (-> "resources/activitystreams-test-documents/simple0020.json" slurp clean first :actor))]
-      (is (= actual expected) "The Person in this file is not valid as an actor, because it lacks a context."))
+      (is (= actual expected) "The Person in this file is not valid as an actor, because it lacks a context, https id, and outbox."))
     (let [o (assoc (-> "resources/activitystreams-test-documents/simple0020.json"
                        slurp
                        clean
                        first
                        :actor)
-                   context-key activitystreams-context-uri)
+                   context-key activitystreams-context-uri
+                   :id "https://example.org/@sally"
+                   :inbox "https://example.org/@sally/inbox"
+                   :outbox "https://example.org/@sally/outbox")
           expected true
           actual (actor? o)]
       (is (= actual expected) (str "The Person from this file is now valid as an actor, because it has a context." o)))))

@@ -15,7 +15,9 @@
 
   (:require [dog-and-duck.quack.picky :refer [*reject-severity* activity-faults
                                               actor-faults filter-severity link-faults
-                                              object-faults persistent-object-faults]]))
+                                              object-faults persistent-object-faults]])
+
+  (:import [java.net URI URISyntaxException]))
 
 ;;;     Copyright (C) Simon Brooke, 2022
 
@@ -81,13 +83,16 @@
    *must be* to an actor object, but before, may only be to a URI pointing to 
    one."
   [x]
-  (and
-   (cond (string? x) (uri? (URI. x))
-         :else (actor? x))
-   true))
+  (try
+    (and
+     (cond (string? x) (uri? (URI. x))
+           :else (actor? x))
+     true)
+    (catch URISyntaxException _ false)
+    (catch NullPointerException _ false)))
 
 (defn activity?
-  "`true` iff `x` quacks like an activity, else false." 
+  "`true` iff `x` quacks like an activity, else false."
   ([x] (activity? x *reject-severity*))
   ([x severity]
    (empty? (filter-severity (activity-faults x) severity))))

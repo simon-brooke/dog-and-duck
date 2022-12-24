@@ -207,9 +207,8 @@
 (defmacro nil-if-empty
   "if `x` is an empty collection, return `nil`; else return `x`."
   [x]
-  `(if (coll? ~x)
-     (nil-if-empty ~x)
-     ~x))
+  `(if (and (coll? ~x) (empty? ~x)) nil
+       ~x))
 
 (defn has-type-or-fault
   "If object `x` has a `:type` value which is `acceptable`, return `nil`;
@@ -271,7 +270,9 @@
    (uri-or-fault u severity if-missing-token if-missing-token))
   ([u severity if-missing-token if-invalid-token]
    (try
-     (uri? (URI. u))
+     (if (uri? (URI. u))
+       nil
+       (make-fault-object severity if-invalid-token))
      (catch URISyntaxException _
        (make-fault-object severity if-invalid-token))
      (catch NullPointerException _
@@ -306,10 +307,10 @@
     "Person"
     "Service"})
 
-(defmacro actor-type?
+(defn actor-type?
   "Return `true` if the `x` is a recognised actor type, else `false`."
   [^String x]
-  `(if (actor-types ~x) true false))
+  (if (actor-types x) true false))
 
 (defn has-actor-type?
   "Return `true` if the object `x` has a type which is an actor type, else 
@@ -344,11 +345,11 @@
     "Offer" "Question" "Reject" "Read" "Remove" "TentativeAccept"
     "TentativeReject" "Travel" "Undo" "Update" "View"})
 
-(defmacro verb-type?
+(defn verb-type?
   "`true` if `x`, a string, represents a recognised ActivityStreams activity
    type."
   [^String x]
-  `(if (verb-types ~x) true false))
+  (if (verb-types x) true false))
 
 (defn has-activity-type?
   "Return `true` if the object `x` has a type which is an activity type, else 
@@ -474,8 +475,8 @@
          :object
          (fn [v]
            (object-reference-or-faults v #{"Invite" "Person"}
-                                      :must
-                                      :bad-accept-target))))
+                                       :must
+                                       :bad-accept-target))))
 
 (def ^:const activity-required-properties
   "Properties activities should have, keyed by activity type. Values are maps 
