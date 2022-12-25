@@ -1,4 +1,6 @@
-(ns dog-and-duck.quack.fault-messages)
+(ns dog-and-duck.quack.picky.fault-messages
+  "Narrative values for fault reports of specific types, used by the picky
+   validator.")
 
 ;;;     Copyright (C) Simon Brooke, 2022
 

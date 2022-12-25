@@ -29,9 +29,32 @@ There are a number of separate concerns required to implement ActivityPub. They 
 3. Delivering ActivityStreams objects to peers;
 4. Delivering ActivityStreams objects to clients.
 
-**NOTE THAT** what Mastodon delivers to clients is not actually in ActivityStreams format; this seems to be an ad-hoc hack that's just never been fixed and has therefore become a de-facto standard for communication between ActivityPub hosts and their clients.
+## Some motivations
+
+### Empowering users
+
+The [ActivityPub spec](https://www.w3.org/TR/activitypub/#Overview) starts by saying:
+
+> ActivityPub provides two layers:
+>
+>   1. A server to server federation protocol (so decentralized websites can share information)
+>   2. A client to server protocol (so users, including real-world users, bots, and other automated processes, can communicate with ActivityPub using their accounts on servers, from a phone or desktop or web application or whatever).
+
+I'm interested in driving much more functionality down to the the client, for example feed ordering and presentation. This would allow users, for example, to choose their own (or roll their own) feed-ordering algorithms.
 
 My proposal would be to deliver exactly the same ActivityStreams format to my client as to other servers. There may be a valid reason for not doing this, but if there is I will discover it in due course.
+
+### Enhanced resiliency
+
+The [ActivityStreams](https://www.w3.org/TR/activitystreams-core/) spec seems predicated on 'always up' communication between at least servers, which is perhaps why there is a two tier network of 'servers' and 'clients'. It also depends on HTTPS certificates to identify servers, which implies it's vulnerable to disruption by a hostile actor with the ability to revoke certificates.
+
+My own history with social media dates back to Usenet over UUCP, a system designed explicitly for intermittent low bandwidth connections; such a system is immensely resilient in the face of disruption to infrastructure.
+
+Social media is useful to concerted popular action in periods of disruption, whether in the case of civil ememrgency such as earthquakes, wild fires and floods, in the case of wars, or in the case of intrusive surveillance by authoritarian governments. But to be useful in such situations it needs to be resilient, and one of the things it needs to be resilient to is parts of the network being intermittently available, or requiring rerouting.
+
+In this I'm influenced by and hope to try to implement ideas from [Ian Clarke](https://blog.locut.us/about/)'s [Freenet](https://en.wikipedia.org/wiki/Freenet) and [Tahrir](http://tahrirproject.org/) projects, especially [webs of trust](https://en.wikipedia.org/wiki/Web_of_trust).
+
+To be clear, it is important for The Old Dog and Duck to be able to interact with other existing 'vanilla' ActivityStreams implementations, but I hope to experiment with enhanced communication between Dog and Duck servers to provide more FreeNet-like resiliency.
 
 ## Proposed dog-and-duck libraries
 

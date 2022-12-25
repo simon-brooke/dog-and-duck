@@ -1,7 +1,8 @@
 (ns dog-and-duck.quack.picky-test
   (:require [clojure.test :refer [deftest is testing]]
-            [dog-and-duck.quack.picky :refer [activitystreams-context-uri
-                                              filter-severity object-faults
+            [dog-and-duck.quack.picky.constants :refer [activitystreams-context-uri]]
+            [dog-and-duck.quack.picky.utils :refer [filter-severity]]
+            [dog-and-duck.quack.picky :refer [object-faults
                                               persistent-object-faults]]))
 
 ;;;     Copyright (C) Simon Brooke, 2022

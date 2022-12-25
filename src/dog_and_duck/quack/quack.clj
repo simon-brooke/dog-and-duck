@@ -13,9 +13,11 @@
    I may have to implement a `*strict*` dynamic variable, so that users can 
    toggle some checks off."
 
-  (:require [dog-and-duck.quack.picky :refer [*reject-severity* activity-faults
-                                              actor-faults filter-severity link-faults
-                                              object-faults persistent-object-faults]])
+  (:require [dog-and-duck.quack.picky :refer [activity-faults actor-faults 
+                                              link-faults object-faults 
+                                              persistent-object-faults]] 
+            [dog-and-duck.quack.picky.control-variables :refer [*reject-severity*]]
+            [dog-and-duck.quack.picky.utils :refer [filter-severity]])
 
   (:import [java.net URI URISyntaxException]))
 

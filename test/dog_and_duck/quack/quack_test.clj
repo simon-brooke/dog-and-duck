@@ -1,8 +1,9 @@
 (ns dog-and-duck.quack.quack-test
   (:require [clojure.test :refer [deftest is testing]]
-            [dog-and-duck.quack.picky :refer [activitystreams-context-uri
-                                              actor-type? context? context-key 
-                                              verb-type?]]
+            [dog-and-duck.quack.picky.constants :refer [activitystreams-context-uri
+                                                        context-key]]
+            [dog-and-duck.quack.picky.utils :refer [actor-type? context?
+                                                    verb-type?]]
             [dog-and-duck.quack.quack :refer [actor? 
                                               object? ordered-collection-page?
                                               persistent-object?]]

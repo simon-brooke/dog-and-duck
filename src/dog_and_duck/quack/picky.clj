@@ -27,12 +27,14 @@
                               possible to serialise a fault report as a 
                               document which in its own right conforms to the
                               ActivityStreams spec."
-    (:require [clojure.set :refer [intersection]]
-              [dog-and-duck.quack.fault-messages :refer [messages]]
-              [dog-and-duck.utils.process :refer [get-hostname get-pid]]
-              [taoensso.timbre :as timbre
-      ;; Optional, just refer what you like:
-               :refer [warn]]
+    (:require [dog-and-duck.quack.picky.constants :refer [actor-types]]
+              [dog-and-duck.quack.picky.control-variables :refer [*reify-refs*]]
+              [dog-and-duck.quack.picky.utils :refer [has-context? 
+                                                      has-activity-type? 
+                                                      has-actor-type? has-type?
+                                                      has-type-or-fault
+                                                      make-fault-object
+                                                      nil-if-empty]]
               [clojure.data.json :as json])
     (:import [java.net URI URISyntaxException]))
 
@@ -51,188 +53,6 @@
 ;;;     You should have received a copy of the GNU General Public License
 ;;;     along with this program; if not, write to the Free Software
 ;;;     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-;; ERRATA
-
-(def ^:dynamic *reify-refs*
-  "If `true`, references to objects in fields will be reified and validated. 
-   If `false`, they won't, but an `:info` level fault report will be generated.
-   
-   There are several things in the spec which, in a document, may correctly be
-   either
-   
-   1. a fully fleshed out object, or
-   2. a URI pointing to such an object.
-   
-   Obviously to fully validate a document we ought to reify all the refs and 
-   check that they are themselves valid, but
-   
-   a. in some of the published test documents the URIs do not reference a
-      valid document;
-   b. there will be performance costs to reifying all the refs;
-   c. in perverse cases, reifying refs might result in runaway recursion.
-   
-   TODO: I think that in production this should default to `true`."
-  false)
-
-(def ^:dynamic *reject-severity*
-  "The severity at which the binary validator will return `false`.
-   
-   In practice documents seen in the wild do not typically appear to be 
-   fully valid, and this does not matter. This allows the sensitivity of
-   the binary validator (`dog-and-duck.quack.quack`) to be tuned. It's in
-   this (`dog-and-duck.quack.picky`) namespace, not that one, because this
-   namespace is where concerns about severity are handled."
-  :must)
-
-(def ^:const context-key
-  "The Clojure reader barfs on `:@context`, although it is in principle a valid 
-   keyword. So we'll make it once, here, to make the code more performant and
-   easier to read."
-  (keyword "@context"))
-
-(def ^:const severity
-  "Severity of faults found, as follows:
-   
-   0. `:info` not actually a fault, but an issue noted during validation;
-   1. `:minor` things which I consider to be faults, but which 
-      don't actually breach the spec;
-   2. `:should` instances where the spec says something SHOULD
-      be done, which isn't;
-   3. `:must` instances where the spec says something MUST
-      be done, which isn't;
-   4. `:critical` instances where I believe the fault means that
-      the object cannot be meaningfully processed."
-  #{:info :minor :should :must :critical})
-
-(def ^:const severity-filters
-  "Hack for implementing a severity hierarchy"
-  {:all #{}
-   :info #{}
-   :minor #{:info}
-   :should #{:info :minor}
-   :must #{:info :minor :should}
-   :critical severity})
-
-(defn truthy?
-  "Return `true` if `x` is truthy, else `false`."
-  [x]
-  (if x true false))
-
-(defn has-type?
-  "Return `true` if object `x` has type `type`, else `false`.
-   
-   The values of `type` fields of ActivityStreams objects may be lists; they
-   are considered to have a type if the type token is a member of the list."
-  [x type]
-  (assert (map? x) (string? type))
-  (let [tv (:type x)]
-    (cond
-      (coll? tv) (truthy? (not-empty (filter #(= % type) tv)))
-      :else (= tv type))))
-
-(defn filter-severity
-  "Return a list of reports taken from these `reports` where the severity
-   of the report is greater than this or equal to this `severity`."
-  [reports severity]
-  (cond (nil? reports) nil
-        (and
-         (coll? reports)
-         (every? map? reports)
-         (every? :severity reports)) (remove
-                                      #((severity-filters severity) (:severity %))
-                                      reports)
-        :else
-        (throw
-         (ex-info
-          "Argument `reports` was not a collection of fault reports"
-          {:arguments {:reports reports
-                       :severity severity}}))))
-
-(def ^:const activitystreams-context-uri
-  "The URI of the context of an ActivityStreams object is expected to be this
-   literal string."
-  "https://www.w3.org/ns/activitystreams")
-
-(def ^:const validation-fault-context-uri
-  "The URI of the context of a validation fault report object shall be this
-   literal string."
-  "https://simon-brooke.github.io/dog-and-duck/codox/Validation_Faults.html")
-
-(defn context?
-  "Returns `true` iff `x` quacks like an ActivityStreams context, else false.
-   
-   A context is either
-   1. the URI (actually an IRI) `activitystreams-context-uri`, or
-   2. a collection comprising that URI and a map."
-  [x]
-  (cond
-    (nil? x) false
-    (string? x) (and (= x activitystreams-context-uri) true)
-    (coll? x) (and (context? (first (remove map? x)))
-                   (= (count x) 2)
-                   true)
-    :else false))
-
-(defmacro has-context?
-  "True if `x` is an ActivityStreams object with a valid context, else `false`."
-  [x]
-  `(context? (context-key ~x)))
-
-(defn make-fault-object
-  "Return a fault object with these `severity`, `fault` and `narrative` values.
-   
-   An ActivityPub object MUST have a globally unique ID. Whether this is 
-   meaningful depends on whether we persist fault report objects and serve
-   them, which at present I have no plans to do."
-  ;; TODO: should not pass in the narrative; instead should use the :fault value
-  ;; to look up the narrative in a resource file.
-  [severity fault]
-  (assoc {}
-         context-key validation-fault-context-uri
-         :id (str "https://"
-                  (get-hostname)
-                  "/fault/"
-                  (get-pid)
-                  ":"
-                  (inst-ms (java.util.Date.)))
-         :type "Fault"
-         :severity severity
-         :fault fault
-         :narrative (or (messages fault)
-                        (do
-                          (warn "No narrative provided for fault token " fault)
-                          (str fault)))))
-
-(defmacro nil-if-empty
-  "if `x` is an empty collection, return `nil`; else return `x`."
-  [x]
-  `(if (and (coll? ~x) (empty? ~x)) nil
-       ~x))
-
-(defn has-type-or-fault
-  "If object `x` has a `:type` value which is `acceptable`, return `nil`;
-   else return a fault object with this `severity` and `token`.
-   
-   `acceptable` may be passed as either nil, a string, or a set of strings.
-   If `acceptable` is `nil`, no type specific tests will be performed."
-  [x acceptable severity token]
-  (when acceptable
-    (let [tv (:type x)]
-      (when-not
-       (cond
-         (and (string? tv) (string? acceptable)) (= tv acceptable)
-         (and (string? tv) (set? acceptable)) (acceptable tv)
-         (and (coll? tv) (string? acceptable)) ((set tv) acceptable)
-         (and (coll? tv) (set? acceptable)) (not-empty
-                                             (intersection (set tv) acceptable))
-         :else
-         (throw (ex-info "Type value or `acceptable` argument not as expected."
-                         {:arguments {:x x
-                                      :acceptable acceptable
-                                      :severity severity
-                                      :token token}})))
-        (make-fault-object severity token)))))
 
 (defn object-faults
   "Return a list of faults found in object `x`, or `nil` if none are.
@@ -296,31 +116,6 @@
                       (make-fault-object :must :null-id-persistent)))
                (make-fault-object :must :no-id-persistent)))))))
 
-(def ^:const actor-types
-  "The set of types we will accept as actors.
-   
-   There's an [explicit set of allowed actor types]
-   (https://www.w3.org/TR/activitystreams-vocabulary/#actor-types)."
-  #{"Application"
-    "Group"
-    "Organization"
-    "Person"
-    "Service"})
-
-(defn actor-type?
-  "Return `true` if the `x` is a recognised actor type, else `false`."
-  [^String x]
-  (if (actor-types x) true false))
-
-(defn has-actor-type?
-  "Return `true` if the object `x` has a type which is an actor type, else 
-   `false`."
-  [x]
-  (let [tv (:type x)]
-    (cond
-      (coll? tv) (truthy? (not-empty (filter actor-type? tv)))
-      :else (actor-type? tv))))
-
 (defn actor-faults
   "Return a list of faults found in actor `x`, or `nil` if none are."
   [x]
@@ -335,31 +130,6 @@
                     (uri-or-fault
                      (:outbox x) :must :no-outbox :invalid-outbox-uri))))))
 
-(def ^:const verb-types
-  "The set of types we will accept as verbs.
-   
-   There's an [explicit set of allowed verb types]
-   (https://www.w3.org/TR/activitystreams-vocabulary/#activity-types)."
-  #{"Accept" "Add" "Announce" "Arrive" "Block" "Create" "Delete" "Dislike"
-    "Flag" "Follow" "Ignore" "Invite" "Join" "Leave" "Like" "Listen" "Move"
-    "Offer" "Question" "Reject" "Read" "Remove" "TentativeAccept"
-    "TentativeReject" "Travel" "Undo" "Update" "View"})
-
-(defn verb-type?
-  "`true` if `x`, a string, represents a recognised ActivityStreams activity
-   type."
-  [^String x]
-  (if (verb-types x) true false))
-
-(defn has-activity-type?
-  "Return `true` if the object `x` has a type which is an activity type, else 
-   `false`."
-  [x]
-  (let [tv (:type x)]
-    (cond
-      (coll? tv) (truthy? (not-empty (filter verb-type? tv)))
-      :else (actor-type? tv))))
-
 (defn string-or-fault
   "If this `value` is not a string, return a fault object with this `severity` 
    and `token`, else `nil`. If `pattern` is also passed, it is expected to be
@@ -370,18 +140,6 @@
   ([value severity token pattern]
    (when not (and (string? value) (re-matches pattern value))
          (make-fault-object severity token))))
-
-(defn link-faults
-  "A link object is required to have an `href` property. It may have all of
-   `rel` | `mediaType` | `name` | `hreflang` | `height` | `width` | `preview`
-   but I *think* they're all optional."
-  [x]
-  (list
-   (uri-or-fault
-    (:href x) :must :no-href-uri :invalid-href-uri)
-   (string-or-fault (:mediaType x) :minor :no-media-type #"\w+\/[-+.\w]+")
-   ;; TODO: possibly more here. Audit against the specs
-   ))
 
 (defn object-reference-or-faults
   "If this `value` is either 
@@ -427,11 +185,6 @@
                           :token token})))]
     (when faults (cons (make-fault-object severity token) faults))))
 
-(defn link-faults
-  "Return a list of faults found in the link `x`, or `nil` if none are found."
-  [x]
-  (object-reference-or-faults x "Link" :critical :expected-link))
-
 (defn coll-object-reference-or-fault
   "As object-reference-or-fault, except `value` argument may also be a list of
    objects and/or object references."
@@ -452,6 +205,22 @@
              :expected-type expected-type
              :severity severity
              :token token}))))
+
+(defn link-faults
+  "A link object is required to have an `href` property. It may have all of
+   `rel` | `mediaType` | `name` | `hreflang` | `height` | `width` | `preview`
+   but I *think* they're all optional."
+  [x]
+  (nil-if-empty
+   (remove empty?
+           (concat
+            (object-reference-or-faults x "Link" :critical :expected-link)
+            (list
+             (uri-or-fault
+              (:href x) :must :no-href-uri :invalid-href-uri)
+             (string-or-fault (:mediaType x) :minor :no-media-type #"\w+\/[-+.\w]+")
+   ;; TODO: possibly more here. Audit against the specs
+             )))))
 
 (def ^:const base-activity-required-properties
   "Properties most activities should have. Values are validating functions, each.
