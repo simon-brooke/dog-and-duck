@@ -144,6 +144,12 @@
   `(if (and (coll? ~x) (empty? ~x)) nil
        ~x))
 
+(defn concat-non-empty
+  "Quick function to replace the pattern (nil-if-empty (remove nil? (concat ...)))
+   which I'm using a lot!"
+  [& lists]
+  (nil-if-empty (remove nil? (apply concat lists))))
+
 (defn has-type-or-fault
   "If object `x` has a `:type` value which is `acceptable`, return `nil`;
    else return a fault object with this `severity` and `token`.

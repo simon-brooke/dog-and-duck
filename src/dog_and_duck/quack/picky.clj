@@ -29,8 +29,9 @@
                               ActivityStreams spec."
     (:require [dog-and-duck.quack.picky.constants :refer [actor-types]]
               [dog-and-duck.quack.picky.control-variables :refer [*reify-refs*]]
-              [dog-and-duck.quack.picky.utils :refer [has-context? 
-                                                      has-activity-type? 
+              [dog-and-duck.quack.picky.utils :refer [concat-non-empty
+                                                      has-context?
+                                                      has-activity-type?
                                                       has-actor-type? has-type?
                                                       has-type-or-fault
                                                       make-fault-object
@@ -73,14 +74,12 @@
              (when-not (and (map? x) (contains? x :id))
                (make-fault-object :minor :no-id-transient))))))
   ([x expected-type]
-   (nil-if-empty
-    (remove empty?
-            (concat
-             (object-faults x)
-             (list
+   (concat-non-empty
+    (object-faults x)
+    (list
               ;; TODO: should resolve the correct `-faults`function for the
               ;; `expected-type` and call that; but that's for later.
-              (has-type-or-fault x expected-type :critical :unexpected-type)))))))
+     (has-type-or-fault x expected-type :critical :unexpected-type)))))
 
 (defn uri-or-fault
   "If `u` is not a valid URI, return a fault object with this `severity` and 
@@ -100,35 +99,37 @@
 
 (defn persistent-object-faults
   "Return a list of faults found in persistent object `x`, or `nil` if none are."
-  [x]
-  (nil-if-empty
-   (remove empty?
-           (concat
-            (object-faults x)
-            (list
-             (if (contains? x :id)
-               (try (let [id (URI. (:id x))]
-                      (when-not (= (.getScheme id) "https")
-                        (make-fault-object :should :id-not-https)))
-                    (catch URISyntaxException _
-                      (make-fault-object :must :id-not-uri))
-                    (catch NullPointerException _
-                      (make-fault-object :must :null-id-persistent)))
-               (make-fault-object :must :no-id-persistent)))))))
+  ([x]
+   (concat-non-empty
+    (object-faults x)
+    (list
+     (if (contains? x :id)
+       (try (let [id (URI. (:id x))]
+              (when-not (= (.getScheme id) "https")
+                (make-fault-object :should :id-not-https)))
+            (catch URISyntaxException _
+              (make-fault-object :must :id-not-uri))
+            (catch NullPointerException _
+              (make-fault-object :must :null-id-persistent)))
+       (make-fault-object :must :no-id-persistent)))))
+  ([x types severity token]
+   (concat-non-empty
+    (persistent-object-faults x)
+    (list
+     (has-type-or-fault x types severity token)))))
 
 (defn actor-faults
   "Return a list of faults found in actor `x`, or `nil` if none are."
   [x]
-  (nil-if-empty
-   (remove empty?
-           (concat (persistent-object-faults x)
-                   (list
-                    (when-not (has-actor-type? x)
-                      (make-fault-object :must :not-actor-type))
-                    (uri-or-fault
-                     (:inbox x) :must :no-inbox :invalid-inbox-uri)
-                    (uri-or-fault
-                     (:outbox x) :must :no-outbox :invalid-outbox-uri))))))
+  (concat-non-empty
+   (persistent-object-faults x)
+   (list
+    (when-not (has-actor-type? x)
+      (make-fault-object :must :not-actor-type))
+    (uri-or-fault
+     (:inbox x) :must :no-inbox :invalid-inbox-uri)
+    (uri-or-fault
+     (:outbox x) :must :no-outbox :invalid-outbox-uri))))
 
 (defn string-or-fault
   "If this `value` is not a string, return a fault object with this `severity` 
@@ -191,13 +192,11 @@
   [value expected-type severity token]
   (cond
     (map? value) (object-reference-or-faults value expected-type severity token)
-    (coll? value) (nil-if-empty
-                   (remove nil?
-                           (reduce concat
-                                   (map
-                                    #(object-reference-or-faults
-                                      % expected-type severity token)
-                                    value))))
+    (coll? value) (concat-non-empty
+                   (map
+                    #(object-reference-or-faults
+                      % expected-type severity token)
+                    value))
     :else (throw
            (ex-info
             "Argument `value` was not an object, a link to an object, nor a list of these."
@@ -211,16 +210,14 @@
    `rel` | `mediaType` | `name` | `hreflang` | `height` | `width` | `preview`
    but I *think* they're all optional."
   [x]
-  (nil-if-empty
-   (remove empty?
-           (concat
-            (object-reference-or-faults x "Link" :critical :expected-link)
-            (list
-             (uri-or-fault
-              (:href x) :must :no-href-uri :invalid-href-uri)
-             (string-or-fault (:mediaType x) :minor :no-media-type #"\w+\/[-+.\w]+")
+  (concat-non-empty
+   (object-reference-or-faults x "Link" :critical :expected-link)
+   (list
+    (uri-or-fault
+     (:href x) :must :no-href-uri :invalid-href-uri)
+    (string-or-fault (:mediaType x) :minor :no-media-type #"\w+\/[-+.\w]+")
    ;; TODO: possibly more here. Audit against the specs
-             )))))
+    )))
 
 (def ^:const base-activity-required-properties
   "Properties most activities should have. Values are validating functions, each.
@@ -305,12 +302,11 @@
 
 (defn activity-faults
   [x]
-  (nil-if-empty
-   (remove empty?
-           (concat (persistent-object-faults x)
+  (concat-non-empty (persistent-object-faults x)
                    (activity-type-faults x)
                    (list
                     (when-not
                      (has-activity-type? x)
                       (make-fault-object :must :not-activity-type))
-                    (when-not (string? (:summary x)) (make-fault-object :should :no-summary)))))))
+                    (when-not (string? (:summary x)) (make-fault-object :should :no-summary)))))
+
