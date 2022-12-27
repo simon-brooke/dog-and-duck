@@ -27,6 +27,7 @@
    :no-id-persistent "Persistent objects MUST have unique global identifiers."
    :no-id-transient "The ActivityPub specification allows objects without `id` fields only if they are intentionally transient; even so it is preferred that the object should have an explicit null id."
    :no-inbox "Actor objects MUST have an `inbox` property, whose value MUST be a reference to an ordered collection."
+   :no-items-collection "A collection expected to be simple had no items."
    :no-outbox "Actor objects MUST have an `outbox` property, whose value MUST be a reference to an ordered collection."
    :no-type "The ActivityPub specification states that the `type` field is optional, but it is hard to process objects with no known type."
    :not-actor-type "The `type` value of the object was not a recognised actor type."

@@ -27,18 +27,20 @@
                               possible to serialise a fault report as a 
                               document which in its own right conforms to the
                               ActivityStreams spec."
-    (:require [dog-and-duck.quack.picky.constants :refer [actor-types]]
-              [dog-and-duck.quack.picky.control-variables :refer [*reify-refs*]]
+    (:require [dog-and-duck.quack.picky.collections :refer [collection-page-faults
+                                                            paged-collection-faults
+                                                            simple-collection-faults]]
+              [dog-and-duck.quack.picky.constants :refer [actor-types]]
               [dog-and-duck.quack.picky.utils :refer [any-or-faults
+                                                      coll-object-reference-or-fault
                                                       concat-non-empty
-                                                      cond-make-fault-object
-                                                      has-context?
                                                       has-activity-type?
                                                       has-actor-type? has-type?
                                                       has-type-or-fault
                                                       make-fault-object
-                                                      nil-if-empty]]
-              [clojure.data.json :as json])
+                                                      object-faults
+                                                      object-reference-or-faults
+                                                      string-or-fault]])
     (:import [java.net URI URISyntaxException]))
 
 ;;;     Copyright (C) Simon Brooke, 2022
@@ -56,31 +58,6 @@
 ;;;     You should have received a copy of the GNU General Public License
 ;;;     along with this program; if not, write to the Free Software
 ;;;     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-(defn object-faults
-  "Return a list of faults found in object `x`, or `nil` if none are.
-   
-   If `expected-type` is also passed, verify that `x` has `expected-type`.
-   `expected-type` may be passed as a string or as a set of strings."
-  ([x]
-   (nil-if-empty
-    (remove empty?
-            (list
-             (when-not (map? x)
-               (make-fault-object :critical :not-an-object))
-             (when-not
-              (has-context? x)
-               (make-fault-object :should :no-context))
-             (when-not (:type x)
-               (make-fault-object :minor :no-type))
-             (when-not (and (map? x) (contains? x :id))
-               (make-fault-object :minor :no-id-transient))))))
-  ([x expected-type]
-   (concat-non-empty
-    (object-faults x)
-    (when expected-type
-      (list
-       (has-type-or-fault x expected-type :critical :unexpected-type))))))
 
 (defn uri-or-fault
   "If `u` is not a valid URI, return a fault object with this `severity` and 
@@ -131,82 +108,6 @@
      (:inbox x) :must :no-inbox :invalid-inbox-uri)
     (uri-or-fault
      (:outbox x) :must :no-outbox :invalid-outbox-uri))))
-
-(defn string-or-fault
-  "If this `value` is not a string, return a fault object with this `severity` 
-   and `token`, else `nil`. If `pattern` is also passed, it is expected to be
-   a Regex, and the fault object will be returned unless `value` matches the 
-   `pattern`."
-  ([value severity token]
-   (when-not (string? value) (make-fault-object severity token)))
-  ([value severity token pattern]
-   (when not (and (string? value) (re-matches pattern value))
-         (make-fault-object severity token))))
-
-(defn object-reference-or-faults
-  "If this `value` is either 
-   
-   1. an object of `expected-type`;
-   2. a URI referencing an object of  `expected-type`; or
-   3. a link object referencing an object of  `expected-type`
-   
-   and no faults are returned from validating the linked object, then return
-   `nil`; else return a sequence comprising a fault object with this `severity`
-   and `token`, prepended to the faults returned.
-   
-   As with `has-type-or-fault` (q.v.), `expected-type` may be passed as a
-   string, as a set of strings, or `nil` (indicating the type of the 
-   referenced object should not be checked).
-   
-   **NOTE THAT** if `*reify-refs*` is `false`, referenced objects will not
-   actually be checked."
-  [value expected-type severity token]
-  (let [faults (cond
-                 (string? value) (try (let [uri (URI. value)
-                                            object (when *reify-refs*
-                                                     (json/read-str (slurp uri)))]
-                                        (when object
-                                          (object-faults object expected-type)))
-                                      (catch URISyntaxException _
-                                        (make-fault-object severity token)))
-                 (map? value) (if (has-type? value "Link")
-                                (cond
-                                  ;; if we were looking for a link and we've 
-                                  ;; found a link, that's OK.
-                                  (= expected-type "Link") nil
-                                  (and (set? expected-type) (expected-type "Link")) nil
-                                  (nil? expected-type) nil
-                                  :else
-                                  (object-reference-or-faults
-                                   (:href value) expected-type severity token))
-                                (object-faults value expected-type))
-                 :else (throw
-                        (ex-info
-                         "Argument `value` was not an object or a link to an object"
-                         {:arguments {:value value}
-                          :expected-type expected-type
-                          :severity severity
-                          :token token})))]
-    (when faults (cons (make-fault-object severity token) faults))))
-
-(defn coll-object-reference-or-fault
-  "As object-reference-or-fault, except `value` argument may also be a list of
-   objects and/or object references."
-  [value expected-type severity token]
-  (cond
-    (map? value) (object-reference-or-faults value expected-type severity token)
-    (coll? value) (concat-non-empty
-                   (map
-                    #(object-reference-or-faults
-                      % expected-type severity token)
-                    value))
-    :else (throw
-           (ex-info
-            "Argument `value` was not an object, a link to an object, nor a list of these."
-            {:arguments {:value value}
-             :expected-type expected-type
-             :severity severity
-             :token token}))))
 
 (defn link-faults
   "A link object is required to have an `href` property. It may have all of
@@ -313,41 +214,6 @@
                        (make-fault-object :must :not-activity-type))
                      (when-not (string? (:summary x)) (make-fault-object :should :no-summary)))))
 
-(defn- paged-collection-faults
-  "Return a list of faults found in `x` considered as a paged collection
-   object of this sub-`type`, or `nil` if none are found."
-  [x type]
-  (concat-non-empty
-   (object-faults x type)
-   (list (object-reference-or-faults x type :critical :expected-collection)
-         (cond-make-fault-object (integer? (:totalItems x)) :should :no-total-items)
-         (object-reference-or-faults (:first x) nil :must :no-first-page)
-         (object-reference-or-faults (:last x) nil :should :no-last-page))))
-
-(defn- simple-collection-faults
-  "Return a list of faults found in `x` considered as a non-paged collection
-   object of this sub-`type`, or `nil` if none are found."
-  [x type]
-  (concat-non-empty
-   (object-faults x type)
-   (cons
-    (list (object-reference-or-faults x type :critical :expected-collection)
-          (cond-make-fault-object (integer? (:totalItems x)) :should :no-total-items)
-          (cond-make-fault-object (coll? (:items x)) :must :no-items-collection))
-    (map #(object-reference-or-faults % nil :must :not-object-reference) (:items x)))))
-
-(defn- collection-page-faults
-  [x type]
-  (concat-non-empty
-   (simple-collection-faults x type)
-   (list
-    (object-reference-or-faults (:partOf x)
-                                (apply str (drop-last 4 type))
-                                :should
-                                :n-part-of)
-    (object-reference-or-faults (:next x) type :minor :no-next-page)
-    (object-reference-or-faults (:prev x) type :minor :no-prev-page))))
-
 (defn collection-faults
   "Return a list of faults found in the collection `x`; if `type` is also 
    specified, it should be a string naming a specific collection type for
@@ -374,11 +240,12 @@
                    "CollectionPage"
                    "OrderedCollectionPage"])))))
   ([x type]
+   ;; (log/info "collection-faults called with argumens " x ", " type)
    (case type
-     ["Collection" "OrderedCollection"] (any-or-faults
+     ("Collection" "OrderedCollection") (any-or-faults
                                          (list (simple-collection-faults x type)
                                                (paged-collection-faults x type))
                                          :must
                                          :no-items)
-     ["CollectionPage" "OrderedCollectionPage"] (collection-page-faults x type)
+     ("CollectionPage" "OrderedCollectionPage") (collection-page-faults x type)
      (list (make-fault-object :critical :expected-collection)))))

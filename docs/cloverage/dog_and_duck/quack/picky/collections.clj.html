@@ -1,0 +1,179 @@
+<html>
+ <head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="../../../coverage.css"/>  <title> dog_and_duck/quack/picky/collections.clj </title>
+ </head>
+ <body>
+<span class="covered" title="1 out of 1 forms covered">
+                001&nbsp;&nbsp;(ns&nbsp;dog-and-duck.quack.picky.collections
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                002&nbsp;&nbsp;&nbsp;&nbsp;(:require&nbsp;[dog-and-duck.quack.picky.utils&nbsp;:refer&nbsp;[concat-non-empty
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cond-make-fault-object
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;object-faults
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                005&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;object-reference-or-faults]]))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                006&nbsp;&nbsp;
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                007&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                008&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copyright&nbsp;(C)&nbsp;Simon&nbsp;Brooke,&nbsp;2022
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                009&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                010&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;program&nbsp;is&nbsp;free&nbsp;software;&nbsp;you&nbsp;can&nbsp;redistribute&nbsp;it&nbsp;and&#x2F;or
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                011&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;modify&nbsp;it&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                012&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;published&nbsp;by&nbsp;the&nbsp;Free&nbsp;Software&nbsp;Foundation;&nbsp;either&nbsp;version&nbsp;2
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                013&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;License,&nbsp;or&nbsp;(at&nbsp;your&nbsp;option)&nbsp;any&nbsp;later&nbsp;version.
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                014&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                015&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;program&nbsp;is&nbsp;distributed&nbsp;in&nbsp;the&nbsp;hope&nbsp;that&nbsp;it&nbsp;will&nbsp;be&nbsp;useful,
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                016&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;but&nbsp;WITHOUT&nbsp;ANY&nbsp;WARRANTY;&nbsp;without&nbsp;even&nbsp;the&nbsp;implied&nbsp;warranty&nbsp;of
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                017&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MERCHANTABILITY&nbsp;or&nbsp;FITNESS&nbsp;FOR&nbsp;A&nbsp;PARTICULAR&nbsp;PURPOSE.&nbsp;&nbsp;See&nbsp;the
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                018&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License&nbsp;for&nbsp;more&nbsp;details.
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                019&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                020&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You&nbsp;should&nbsp;have&nbsp;received&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                021&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;along&nbsp;with&nbsp;this&nbsp;program;&nbsp;if&nbsp;not,&nbsp;write&nbsp;to&nbsp;the&nbsp;Free&nbsp;Software
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                022&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Foundation,&nbsp;Inc.,&nbsp;51&nbsp;Franklin&nbsp;Street,&nbsp;Fifth&nbsp;Floor,&nbsp;Boston,&nbsp;MA&nbsp;&nbsp;02110-1301,&nbsp;USA.
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                023&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                024&nbsp;&nbsp;(defn&nbsp;paged-collection-faults
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                025&nbsp;&nbsp;&nbsp;&nbsp;&quot;Return&nbsp;a&nbsp;list&nbsp;of&nbsp;faults&nbsp;found&nbsp;in&nbsp;`x`&nbsp;considered&nbsp;as&nbsp;a&nbsp;paged&nbsp;collection
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;object&nbsp;of&nbsp;this&nbsp;sub-`type`,&nbsp;or&nbsp;`nil`&nbsp;if&nbsp;none&nbsp;are&nbsp;found.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                027&nbsp;&nbsp;&nbsp;&nbsp;[x&nbsp;type]
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                028&nbsp;&nbsp;&nbsp;&nbsp;(concat-non-empty
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                029&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-faults&nbsp;x&nbsp;type)
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                030&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;(object-reference-or-faults&nbsp;x&nbsp;type&nbsp;:critical&nbsp;:expected-collection)
+                </span><br/>
+<span class="not-covered" title="0 out of 11 forms covered">
+                031&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond-make-fault-object&nbsp;(integer?&nbsp;(:totalItems&nbsp;x))&nbsp;:should&nbsp;:no-total-items)
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults&nbsp;(:first&nbsp;x)&nbsp;nil&nbsp;:must&nbsp;:no-first-page)
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                033&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults&nbsp;(:last&nbsp;x)&nbsp;nil&nbsp;:should&nbsp;:no-last-page))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                034&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                035&nbsp;&nbsp;(defn&nbsp;simple-collection-faults
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                036&nbsp;&nbsp;&nbsp;&nbsp;&quot;Return&nbsp;a&nbsp;list&nbsp;of&nbsp;faults&nbsp;found&nbsp;in&nbsp;`x`&nbsp;considered&nbsp;as&nbsp;a&nbsp;non-paged&nbsp;collection
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                037&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;object&nbsp;of&nbsp;this&nbsp;sub-`type`,&nbsp;or&nbsp;`nil`&nbsp;if&nbsp;none&nbsp;are&nbsp;found.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                038&nbsp;&nbsp;&nbsp;&nbsp;[x&nbsp;type]
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                039&nbsp;&nbsp;&nbsp;&nbsp;(concat-non-empty
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                040&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-faults&nbsp;x&nbsp;type)
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                041&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                042&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;(object-reference-or-faults&nbsp;x&nbsp;type&nbsp;:critical&nbsp;:expected-collection)
+                </span><br/>
+<span class="not-covered" title="0 out of 11 forms covered">
+                043&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond-make-fault-object&nbsp;(integer?&nbsp;(:totalItems&nbsp;x))&nbsp;:should&nbsp;:no-total-items)
+                </span><br/>
+<span class="not-covered" title="0 out of 11 forms covered">
+                044&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond-make-fault-object&nbsp;(coll?&nbsp;(:items&nbsp;x))&nbsp;:must&nbsp;:no-items-collection))
+                </span><br/>
+<span class="not-covered" title="0 out of 12 forms covered">
+                045&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(map&nbsp;#(object-reference-or-faults&nbsp;%&nbsp;nil&nbsp;:must&nbsp;:not-object-reference)&nbsp;(:items&nbsp;x)))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                046&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                047&nbsp;&nbsp;(defn&nbsp;collection-page-faults
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                048&nbsp;&nbsp;&nbsp;&nbsp;[x&nbsp;type]
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                049&nbsp;&nbsp;&nbsp;&nbsp;(concat-non-empty
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                050&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(simple-collection-faults&nbsp;x&nbsp;type)
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                051&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list
+                </span><br/>
+<span class="not-covered" title="0 out of 7 forms covered">
+                052&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults&nbsp;(:partOf&nbsp;x)
+                </span><br/>
+<span class="not-covered" title="0 out of 7 forms covered">
+                053&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(apply&nbsp;str&nbsp;(drop-last&nbsp;4&nbsp;type))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                054&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:should
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                055&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:n-part-of)
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                056&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults&nbsp;(:next&nbsp;x)&nbsp;type&nbsp;:minor&nbsp;:no-next-page)
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                057&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults&nbsp;(:prev&nbsp;x)&nbsp;type&nbsp;:minor&nbsp;:no-prev-page))))
+                </span><br/>
+ </body>
+</html>

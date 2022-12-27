@@ -1,0 +1,155 @@
+<html>
+ <head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="../../../coverage.css"/>  <title> dog_and_duck/quack/picky/control_variables.clj </title>
+ </head>
+ <body>
+<span class="covered" title="1 out of 1 forms covered">
+                001&nbsp;&nbsp;(ns&nbsp;dog-and-duck.quack.picky.control-variables
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                002&nbsp;&nbsp;&nbsp;&nbsp;&quot;Control&nbsp;variables&nbsp;for&nbsp;the&nbsp;picky&nbsp;validator.&quot;)
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                003&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                004&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copyright&nbsp;(C)&nbsp;Simon&nbsp;Brooke,&nbsp;2022
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                005&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                006&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;program&nbsp;is&nbsp;free&nbsp;software;&nbsp;you&nbsp;can&nbsp;redistribute&nbsp;it&nbsp;and&#x2F;or
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                007&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;modify&nbsp;it&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                008&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;published&nbsp;by&nbsp;the&nbsp;Free&nbsp;Software&nbsp;Foundation;&nbsp;either&nbsp;version&nbsp;2
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                009&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;License,&nbsp;or&nbsp;(at&nbsp;your&nbsp;option)&nbsp;any&nbsp;later&nbsp;version.
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                010&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                011&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;program&nbsp;is&nbsp;distributed&nbsp;in&nbsp;the&nbsp;hope&nbsp;that&nbsp;it&nbsp;will&nbsp;be&nbsp;useful,
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                012&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;but&nbsp;WITHOUT&nbsp;ANY&nbsp;WARRANTY;&nbsp;without&nbsp;even&nbsp;the&nbsp;implied&nbsp;warranty&nbsp;of
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                013&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MERCHANTABILITY&nbsp;or&nbsp;FITNESS&nbsp;FOR&nbsp;A&nbsp;PARTICULAR&nbsp;PURPOSE.&nbsp;&nbsp;See&nbsp;the
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                014&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License&nbsp;for&nbsp;more&nbsp;details.
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                015&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                016&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You&nbsp;should&nbsp;have&nbsp;received&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                017&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;along&nbsp;with&nbsp;this&nbsp;program;&nbsp;if&nbsp;not,&nbsp;write&nbsp;to&nbsp;the&nbsp;Free&nbsp;Software
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                018&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Foundation,&nbsp;Inc.,&nbsp;51&nbsp;Franklin&nbsp;Street,&nbsp;Fifth&nbsp;Floor,&nbsp;Boston,&nbsp;MA&nbsp;&nbsp;02110-1301,&nbsp;USA.
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                019&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                020&nbsp;&nbsp;(def&nbsp;^:dynamic&nbsp;*reify-refs*
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                021&nbsp;&nbsp;&nbsp;&nbsp;&quot;If&nbsp;`true`,&nbsp;references&nbsp;to&nbsp;objects&nbsp;in&nbsp;fields&nbsp;will&nbsp;be&nbsp;reified&nbsp;and&nbsp;validated.&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                022&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;`false`,&nbsp;they&nbsp;won&#x27;t,&nbsp;but&nbsp;an&nbsp;`:info`&nbsp;level&nbsp;fault&nbsp;report&nbsp;will&nbsp;be&nbsp;generated.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                023&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There&nbsp;are&nbsp;several&nbsp;things&nbsp;in&nbsp;the&nbsp;spec&nbsp;which,&nbsp;in&nbsp;a&nbsp;document,&nbsp;may&nbsp;correctly&nbsp;be
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                025&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;either
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                027&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;a&nbsp;fully&nbsp;fleshed&nbsp;out&nbsp;object,&nbsp;or
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                028&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;a&nbsp;URI&nbsp;pointing&nbsp;to&nbsp;such&nbsp;an&nbsp;object.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                029&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                030&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Obviously&nbsp;to&nbsp;fully&nbsp;validate&nbsp;a&nbsp;document&nbsp;we&nbsp;ought&nbsp;to&nbsp;reify&nbsp;all&nbsp;the&nbsp;refs&nbsp;and&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                031&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;check&nbsp;that&nbsp;they&nbsp;are&nbsp;themselves&nbsp;valid,&nbsp;but
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                033&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a.&nbsp;in&nbsp;some&nbsp;of&nbsp;the&nbsp;published&nbsp;test&nbsp;documents&nbsp;the&nbsp;URIs&nbsp;do&nbsp;not&nbsp;reference&nbsp;a
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                034&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;valid&nbsp;document;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                035&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b.&nbsp;there&nbsp;will&nbsp;be&nbsp;performance&nbsp;costs&nbsp;to&nbsp;reifying&nbsp;all&nbsp;the&nbsp;refs;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                036&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c.&nbsp;in&nbsp;perverse&nbsp;cases,&nbsp;reifying&nbsp;refs&nbsp;might&nbsp;result&nbsp;in&nbsp;runaway&nbsp;recursion.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                037&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                038&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TODO:&nbsp;I&nbsp;think&nbsp;that&nbsp;in&nbsp;production&nbsp;this&nbsp;should&nbsp;default&nbsp;to&nbsp;`true`.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                039&nbsp;&nbsp;&nbsp;&nbsp;false)
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                040&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                041&nbsp;&nbsp;(def&nbsp;^:dynamic&nbsp;*reject-severity*
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                042&nbsp;&nbsp;&nbsp;&nbsp;&quot;The&nbsp;severity&nbsp;at&nbsp;which&nbsp;the&nbsp;binary&nbsp;validator&nbsp;will&nbsp;return&nbsp;`false`.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                043&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                044&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In&nbsp;practice&nbsp;documents&nbsp;seen&nbsp;in&nbsp;the&nbsp;wild&nbsp;do&nbsp;not&nbsp;typically&nbsp;appear&nbsp;to&nbsp;be&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                045&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fully&nbsp;valid,&nbsp;and&nbsp;this&nbsp;does&nbsp;not&nbsp;matter.&nbsp;This&nbsp;allows&nbsp;the&nbsp;sensitivity&nbsp;of
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                046&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;binary&nbsp;validator&nbsp;(`dog-and-duck.quack.quack`)&nbsp;to&nbsp;be&nbsp;tuned.&nbsp;It&#x27;s&nbsp;in
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                047&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this&nbsp;(`dog-and-duck.quack.picky`)&nbsp;namespace,&nbsp;not&nbsp;that&nbsp;one,&nbsp;because&nbsp;this
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                048&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;namespace&nbsp;is&nbsp;where&nbsp;concerns&nbsp;about&nbsp;severity&nbsp;are&nbsp;handled.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                049&nbsp;&nbsp;&nbsp;&nbsp;:must)
+                </span><br/>
+ </body>
+</html>
