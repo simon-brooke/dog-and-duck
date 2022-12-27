@@ -10,7 +10,9 @@
             [dog-and-duck.utils.process :refer [get-hostname get-pid]]
             [taoensso.timbre :as timbre
       ;; Optional, just refer what you like:
-             :refer [warn]]))
+             :refer [warn]])
+
+  (:import [java.net URI URISyntaxException]))
 
 ;;;     Copyright (C) Simon Brooke, 2022
 
@@ -35,7 +37,8 @@
   (if (actor-types x) true false))
 
 (defn truthy?
-  "Return `true` if `x` is truthy, else `false`."
+  "Return `true` if `x` is truthy, else `false`. There must be some more 
+   idiomatic way to do this?"
   [x]
   (if x true false))
 
@@ -50,6 +53,22 @@
     (cond
       (coll? tv) (truthy? (not-empty (filter #(= % type) tv)))
       :else (= tv type))))
+
+(defn object-or-uri?
+  "Very basic check that `x` is either an object or a URI."
+  [x]
+  (try
+    (cond (string? x) (uri? (URI. x))
+          (map? x) (if (and (:type x) (:id x)) true false)
+          :else false)
+    (catch URISyntaxException _ false)
+    (catch NullPointerException _ false)))
+
+(defmacro link-or-uri?
+  "Very basic check that `x` is either a link object or a URI."
+  [x]
+  `(if (object-or-uri? ~x) (has-type? ~x "Link") false))
+
 
 (defn verb-type?
   "`true` if `x`, a string, represents a recognised ActivityStreams activity
@@ -173,3 +192,22 @@
                                       :severity severity
                                       :token token}})))
         (make-fault-object severity token)))))
+
+(defn any-or-faults
+  "Return `nil` if validating one of these options returns `nil`; otherwise 
+   return a list comprising a fault report object with this `severity-if-none`
+   and this token followed by all the fault reports from validating each
+   option.
+   
+   There are several places - but especially in validating collections - where
+   there are several different valid configurations, but few or no properties
+   are always required."
+  [options severity-if-none token]
+  (let [faults (remove empty? (reduce concat options))]
+    (when-not (empty? faults) (cons (make-fault-object severity-if-none token) faults))))
+
+(defmacro cond-make-fault-object
+  "If `v` is `false` or `nil`, return a fault object with this `severity` and `token`,
+   else return nil."
+  [v severity token]
+  `(when-not ~v (make-fault-object ~severity ~token)))

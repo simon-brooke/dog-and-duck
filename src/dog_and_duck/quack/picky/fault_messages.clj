@@ -20,7 +20,8 @@
 
 (def messages
   "Actual fault messages to which fault codes resolve."
-  {:id-not-https "Publicly facing content SHOULD use HTTPS URIs"
+  {:expected-collection "A collection was expected, but was not found."
+   :id-not-https "Publicly facing content SHOULD use HTTPS URIs"
    :id-not-uri "identifiers must be publicly dereferencable URIs"
    :no-context "Section 3 of the ActivityPub specification states Implementers SHOULD include the ActivityPub context in their object definitions`."
    :no-id-persistent "Persistent objects MUST have unique global identifiers."

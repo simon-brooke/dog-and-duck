@@ -29,7 +29,9 @@
                               ActivityStreams spec."
     (:require [dog-and-duck.quack.picky.constants :refer [actor-types]]
               [dog-and-duck.quack.picky.control-variables :refer [*reify-refs*]]
-              [dog-and-duck.quack.picky.utils :refer [concat-non-empty
+              [dog-and-duck.quack.picky.utils :refer [any-or-faults
+                                                      concat-non-empty
+                                                      cond-make-fault-object
                                                       has-context?
                                                       has-activity-type?
                                                       has-actor-type? has-type?
@@ -76,10 +78,9 @@
   ([x expected-type]
    (concat-non-empty
     (object-faults x)
-    (list
-              ;; TODO: should resolve the correct `-faults`function for the
-              ;; `expected-type` and call that; but that's for later.
-     (has-type-or-fault x expected-type :critical :unexpected-type)))))
+    (when expected-type
+      (list
+       (has-type-or-fault x expected-type :critical :unexpected-type))))))
 
 (defn uri-or-fault
   "If `u` is not a valid URI, return a fault object with this `severity` and 
@@ -154,7 +155,8 @@
    and `token`, prepended to the faults returned.
    
    As with `has-type-or-fault` (q.v.), `expected-type` may be passed as a
-   string or as a set of strings.
+   string, as a set of strings, or `nil` (indicating the type of the 
+   referenced object should not be checked).
    
    **NOTE THAT** if `*reify-refs*` is `false`, referenced objects will not
    actually be checked."
@@ -173,6 +175,7 @@
                                   ;; found a link, that's OK.
                                   (= expected-type "Link") nil
                                   (and (set? expected-type) (expected-type "Link")) nil
+                                  (nil? expected-type) nil
                                   :else
                                   (object-reference-or-faults
                                    (:href value) expected-type severity token))
@@ -303,10 +306,79 @@
 (defn activity-faults
   [x]
   (concat-non-empty (persistent-object-faults x)
-                   (activity-type-faults x)
-                   (list
-                    (when-not
-                     (has-activity-type? x)
-                      (make-fault-object :must :not-activity-type))
-                    (when-not (string? (:summary x)) (make-fault-object :should :no-summary)))))
+                    (activity-type-faults x)
+                    (list
+                     (when-not
+                      (has-activity-type? x)
+                       (make-fault-object :must :not-activity-type))
+                     (when-not (string? (:summary x)) (make-fault-object :should :no-summary)))))
 
+(defn- paged-collection-faults
+  "Return a list of faults found in `x` considered as a paged collection
+   object of this sub-`type`, or `nil` if none are found."
+  [x type]
+  (concat-non-empty
+   (object-faults x type)
+   (list (object-reference-or-faults x type :critical :expected-collection)
+         (cond-make-fault-object (integer? (:totalItems x)) :should :no-total-items)
+         (object-reference-or-faults (:first x) nil :must :no-first-page)
+         (object-reference-or-faults (:last x) nil :should :no-last-page))))
+
+(defn- simple-collection-faults
+  "Return a list of faults found in `x` considered as a non-paged collection
+   object of this sub-`type`, or `nil` if none are found."
+  [x type]
+  (concat-non-empty
+   (object-faults x type)
+   (cons
+    (list (object-reference-or-faults x type :critical :expected-collection)
+          (cond-make-fault-object (integer? (:totalItems x)) :should :no-total-items)
+          (cond-make-fault-object (coll? (:items x)) :must :no-items-collection))
+    (map #(object-reference-or-faults % nil :must :not-object-reference) (:items x)))))
+
+(defn- collection-page-faults
+  [x type]
+  (concat-non-empty
+   (simple-collection-faults x type)
+   (list
+    (object-reference-or-faults (:partOf x)
+                                (apply str (drop-last 4 type))
+                                :should
+                                :n-part-of)
+    (object-reference-or-faults (:next x) type :minor :no-next-page)
+    (object-reference-or-faults (:prev x) type :minor :no-prev-page))))
+
+(defn collection-faults
+  "Return a list of faults found in the collection `x`; if `type` is also 
+   specified, it should be a string naming a specific collection type for
+   which checks should be performed. 
+   
+   Every collection *should*(?) have a `totalItems` field (an integer).
+   
+   Beyond that, collections are either 'just collections' (in which case
+   they *should* have an `items` field (a sequence)), or else they're paged
+   collections, in which case they *must*(?) have a `first` field which is 
+   a collection page or a URI pointing to a collection page, and *should* 
+   have a `last` field which is similar.
+   
+   The pages of collections *should* be collection pages; the pages of 
+   ordered collections *should* be ordered collection pages."
+  ([x]
+   (collection-faults
+    x
+    (first
+     (remove nil?
+             (map #(when (has-type? x %) %)
+                  ["Collection"
+                   "OrderedCollection"
+                   "CollectionPage"
+                   "OrderedCollectionPage"])))))
+  ([x type]
+   (case type
+     ["Collection" "OrderedCollection"] (any-or-faults
+                                         (list (simple-collection-faults x type)
+                                               (paged-collection-faults x type))
+                                         :must
+                                         :no-items)
+     ["CollectionPage" "OrderedCollectionPage"] (collection-page-faults x type)
+     (list (make-fault-object :critical :expected-collection)))))
