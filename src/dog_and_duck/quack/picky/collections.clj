@@ -45,6 +45,8 @@
     (map #(object-reference-or-faults % nil :must :not-object-reference) (:items x)))))
 
 (defn collection-page-faults
+  "Return a list of faults found in `x` considered as a collection page
+   object of this sub-`type`, or `nil` if none are found."
   [x type]
   (concat-non-empty
    (simple-collection-faults x type)

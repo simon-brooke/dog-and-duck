@@ -44,11 +44,11 @@
 ;; ;;; examine what you got back!
 (:inbox account)
 
-(-> account
-    :inbox
-    slurp
-    json/read-str
-    pprint) ;; => 80
+;; (-> account
+;;     :inbox
+;;     slurp
+;;     json/read-str
+;;     pprint) ;; => 80
 
 ;; (def rsa (pgp-gen/rsa-keypair-generator 2048))
 ;; (def kp (pgp-gen/generate-keypair rsa :rsa-general))
