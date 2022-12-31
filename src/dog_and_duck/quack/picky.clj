@@ -302,11 +302,12 @@
 
 (defn activity-faults
   [x]
-  (concat-non-empty (persistent-object-faults x)
-                   (activity-type-faults x)
-                   (list
-                    (when-not
-                     (has-activity-type? x)
-                      (make-fault-object :must :not-activity-type))
-                    (when-not (string? (:summary x)) (make-fault-object :should :no-summary)))))
+  (concat-non-empty
+   (persistent-object-faults x)
+   (activity-type-faults x)
+   (list
+    (when-not
+     (has-activity-type? x)
+      (make-fault-object :must :not-activity-type))
+    (when-not (string? (:summary x)) (make-fault-object :should :no-summary)))))
 

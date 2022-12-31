@@ -1,0 +1,5 @@
+# Per-User Database
+
+*This is a design thought, not a design decision.*
+
+Obviously, the way to give each user control of their social media is for each user to have effectively their own server, and that thought is behind my ideas about driving more functionality down to the client. Allowing an architecture of intermittent links helps with this - the same client will not always appear on the same ip address and thus cannot use conventional SSL certificates for authentication, so we need a workaround for that.

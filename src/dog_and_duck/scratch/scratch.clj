@@ -2,8 +2,11 @@
   "Scratchpad where I try to understand how to do this stuff."
   (:require [clj-activitypub.core :as activitypub]
             [clj-activitypub.webfinger :as webfinger]
+            [clj-activitypub.net :as activitypub-net]
             [clj-pgp.generate :as pgp-gen]
-            [clojure.walk :refer [keywordize-keys]]))
+            [clojure.walk :refer [keywordize-keys]]
+            [clojure.pprint :refer [pprint]]
+            [clojure.data.json :as json]))
 
 ;;;     Copyright (C) Simon Brooke, 2022
 
@@ -24,22 +27,28 @@
 ;;; Use any ActivityPub account handle you like - for example, your own
 (def account-handle "@simon_brooke@mastodon.scot")
 
-(def handle (activitypub/parse-account account-handle))
-(webfinger/fetch-user-id "mastodon.scot" "simon_brooke")
-(apply webfinger/fetch-user-id (map handle [:domain :username]))
+;;(def handle (activitypub/parse-account account-handle))
+;;(webfinger/fetch-user-id "mastodon.scot" "simon_brooke")
+;;(apply webfinger/fetch-user-id (map handle [:domain :username]))
 
 ;;; Retrieve the account details from its home server
 ;;; (`keywordize-keys` is not necessary here but produces a more idiomatic clojure
 ;;; data structure)
 (def account
-  "Fetch my account to mess with"
-  (let [handle (activitypub/parse-account account-handle)]
-    (keywordize-keys
-     (activitypub/fetch-user
-      (apply webfinger/fetch-user-id (map handle [:domain :username]))))))
+  (-> account-handle
+      (webfinger/parse-handle)
+      (webfinger/fetch-user-id!)
+      (activitypub-net/fetch-user!)
+      (select-keys [:name :preferredUsername :inbox :summary])))
 
-;;; examine what you got back!
+;; ;;; examine what you got back!
 (:inbox account)
+
+(-> account
+    :inbox
+    slurp
+    json/read-str
+    pprint) ;; => 80
 
 ;; (def rsa (pgp-gen/rsa-keypair-generator 2048))
 ;; (def kp (pgp-gen/generate-keypair rsa :rsa-general))

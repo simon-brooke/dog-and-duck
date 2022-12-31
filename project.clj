@@ -7,15 +7,14 @@
           :output-path "docs/codox"
           :source-uri "https://github.com/simon-brooke/dog-and-duck/blob/master/{filepath}#L{line}"}
   :description "A playground for hacking ActivityPub stuff."
-  :dependencies [[org.clojure/clojure "1.11.1"]
+  :dependencies [[clj-activitypub/activitypub "0.49"]
+                 [com.taoensso/timbre "6.0.4"]
+                 [mvxcvi/clj-pgp "1.1.0"]
+                 [org.bouncycastle/bcpkix-jdk18on "1.72"] 
+                 [org.clojure/clojure "1.11.1"]
                  [org.clojure/data.json "2.4.0"]
                  [org.clojure/math.numeric-tower "0.0.5"]
-                 [org.clojure/spec.alpha "0.3.218"]
-                 [mvxcvi/clj-pgp "1.1.0"]
-                 [org.bouncycastle/bcpkix-jdk18on "1.72"] ;; required by clj-activitypub
-                 [clj-http "3.12.3"] ;; required by clj-activitypub
-                 [cheshire "5.11.0"] ;; if this is not present, clj-http/client errors with 'json-enabled?'
-                 [com.taoensso/timbre "6.0.4"]]
+                 [org.clojure/spec.alpha "0.3.218"]]
   :license {:name "GPL-2.0-or-later"
             :url "https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html"}
   :plugins [[lein-cloverage "1.2.2"]

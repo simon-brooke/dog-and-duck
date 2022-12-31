@@ -52,4 +52,3 @@ The Tombstone object is a means of acknowledging that the requested object did o
 If we're pushing entire objects – which may include media attachments – to the inboxes of many recipients who may never choose to read them, that feels like a lot of wasted bandwidth. However, if we're pushing only ids or links of posts which are not public, that feels like a major security headache in verifying that the requestors are indeed verified recipients.
 
 Again, the fact that Mastodon is able to show me '[user] edited a post' items in my notifications seems to imply that updates of the complete edited object are being pushed out to all recipients' inboxes, and again that seems expensive.
-
