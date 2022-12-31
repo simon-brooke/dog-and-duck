@@ -14,10 +14,10 @@
    toggle some checks off."
 
   (:require [dog-and-duck.quack.picky :refer [activity-faults actor-faults 
-                                              link-faults object-faults 
+                                              link-faults 
                                               persistent-object-faults]] 
             [dog-and-duck.quack.picky.control-variables :refer [*reject-severity*]]
-            [dog-and-duck.quack.picky.utils :refer [filter-severity]])
+            [dog-and-duck.quack.picky.utils :refer [filter-severity object-faults]])
 
   (:import [java.net URI URISyntaxException]))
 

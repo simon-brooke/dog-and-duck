@@ -1,6 +1,6 @@
 (ns dog-and-duck.scratch.parser
-  (:require [clojure.java.io :refer [file]]
-            [clojure.string :refer [ends-with?]]
+  (:require ;; [clojure.java.io :refer [file]]
+            ;; [clojure.string :refer [ends-with?]]
             [clojure.walk :refer [keywordize-keys]]
             [clojure.data.json :as json]
             [dog-and-duck.quack.quack :as q]))
@@ -33,15 +33,15 @@
       (cond (map? feed) (list (keywordize-keys feed))
             (coll? feed) (map keywordize-keys feed))))))
 
-(clean (slurp "resources/activitystreams-test-documents/core-ex1-jsonld.json"))
+;; (clean (slurp "resources/activitystreams-test-documents/core-ex1-jsonld.json"))
 
-(map
- #(when 
-   (ends-with? (str %) ".json") 
-    (let [objects (clean (slurp %))]
-      (list (str %) 
-            (count objects) 
-            (map :type objects))))
- (file-seq (file "resources/activitystreams-test-documents")))
+;; (map
+;;  #(when 
+;;    (ends-with? (str %) ".json") 
+;;     (let [objects (clean (slurp %))]
+;;       (list (str %) 
+;;             (count objects) 
+;;             (map :type objects))))
+;;  (file-seq (file "resources/activitystreams-test-documents")))
 
-(-> "resources/activitystreams-test-documents/simple0020.json" slurp clean first :actor)
+;; (-> "resources/activitystreams-test-documents/simple0020.json" slurp clean first :actor)
