@@ -98,6 +98,33 @@ At present, only the duck-typing functions work. To play with them, use
 
 Full documentation is [here](https://simon-brooke.github.io/dog-and-duck/).
 
+## Building
+
+### clj-activitypub
+
+**NOTE THAT** `dog-and-duck` depends on Jahfer's `clj-activitypub`, which is also currently not yet released and under rapid development and consequently currently *very* unstable. For this reason it's probably best to clone [my fork](https://github.com/simon-brooke/clj-activitypub) rather than [the original](https://github.com/jahfer/clj-activitypub), because that way you are less likely to encounter version incompatibilities.
+
+`clj-activitypub` is configured to build with [tools.bui;d](https://clojure.org/guides/tools_build). To prepare `clj-activitypub` before building `dog-and-duck`, do
+
+```bash
+$ git clone git@github.com:simon-brooke/clj-activitypub.git
+$ cd clj-activitypub/
+$ clj -T:build jar
+$ clj -T:build install
+```
+
+I shall keep `dog-and-duck` and my fork of `clj-activitypub` in sync at least until Jahfer makes a production release of his project to [Clojars]().
+
+### Leiningen
+
+`dog-and-duck` itself is still set up to build with [Leiningen](https://leiningen.org/). Yes, I know that's not what the cool kids are using any more but hey, I'm an old man, leave me be. To get `dog-and-duck` up to a point where you can start to play,
+
+```bash
+$ git clone git@github.com:simon-brooke/dog-and-duck.git
+$ cd dog-and-duck
+$ lein repl
+```
+
 ## Testing
 
 Prior to testing, you should clone [activitystreams-test-documents](https://github.com/w3c-social/activitystreams-test-documents) into the `resources` directory. You can then test with

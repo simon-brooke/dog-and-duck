@@ -5,7 +5,8 @@
             [dog-and-duck.quack.picky.utils :refer 
              [filter-severity object-faults]]
             [dog-and-duck.quack.picky :refer 
-             [persistent-object-faults]]))
+             [collection-faults persistent-object-faults]]
+            [dog-and-duck.scratch.parser :refer [clean]]))
 
 ;;;     Copyright (C) Simon Brooke, 2022
 
@@ -108,3 +109,30 @@
             actual (-> o persistent-object-faults first :fault)]
         (is (= actual expected)
             "The fault from a persistent object with an id which is not a valid URI should be :id-not-uri")))))
+
+(deftest collection-faults-test
+    (let [outbox (-> "resources/test_documents/outbox.json" slurp clean first)
+        outbox-page (-> "resources/test_documents/outbox_page.json"
+                 slurp clean first)
+        simple (-> "resources/activitystreams-test-documents/vocabulary-ex5-jsonld.json"
+                   slurp clean first)
+        not-a-collection {(keyword "@context") activitystreams-context-uri
+                          :id "https://somewhere.out.there/object/14323:1671654380083"
+                          :type "Test"}]
+  (testing "Collection type identification"
+    (let [actual (collection-faults outbox)
+          expected nil]
+      (is (= actual expected) 
+          "There should be no faults in an outbox delivered by mastodon."))
+    (let [actual (collection-faults outbox-page)
+          expected nil]
+      (is (= actual expected)
+          "There should be no faults in an outbox page delivered by mastodon."))
+    (let [actual (set (remove nil? (map :fault (collection-faults simple))))
+          expected #{:no-id-transient :no-context :not-object-reference}]
+      (is (= actual expected)
+          "There should be no faults from vocabulary-ex5-jsonld, either, but there are."))
+    (let [actual (empty? (collection-faults not-a-collection))
+          expected false]
+      (is (= actual expected)
+          "There should be faults from anything which isn't a collection")))))

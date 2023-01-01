@@ -185,12 +185,15 @@
          (and (coll? tv) (string? acceptable)) ((set tv) acceptable)
          (and (coll? tv) (set? acceptable)) (not-empty
                                              (intersection (set tv) acceptable))
-         :else
-         (throw (ex-info "Type value or `acceptable` argument not as expected."
-                         {:arguments {:x x
-                                      :acceptable acceptable
-                                      :severity severity
-                                      :token token}})))
+         (not
+          (or (string? acceptable)
+              (set? acceptable))) (throw
+                                   (ex-info
+                                    "`acceptable` argument not as expected."
+                                    {:arguments {:x x
+                                                 :acceptable acceptable
+                                                 :severity severity
+                                                 :token token}})))
         (make-fault-object severity token)))))
 
 (defn any-or-faults
@@ -204,7 +207,7 @@
    are always required."
   [options severity-if-none token]
   (let [faults (filter empty? options)]
-    (when (empty? faults) 
+    (when (empty? faults)
       ;; i.e. there was at least one option that returned no faults...
       (cons (make-fault-object severity-if-none token) faults))))
 

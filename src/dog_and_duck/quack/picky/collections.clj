@@ -29,8 +29,8 @@
    (object-faults x type)
    (list (object-reference-or-faults x type :critical :expected-collection)
          (cond-make-fault-object (integer? (:totalItems x)) :should :no-total-items)
-         (object-reference-or-faults (:first x) nil :must :no-first-page)
-         (object-reference-or-faults (:last x) nil :should :no-last-page))))
+         (object-reference-or-faults (:first x) (str type "Page") :must :no-first-page)
+         (object-reference-or-faults (:last x) (str type "Page") :should :no-last-page))))
 
 (defn simple-collection-faults
   "Return a list of faults found in `x` considered as a non-paged collection
@@ -38,11 +38,12 @@
   [x type]
   (concat-non-empty
    (object-faults x type)
-   (cons
-    (list (object-reference-or-faults x type :critical :expected-collection)
-          (cond-make-fault-object (integer? (:totalItems x)) :should :no-total-items)
+   (concat
+    (list (cond-make-fault-object (integer? (:totalItems x)) :should :no-total-items)
           (cond-make-fault-object (coll? (:items x)) :must :no-items-collection))
-    (map #(object-reference-or-faults % nil :must :not-object-reference) (:items x)))))
+    (reduce 
+     concat
+     (map #(object-reference-or-faults % nil :must :not-object-reference) (:items x))))))
 
 (defn collection-page-faults
   "Return a list of faults found in `x` considered as a collection page
