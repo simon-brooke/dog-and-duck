@@ -12,6 +12,7 @@
                  [com.taoensso/timbre "6.0.4"]
                  [mvxcvi/clj-pgp "1.1.0"]
                  [org.bouncycastle/bcpkix-jdk18on "1.72"] 
+                 [org.clojars.simon_brooke/internationalisation "1.0.4"]
                  [org.clojure/clojure "1.11.1"]
                  [org.clojure/data.json "2.4.0"]
                  [org.clojure/math.numeric-tower "0.0.5"]

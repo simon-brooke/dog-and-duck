@@ -22,13 +22,6 @@
    literal string."
   "https://www.w3.org/ns/activitystreams")
 
-(def ^:const xsd-date-time-pattern 
-  "The pattern to which valid 
-   [xsd:dateTime](https://www.w3.org/TR/xmlschema11-2/#dateTime) values conform.
-   
-   TODO: this is failing on some of the published examples, so may be wrong."
-  "yyyy-MM-dd'T'HH:mm:ssX")
-
 (def ^:const actor-types
   "The set of types we will accept as actors.
    

@@ -31,15 +31,15 @@
                                                             paged-collection-faults
                                                             simple-collection-faults]]
               [dog-and-duck.quack.picky.constants :refer [actor-types]]
+              [dog-and-duck.quack.picky.objects :refer [coll-object-reference-or-fault
+                                                        object-faults
+                                                        object-reference-or-faults]]
               [dog-and-duck.quack.picky.utils :refer [any-or-faults
-                                                      coll-object-reference-or-fault
                                                       concat-non-empty
                                                       has-activity-type?
                                                       has-actor-type? has-type?
                                                       has-type-or-fault
                                                       make-fault-object
-                                                      object-faults
-                                                      object-reference-or-faults
                                                       string-or-fault]])
     (:import [java.net URI URISyntaxException]))
 

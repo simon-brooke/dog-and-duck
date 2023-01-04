@@ -17,7 +17,8 @@
                                               link-faults 
                                               persistent-object-faults]] 
             [dog-and-duck.quack.picky.control-variables :refer [*reject-severity*]]
-            [dog-and-duck.quack.picky.utils :refer [filter-severity object-faults]])
+            [dog-and-duck.quack.picky.objects :refer [object-faults]]
+            [dog-and-duck.quack.picky.utils :refer [filter-severity]])
 
   (:import [java.net URI URISyntaxException]))
 

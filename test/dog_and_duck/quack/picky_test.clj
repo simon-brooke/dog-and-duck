@@ -2,8 +2,8 @@
   (:require [clojure.test :refer [deftest is testing]]
             [dog-and-duck.quack.picky.constants :refer 
              [activitystreams-context-uri]]
-            [dog-and-duck.quack.picky.utils :refer 
-             [filter-severity object-faults]]
+            [dog-and-duck.quack.picky.objects :refer [object-faults]]
+            [dog-and-duck.quack.picky.utils :refer [filter-severity]]
             [dog-and-duck.quack.picky :refer 
              [collection-faults persistent-object-faults]]
             [dog-and-duck.scratch.parser :refer [clean]]))

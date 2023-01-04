@@ -1,8 +1,8 @@
 (ns dog-and-duck.quack.picky.collections
-  (:require [dog-and-duck.quack.picky.utils :refer [concat-non-empty
-                                                    cond-make-fault-object
-                                                    object-faults
-                                                    object-reference-or-faults]]))
+  (:require [dog-and-duck.quack.picky.objects :refer [object-faults
+                                                      object-reference-or-faults]]
+            [dog-and-duck.quack.picky.utils :refer [concat-non-empty
+                                                    cond-make-fault-object]]))
 
 
 ;;;     Copyright (C) Simon Brooke, 2022
@@ -41,7 +41,7 @@
    (concat
     (list (cond-make-fault-object (integer? (:totalItems x)) :should :no-total-items)
           (cond-make-fault-object (coll? (:items x)) :must :no-items-collection))
-    (reduce 
+    (reduce
      concat
      (map #(object-reference-or-faults % nil :must :not-object-reference) (:items x))))))
 
