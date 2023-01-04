@@ -8,6 +8,7 @@
           :source-uri "https://github.com/simon-brooke/dog-and-duck/blob/master/{filepath}#L{line}"}
   :description "A playground for hacking ActivityPub stuff."
   :dependencies [[clj-activitypub/activitypub "0.49"]
+                 [clojure.java-time "1.1.0"]
                  [com.taoensso/timbre "6.0.4"]
                  [mvxcvi/clj-pgp "1.1.0"]
                  [org.bouncycastle/bcpkix-jdk18on "1.72"] 
