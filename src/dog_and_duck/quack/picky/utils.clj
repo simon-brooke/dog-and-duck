@@ -189,12 +189,15 @@
          (and (coll? tv) (string? acceptable)) ((set tv) acceptable)
          (and (coll? tv) (set? acceptable)) (not-empty
                                              (intersection (set tv) acceptable))
-         :else
-         (throw (ex-info "Type value or `acceptable` argument not as expected."
-                         {:arguments {:x x
-                                      :acceptable acceptable
-                                      :severity severity
-                                      :token token}})))
+         (not
+          (or (string? acceptable)
+              (set? acceptable))) (throw
+                                   (ex-info
+                                    "`acceptable` argument not as expected."
+                                    {:arguments {:x x
+                                                 :acceptable acceptable
+                                                 :severity severity
+                                                 :token token}})))
         (make-fault-object severity token)))))
 
 (defn any-or-faults
