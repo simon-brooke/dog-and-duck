@@ -5,7 +5,7 @@
                                                         actor-types
                                                         context-key severity-filters
                                                         validation-fault-context-uri
-                                                        verb-types]]
+                                                        activity-types]]
             [dog-and-duck.utils.process :refer [get-hostname get-pid]]
             [scot.weft.i18n.core :refer [get-message]]
             [taoensso.timbre :as log :refer [warn]])
@@ -41,26 +41,39 @@
   (if x true false))
 
 (defn has-type?
-  "Return `true` if object `x` has type `type`, else `false`.
+  "Return `true` if object `x` has a type in `acceptable`, else `false`.
    
-   The values of `type` fields of ActivityStreams objects may be lists; they
-   are considered to have a type if the type token is a member of the list."
-  [x type]
-  (assert (map? x) (string? type))
+   The values of `:type` fields of ActivityStreams objects may be lists; they
+   are considered to have a type if a member of the list is in `acceptable`.
+   
+   `acceptable` may be passed as a string, in which case there is only one
+   acceptable value, or as a set of strings, in which case any member of the
+   set is acceptable."
+  [x acceptable]
+  (assert (map? x) (or (string? acceptable) (set? acceptable)))
   (let [tv (:type x)]
-    (cond
-      (coll? tv) (truthy? (not-empty (filter #(= % type) tv)))
-      :else (= tv type))))
+    (truthy?
+     (cond
+       (and (string? acceptable) (coll? tv)) (not-empty (filter #(= % acceptable) tv))
+       (and (set? acceptable) (coll? tv)) (not-empty (filter #(acceptable %) tv))
+       (string? acceptable) (= tv acceptable)
+       (set? acceptable) (acceptable tv)))))
 
 (defn object-or-uri?
   "Very basic check that `x` is either an object or a URI."
-  [x]
-  (try
-    (cond (string? x) (uri? (URI. x))
-          (map? x) (if (and (:type x) (:id x)) true false)
-          :else false)
-    (catch URISyntaxException _ false)
-    (catch NullPointerException _ false)))
+  ([x]
+   (try
+     (cond (string? x) (uri? (URI. x))
+           (map? x) (if (and (:type x) (:id x)) true false)
+           :else false)
+     (catch URISyntaxException _ false)
+     (catch NullPointerException _ false)))
+  ([x type]
+   (if (object-or-uri? x)
+     (if (map? x)
+       (has-type? x type)
+       true)
+     false)))
 
 (defmacro link-or-uri?
   "Very basic check that `x` is either a link object or a URI."
@@ -68,11 +81,11 @@
   `(if (object-or-uri? ~x) (has-type? ~x "Link") false))
 
 
-(defn verb-type?
+(defn activity-type?
   "`true` if `x`, a string, represents a recognised ActivityStreams activity
    type."
   [^String x]
-  (if (verb-types x) true false))
+  (if (activity-types x) true false))
 
 (defn has-activity-type?
   "Return `true` if the object `x` has a type which is an activity type, else 
@@ -80,8 +93,8 @@
   [x]
   (let [tv (:type x)]
     (cond
-      (coll? tv) (truthy? (not-empty (filter verb-type? tv)))
-      :else (verb-type? tv))))
+      (coll? tv) (truthy? (not-empty (filter activity-type? tv)))
+      :else (activity-type? tv))))
 
 (defn has-actor-type?
   "Return `true` if the object `x` has a type which is an actor type, else 

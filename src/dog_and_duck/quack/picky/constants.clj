@@ -60,14 +60,14 @@
    :minor #{:info}
    :should #{:info :minor}
    :must #{:info :minor :should}
-   :critical severity})
+   :critical #{:info :minor :should :must}})
 
 (def ^:const validation-fault-context-uri
   "The URI of the context of a validation fault report object shall be this
    literal string."
   "https://simon-brooke.github.io/dog-and-duck/codox/Validation_Faults.html")
 
-(def ^:const verb-types
+(def ^:const activity-types
   "The set of types we will accept as verbs.
    
    There's an [explicit set of allowed verb types]
@@ -76,4 +76,10 @@
     "Flag" "Follow" "Ignore" "Invite" "Join" "Leave" "Like" "Listen" "Move"
     "Offer" "Question" "Reject" "Read" "Remove" "TentativeAccept"
     "TentativeReject" "Travel" "Undo" "Update" "View"})
+
+(def ^:const noun-types
+  "The set of types we will accept as nouns.
+   
+   TODO: incomplete."
+  #{"Image" "Note" "Place"})
 

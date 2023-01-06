@@ -1,11 +1,13 @@
 (ns dog-and-duck.quack.picky.time
   "Time, gentleman, please! Recognising and validating date time values."
   (:require [dog-and-duck.quack.picky.utils :refer [cond-make-fault-object
-                                                    make-fault-object]]
+                                                    make-fault-object
+                                                    truthy?]]
             [scot.weft.i18n.core :refer [get-message]]
             [taoensso.timbre :refer [warn]])
   (:import [java.time LocalDateTime]
-           [java.time.format DateTimeFormatter DateTimeParseException]))
+           [java.time.format DateTimeFormatter DateTimeParseException]
+           [javax.xml.datatype DatatypeFactory]))
 
 ;;;     Copyright (C) Simon Brooke, 2023
 
@@ -32,6 +34,17 @@
     (catch DateTimeParseException _
       (warn (get-message :bad-date-time) ":" value)
       false)))
+
+(defn xsd-duration?
+  "Return `true` if `value` matches the pattern for an 
+   [xsd:duration](https://www.w3.org/TR/xmlschema11-2/#duration), else `false`"
+  [value]
+  (truthy?
+   (and (string? value)
+        (try (DatatypeFactory/newDuration value)
+             (catch IllegalArgumentException _
+               (warn (get-message :bad-duration) ":" value)
+               false)))))
 
 (defn date-time-property-or-fault
   "If the value of this `property` of object `x` is a valid xsd:dateTime 

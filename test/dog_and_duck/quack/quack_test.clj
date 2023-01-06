@@ -3,7 +3,7 @@
             [dog-and-duck.quack.picky.constants :refer [activitystreams-context-uri
                                                         context-key]]
             [dog-and-duck.quack.picky.utils :refer [actor-type? context?
-                                                    verb-type?]]
+                                                    activity-type?]]
             [dog-and-duck.quack.quack :refer [actor? 
                                               object? ordered-collection-page?
                                               persistent-object?]]
@@ -85,16 +85,16 @@
 (deftest verb-type-test
   (testing "identification of verb types"
     (let [expected false
-          actual (verb-type? nil)]
+          actual (activity-type? nil)]
       (is (= actual expected) "nil is not a verb"))
     (let [expected false
-          actual (verb-type? "Quack")]
+          actual (activity-type? "Quack")]
       (is (= actual expected) "Quack is not a verb"))
     (let [expected true
-          actual (verb-type? "Create")]
+          actual (activity-type? "Create")]
       (is (= actual expected) "Create is a verb"))
     (let [expected true
-          actual (verb-type? "Reject")]
+          actual (activity-type? "Reject")]
       (is (= actual expected) "Reject is a verb"))))
 
 (deftest context-test
