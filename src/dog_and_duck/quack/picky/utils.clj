@@ -70,7 +70,7 @@
   ([x]
    (try
      (cond (string? x) (uri? (URI. x))
-           (map? x) (if (and (:type x) (:id x)) true false)
+           (map? x) true
            :else false)
      (catch URISyntaxException _ false)
      (catch NullPointerException _ false)))
@@ -228,11 +228,11 @@
       ;; i.e. there was at least one option that returned no faults...
       (cons (make-fault-object severity-if-none token) faults))))
 
-(defmacro cond-make-fault-object
+(defn cond-make-fault-object
   "If `v` is `false` or `nil`, return a fault object with this `severity` and `token`,
    else return nil."
   [v severity token]
-  `(when-not ~v (make-fault-object ~severity ~token)))
+  (when-not v (make-fault-object severity token)))
 
 (defn string-or-fault
   "If this `value` is not a string, return a fault object with this `severity` 

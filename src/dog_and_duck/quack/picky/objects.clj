@@ -9,6 +9,7 @@
                                                    xsd-date-time?
                                                    xsd-duration?]]
             [dog-and-duck.quack.picky.utils :refer [concat-non-empty
+                                                    cond-make-fault-object
                                                     has-activity-type?
                                                     has-context?
                                                     has-type?
@@ -18,7 +19,7 @@
                                                     object-or-uri?
                                                     truthy?
                                                     xsd-non-negative-integer?]]
-            [taoensso.timbre :refer [warn]])
+            [taoensso.timbre :refer [info warn]])
   (:import [java.io FileNotFoundException]
            [java.net URI URISyntaxException]))
 
@@ -77,7 +78,7 @@
               :validator xsd-float?}
    :anyOf {:collection true
            :functional false
-           ;; a Question should have a `:oneOf` ot `:anyOf`, but at this layer
+           ;; a Question should have a `:oneOf` or `:anyOf`, but at this layer
            ;; that's hard to check.
            :if-invalid [:must :invalid-option]
            :validator object-or-uri?}
@@ -196,21 +197,21 @@
            :functional false
            :if-invalid [:must :invalid-items]
            :if-missing [:must :no-items-or-pages]
-           :required (fn [x] (or (has-type? x #{"CollectionPage"
-                                                "OrderedCollectionPage"})
-                                 (and (has-type? x #{"Collection"
-                                                     "OrderedCollection"})
+           :required (fn [x] (or (has-type? x "CollectionPage")
+                                 (and (has-type? x "Collection")
                                       ;; if it's a collection and has pages,
                                       ;; it doesn't need items.
                                       (not (:current x))
                                       (not (:first x))
                                       (not (:last x)))))
-           :validator object-or-uri?}
+           :validator (fn [pv] (and (coll? pv) (every? object-or-uri? pv)))}
    :last {:functional true
           :if-missing [:minor :paged-collection-no-last]
           :if-invalid [:must :paged-collection-invalid-last]
-          :required (fn [x] (if (try (uri? (URI. x))
-                                     (catch URISyntaxException _ false))
+          :required (fn [x] (if (and
+                                 (string? x)
+                                 (try (uri? (URI. x))
+                                      (catch URISyntaxException _ false)))
                               true
                                  ;; if an object is a collection which has pages,
                                  ;; it ought to have a `:last` page. But 
@@ -255,8 +256,21 @@
            ;; that's hard to check.
            :if-invalid [:must :invalid-option]
            :validator object-or-uri?}
+   
+   :orderedItems {:collection true
+           :functional false
+           :if-invalid [:must :invalid-items]
+           :if-missing [:must :no-items-or-pages]
+           :required (fn [x] (or (has-type? x "OrderedCollectionPage")
+                                 (and (has-type? x "OrderedCollection")
+                                      ;; if it's a collection and has pages,
+                                      ;; it doesn't need items.
+                                      (not (:current x))
+                                      (not (:first x))
+                                      (not (:last x)))))
+           :validator (fn [pv] (and (coll? pv) (every? object-or-uri? pv)))}
    :origin {:functional false
-            :if-invalid :invalid-origin
+            :if-invalid [:must :invalid-origin]
             :validator object-or-uri?}
    :partOf {:functional true
             :if-missing [:must :missing-part-of]
@@ -341,24 +355,48 @@
            :if-invalid [:must :invalid-width]
            :validator xsd-non-negative-integer?}})
 
-(defn- check-property [x p]
-  #(let [c (object-expected-properties x)
-         r (:required c)
-         [s m] (:if-missing c)]
-     (when (and r (r x) (not (x p)))
-       (make-fault-object s m))))
+(defn check-property-required [obj prop clause]
+  (let [required (:required clause)
+        [severity token] (:if-missing clause)]
+    (when required
+      (when
+       (and (apply required (list obj)) (not (obj prop)))
+        (make-fault-object severity token)))))
+
+(defn check-property-valid
+  [obj prop clause]
+  (info "obj" obj "prop" prop "clause" clause)
+  (let [val (obj prop)
+        validator (:validator clause)
+        [severity token] (:if-invalid clause)]
+    (when (and val validator)
+      (cond-make-fault-object
+       (apply validator (list val))
+       severity token))))
+
+(defn check-property [obj prop]
+  (assert (map? obj))
+  (assert (keyword? prop))
+  (let [clause (object-expected-properties prop)]
+    (nil-if-empty
+     (remove nil?
+             (list
+              (check-property-required obj prop clause)
+              (check-property-valid obj prop clause))))))
 
 (defn properties-faults
   "Return a lost of faults found on properties of the object `x`, or
    `nil` if none are."
   [x]
-  (nil-if-empty
+  (apply 
+   concat-non-empty
    (let [props (set (keys x))
-         required (filter
-                   #((object-expected-properties %) :required)
-                   (keys object-expected-properties))]
+         required (set
+                   (filter
+                    #((object-expected-properties %) :required)
+                    (keys object-expected-properties)))]
      (map
-      #(check-property x %)
+      (fn [p] (check-property x p))
       (union props required)))))
 
 (defn object-faults
@@ -373,7 +411,7 @@
   ;; https://www.w3.org/TR/activitystreams-vocabulary/#properties
   ;; if these properties are present, these types should be checked.
   ([x]
-   (nil-if-empty
+   (concat-non-empty
     (remove empty?
             (list
              (when-not (map? x)
@@ -384,13 +422,8 @@
              (when-not (:type x)
                (make-fault-object :minor :no-type))
              (when-not (and (map? x) (contains? x :id))
-               (make-fault-object :minor :no-id-transient))
-             (date-time-property-or-fault x :endTime :must
-                                          :not-valid-date-time false)
-             (date-time-property-or-fault x :published :must
-                                          :not-valid-date-time false)
-             (date-time-property-or-fault x :startTime :must
-                                          :not-valid-date-time false)))))
+               (make-fault-object :minor :no-id-transient))))
+    (properties-faults x)))
   ([x expected-type]
    (concat-non-empty
     (object-faults x)

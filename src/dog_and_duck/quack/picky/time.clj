@@ -4,7 +4,7 @@
                                                     make-fault-object
                                                     truthy?]]
             [scot.weft.i18n.core :refer [get-message]]
-            [taoensso.timbre :refer [warn]])
+            [taoensso.timbre :refer [warn error]])
   (:import [java.time LocalDateTime]
            [java.time.format DateTimeFormatter DateTimeParseException]
            [javax.xml.datatype DatatypeFactory]))
@@ -33,6 +33,9 @@
     (if (LocalDateTime/from (.parse DateTimeFormatter/ISO_DATE_TIME value)) true false)
     (catch DateTimeParseException _
       (warn (get-message :bad-date-time) ":" value)
+      false)
+    (catch Exception e
+      (error "Exception thrown while parsing date" value e)
       false)))
 
 (defn xsd-duration?
@@ -41,9 +44,12 @@
   [value]
   (truthy?
    (and (string? value)
-        (try (DatatypeFactory/newDuration value)
+        (try (.newDuration (DatatypeFactory/newInstance) value)
              (catch IllegalArgumentException _
                (warn (get-message :bad-duration) ":" value)
+               false)
+             (catch Exception e
+               (error "Exception thrown while parsing duration" value e)
                false)))))
 
 (defn date-time-property-or-fault
