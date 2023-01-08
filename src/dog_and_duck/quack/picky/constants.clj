@@ -19,7 +19,11 @@
 
 (def ^:const activitystreams-context-uri
   "The URI of the context of an ActivityStreams object is expected to be this
-   literal string."
+   literal string.
+   
+   **NOTE THAT** the URI actually used in the published suite of 
+   activitystreams-test-documents use this URI with 'http' rather than
+   'https' as the property part, but the spec itself specifies 'https'."
   "https://www.w3.org/ns/activitystreams")
 
 (def ^:const actor-types
