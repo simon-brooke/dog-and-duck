@@ -1,6 +1,9 @@
 (ns dog-and-duck.quack.picky.objects
   (:require [clojure.data.json :as json]
-            [dog-and-duck.quack.picky.constants :refer [actor-types noun-types]]
+            [clojure.set :refer [union]]
+            [dog-and-duck.quack.picky.constants :refer [actor-types
+                                                        noun-types
+                                                        re-rfc5646]]
             [dog-and-duck.quack.picky.control-variables :refer [*reify-refs*]]
             [dog-and-duck.quack.picky.time :refer [date-time-property-or-fault
                                                    xsd-date-time?
@@ -12,10 +15,32 @@
                                                     has-type-or-fault
                                                     make-fault-object
                                                     nil-if-empty
-                                                    object-or-uri?]]
+                                                    object-or-uri?
+                                                    truthy?
+                                                    xsd-non-negative-integer?]]
             [taoensso.timbre :refer [warn]])
   (:import [java.io FileNotFoundException]
            [java.net URI URISyntaxException]))
+
+(defn- xsd-float?
+  [pv]
+  (or (integer? pv) (float? pv)))
+
+;;;     Copyright (C) Simon Brooke, 2022
+
+;;;     This program is free software; you can redistribute it and/or
+;;;     modify it under the terms of the GNU General Public License
+;;;     as published by the Free Software Foundation; either version 2
+;;;     of the License, or (at your option) any later version.
+
+;;;     This program is distributed in the hope that it will be useful,
+;;;     but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;;     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;;     GNU General Public License for more details.
+
+;;;     You should have received a copy of the GNU General Public License
+;;;     along with this program; if not, write to the Free Software
+;;;     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 (def object-expected-properties
   "Requirements of properties of object, cribbed from
@@ -35,51 +60,53 @@
    * `:required` a boolean, or a function of one argument returning a 
       boolean, in which case the function will be applied to the object
       having the property;
-   * `:verifier` a function of one argument returning a boolean, which will 
+   * `:validator` a function of one argument returning a boolean, which will 
       be applied to the value or values of the identified property."
   {:accuracy {:functional false
               :if-invalid [:must :invalid-number]
-              :verifier number?}
+              :validator (fn [pv] (and (xsd-float? pv)
+                                       (>= pv 0)
+                                       (<= pv 100)))}
    :actor {:functional false
            :if-invalid [:must :invalid-actor]
            :if-missing [:must :no-actor]
            :required has-activity-type?
-           :verifier object-or-uri?}
+           :validator object-or-uri?}
    :altitude {:functional false
               :if-invalid [:must :invalid-number]
-              :verifier number?}
+              :validator xsd-float?}
    :anyOf {:collection true
            :functional false
            ;; a Question should have a `:oneOf` ot `:anyOf`, but at this layer
            ;; that's hard to check.
            :if-invalid [:must :invalid-option]
-           :verifier object-or-uri?}
+           :validator object-or-uri?}
    :attachment {:functional false
                 :if-invalid [:must :invalid-attachment]
-                :verifier object-or-uri?}
+                :validator object-or-uri?}
    :attributedTo {:functional false
                   :if-invalid [:must :invalid-attribution]
-                  :verifier object-or-uri?}
+                  :validator object-or-uri?}
    :audience {:functional false
               :if-invalid [:must :invalid-audience]
-              :verifier object-or-uri?}
+              :validator object-or-uri?}
    :bcc {:functional false
          :if-invalid [:must :invalid-audience] ;; do we need a separate message for bcc, cc, etc?
-         :verifier object-or-uri?}
+         :validator object-or-uri?}
    :cc {:functional false
         :if-invalid [:must :invalid-audience] ;; do we need a separate message for bcc, cc, etc?
-        :verifier object-or-uri?}
+        :validator object-or-uri?}
    :closed {:functional false
             :if-invalid [:must :invalid-closed]
-            :verifier (fn [pv] (or (object-or-uri? pv)
-                                   (xsd-date-time? pv)
-                                   (#{"true" "false"} pv)))}
+            :validator (fn [pv] (truthy? (or (object-or-uri? pv)
+                                             (xsd-date-time? pv)
+                                             (#{"true" "false"} pv))))}
    :content {:functional false
              :if-invalid [:must :invalid-content]
-             :verifier string?}
+             :validator string?}
    :context {:functional false
              :if-invalid [:must :invalid-context]
-             :verifier object-or-uri?}
+             :validator object-or-uri?}
    :current {:functional true
              :if-missing [:minor :paged-collection-no-current]
              :if-invalid [:must :paged-collection-invalid-current]
@@ -93,11 +120,26 @@
                           (or (has-type? x "Collection")
                               (has-type? x "OrderedCollection"))
                           (:first x)))
-             :verifier (fn [pv] (object-or-uri? pv #{"CollectionPage"
-                                                     "OrderedCollectionPage"}))}
+             :validator (fn [pv] (object-or-uri? pv #{"CollectionPage"
+                                                      "OrderedCollectionPage"}))}
+   :deleted {:functional true
+             :if-missing [:minor :tombstone-missing-deleted]
+             :if-invalid [:must :invalid-deleted]
+             :required (fn [x] (has-type? x "Tombstone"))
+             :validator xsd-date-time?}
+   :describes {:functional true
+               :required (fn [x] (has-type? x "Profile"))
+               :if-invalid [:must :invalid-describes]
+               ;; TODO: actually the spec says this MUST be an object and
+               ;; not a URI, which it doesn't say anywhere else, but this seems
+               ;; to make no sense?
+               :validator object-or-uri?}
    :duration {:functional false
               :if-invalid [:must :invalid-duration]
-              :verifier xsd-duration?}
+              :validator xsd-duration?}
+   :endTime {:functional true
+             :if-invalid [:must :invalid-date-time]
+             :validator xsd-date-time?}
    :first {:functional true
            :if-missing [:minor :paged-collection-no-first]
            :if-invalid [:must :paged-collection-invalid-first]
@@ -111,30 +153,45 @@
                         (or (has-type? x "Collection")
                             (has-type? x "OrderedCollection"))
                         (:last x)))
-           :verifier (fn [pv] (object-or-uri? pv #{"CollectionPage"
-                                                   "OrderedCollectionPage"}))}
+           :validator (fn [pv] (object-or-uri? pv #{"CollectionPage"
+                                                    "OrderedCollectionPage"}))}
+   :formerType {:functional false
+                :if-missing [:minor :tombstone-missing-former-type]
+                :if-invalid [:must :invalid-former-type]
+                :required (fn [x] (has-type? x "Tombstone"))
+                ;; The narrative of the spec says this should be an `Object`,
+                ;; but in all the provided examples it's a string.
+                :validator string?}
    :generator {:functional false
                :if-invalid [:must :invalid-generator]
-               :verifier object-or-uri?}
+               :validator object-or-uri?}
+   :height {:functional false
+            :if-invalid [:must :invalid-non-negative]
+            :validator xsd-non-negative-integer?}
+   :href {:functional false
+          :if-invalid [:must :invalid-href]
+          :validator (fn [pv] (try (uri? (URI. pv))
+                                   (catch URISyntaxException _ false)))}
+   :hreflang {:validator (fn [pv] (truthy? (re-matches re-rfc5646 pv)))}
    :icon {:functional false
           :if-invalid [:must :invalid-icon]
           ;; an icon is also expected to have a 1:1 aspect ratio, but that's
           ;; too much detail at this level of verification
-          :verifier (fn [pv] (object-or-uri? pv "Image"))}
+          :validator (fn [pv] (object-or-uri? pv "Image"))}
    :id {:functional true
         :if-missing [:minor :no-id-transient]
         :if-invalid [:must :invalid-id]
-        :verifier (fn [pv] (try (uri? (URI. pv))
-                                (catch URISyntaxException _ false)))}
+        :validator (fn [pv] (try (uri? (URI. pv))
+                                 (catch URISyntaxException _ false)))}
    :image {:functional false
            :if-invalid [:must :invalid-image]
-           :verifier (fn [pv] (object-or-uri? pv "Image"))}
+           :validator (fn [pv] (object-or-uri? pv "Image"))}
    :inReplyTo {:functional false
                :if-invalid [:must :invalid-in-reply-to]
-               :verifier (fn [pv] (object-or-uri? pv noun-types))}
+               :validator (fn [pv] (object-or-uri? pv noun-types))}
    :instrument {:functional false
                 :if-invalid [:must :invalid-instrument]
-                :verifier object-or-uri?}
+                :validator object-or-uri?}
    :items {:collection true
            :functional false
            :if-invalid [:must :invalid-items]
@@ -148,7 +205,7 @@
                                       (not (:current x))
                                       (not (:first x))
                                       (not (:last x)))))
-           :verifier object-or-uri?}
+           :validator object-or-uri?}
    :last {:functional true
           :if-missing [:minor :paged-collection-no-last]
           :if-invalid [:must :paged-collection-invalid-last]
@@ -165,62 +222,144 @@
                                (has-type? x #{"Collection"
                                               "OrderedCollection"})
                                (:first x))))
-          :verifier (fn [pv] (object-or-uri? pv #{"CollectionPage"
-                                                  "OrderedCollectionPage"}))}
+          :validator (fn [pv] (object-or-uri? pv #{"CollectionPage"
+                                                   "OrderedCollectionPage"}))}
+   :latitude {:functional true
+              :if-invalid [:must :invalid-latitude]
+              ;; The XSD spec says this is an IEEE 754-2008, and the IEEE
+              ;; wants US$104 for me to find out what that is. So I don't
+              ;; strictly know that an integer is valid here.
+              :validator xsd-float?}
    :location {:functional false
               :if-invalid [:must :invalid-location]
-              :verifier (fn [pv] (object-or-uri? pv #{"Place"}))}
+              :validator (fn [pv] (object-or-uri? pv #{"Place"}))}
+   :longitude {:functional true
+               :if-invalid [:must :invalid-longitude]
+               :validator xsd-float?}
+   :mediaType {:functional true
+               :if-invalid [:must :invalid-mime-type]
+               :validator (fn [pv] (truthy? (re-matches #"\w+/[-.\w]+(?:\+[-.\w]+)?" pv)))}
    :name {:functional false
-             :if-invalid [:must :invalid-name]
-             :verifier string?}
+          :if-invalid [:must :invalid-name]
+          :validator string?}
+   :next {:functional true
+          :if-invalid [:must :invalid-next-page]
+          :validator (fn [pv] (object-or-uri? pv #{"CollectionPage"
+                                                   "OrderedCollectionPage"}))}
+   :object {:functional false
+            :if-invalid [:must :invalid-direct-object]
+            :validator object-or-uri?}
    :oneOf {:collection true
            :functional false
            ;; a Question should have a `:oneOf` ot `:anyOf`, but at this layer
            ;; that's hard to check.
            :if-invalid [:must :invalid-option]
-           :verifier object-or-uri?}
+           :validator object-or-uri?}
    :origin {:functional false
             :if-invalid :invalid-origin
-            :verifier object-or-uri?}
-   :next {:functional true
-          :if-invalid [:must :invalid-next-page]
-          :verifier (fn [pv] (object-or-uri? pv #{"CollectionPage"
-                                                  "OrderedCollectionPage"}))}
-   :object {:functional false
-            :if-invalid [:must :invalid-direct-object]
-            :verifier object-or-uri?}
+            :validator object-or-uri?}
+   :partOf {:functional true
+            :if-missing [:must :missing-part-of]
+            :if-invalid [:must :invalid-part-of]
+            :required (fn [x] (object-or-uri? x #{"CollectionPage"
+                                                  "OrderedCollectionPage"}))
+            :validator (fn [pv] (object-or-uri? pv #{"Collection"
+                                                     "OrderedCollection"}))}
    :prev {:functional true
           :if-invalid [:must :invalid-prior-page]
-          :verifier (fn [pv] (object-or-uri? pv #{"CollectionPage"
-                                                  "OrderedCollectionPage"}))}
+          :validator (fn [pv] (object-or-uri? pv #{"CollectionPage"
+                                                   "OrderedCollectionPage"}))}
    :preview {:functional false
              :if-invalid [:must :invalid-preview]
              ;; probably likely to be an Image or Video, but that isn't stated.
-             :verifier object-or-uri?}
+             :validator object-or-uri?}
+   :published {:functional true
+               :if-invalid [:must :invalid-date-time]
+               :validator xsd-date-time?}
    :replies {:functional true
              :if-invalid [:must :invalid-replies]
-             :verifier (fn [pv] (object-or-uri? pv #{"Collection"
-                                                     "OrderedCollection"}))}
+             :validator (fn [pv] (object-or-uri? pv #{"Collection"
+                                                      "OrderedCollection"}))}
+   :radius {:functional true
+            :if-invalid [:must :invalid-positive-number]
+            :validator (fn [pv] (and (xsd-float? pv) (> pv 0)))}
+   :rel {:functional false
+         :if-invalid [:must :invalid-link-relation]
+         ;; TODO: this is not really good enough.
+         :validator (fn [pv] (truthy? (re-matches #"[a-zA-A0-9_\-\.\:\?/\\]*" pv)))}
+   :relationship {;; this exists in the spec, but it doesn't seem to be required and it's
+                  ;; extremely hazily specified. 
+                  }
    :result {:functional false
             :if-invalid [:must :invalid-result]
-            :verifier object-or-uri?}
+            :validator object-or-uri?}
+   :startIndex {:functional true
+                :if-invalid [:must :invalid-start-index]
+                :validator xsd-non-negative-integer?}
+   :start-time {:functional true
+                :if-invalid [:must :invalid-date-time]
+                :validator xsd-date-time?}
+   :subject {:functional true
+             :if-invalid [:must :invalid-subject]
+             :if-missing [:minor :no-relationship-subject]
+             :required (fn [x] (has-type? x "Relationship"))
+             :validator object-or-uri?}
+   :summary {:functional false
+             :if-invalid [:must :invalid-summary]
+             ;; TODO: HTML formatting is allowed, but other forms of formatting
+             ;; are not. Can this be validated?
+             :validator string?}
    :tag {:functional false
          :if-invalid [:must :invalid-tag]
-         :verifier object-or-uri?}
+         :validator object-or-uri?}
    :target {:functional false
             :if-invalid [:must :invalid-target]
-            :verifier object-or-uri?}
+            :validator object-or-uri?}
    :to {:functional false
         :if-invalid [:must :invalid-to]
-        :verifier (fn [pv] (object-or-uri? pv actor-types))}
+        :validator (fn [pv] (object-or-uri? pv actor-types))}
+   :totalItems {:functional true
+                :if-invalid [:must :invalid-total-items]
+                :validator xsd-non-negative-integer?}
    :type {:functional false
           :if-missing [:minor :no-type]
           :if-invalid [:must :invalid-type]
-          ;; strictly, it's an 'anyURI', but realistically these are not checkable.
-          :verifier string?}
+          ;; strictly, it's an `anyURI`, but realistically these are not checkable.
+          :validator string?}
+   :units {:functional true
+           :if-invalid [:must :invalid-units]
+           ;; the narrative says that `anyURI`, but actually unless it's a recognised
+           ;; unit the property is useless. These are the units explicitly specified.
+           :validator (fn [pv] (#{"cm" "feet" "inches" "km" "m" "miles"} pv))}
+   :updated {:functional true
+             :if-invalid [:must :invalid-updated]
+             :validator xsd-date-time?}
    :url {:functional false
          :if-invalid [:must :invalid-url-property]
-         :verifier (fn [pv] (object-or-uri? pv "Link"))}})
+         :validator (fn [pv] (object-or-uri? pv "Link"))}
+   :width {:functional true
+           :if-invalid [:must :invalid-width]
+           :validator xsd-non-negative-integer?}})
+
+(defn- check-property [x p]
+  #(let [c (object-expected-properties x)
+         r (:required c)
+         [s m] (:if-missing c)]
+     (when (and r (r x) (not (x p)))
+       (make-fault-object s m))))
+
+(defn properties-faults
+  "Return a lost of faults found on properties of the object `x`, or
+   `nil` if none are."
+  [x]
+  (nil-if-empty
+   (let [props (set (keys x))
+         required (filter
+                   #((object-expected-properties %) :required)
+                   (keys object-expected-properties))]
+     (map
+      #(check-property x %)
+      (union props required)))))
 
 (defn object-faults
   "Return a list of faults found in object `x`, or `nil` if none are.

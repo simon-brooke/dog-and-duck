@@ -39,6 +39,11 @@
    easier to read."
   (keyword "@context"))
 
+(def ^:const re-rfc5646 
+  "A regex which tests conformity to RFC 5646. Cribbed from
+   https://newbedev.com/regex-to-detect-locales"
+  #"^[a-z]{2,4}(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?$")
+
 (def ^:const severity
   "Severity of faults found, as follows:
    
@@ -68,9 +73,9 @@
   "https://simon-brooke.github.io/dog-and-duck/codox/Validation_Faults.html")
 
 (def ^:const activity-types
-  "The set of types we will accept as verbs.
+  "The set of types we will accept as activities.
    
-   There's an [explicit set of allowed verb types]
+   There's an [explicit set of allowed activity types]
    (https://www.w3.org/TR/activitystreams-vocabulary/#activity-types)."
   #{"Accept" "Add" "Announce" "Arrive" "Block" "Create" "Delete" "Dislike"
     "Flag" "Follow" "Ignore" "Invite" "Join" "Leave" "Like" "Listen" "Move"
@@ -78,8 +83,30 @@
     "TentativeReject" "Travel" "Undo" "Update" "View"})
 
 (def ^:const noun-types
-  "The set of types we will accept as nouns.
+  "The set of object types we will accept as nouns.
    
-   TODO: incomplete."
-  #{"Image" "Note" "Place"})
+   There's an [explicit set of allowed 'object types']
+   (https://www.w3.org/TR/activitystreams-vocabulary/#activity-types), but by 
+   implication it is not exhaustive."
+  #{"Article" 
+    "Audio" 
+    "Document"
+    "Event"
+    "Image"
+    "Link"
+    "Mention"
+    "Note"
+    "Object"
+    "Page"
+    "Place"
+    "Profile"
+    "Relationsip"
+    "Tombstone"
+    "Video"})
+
+(def ^:const implicit-noun-types
+  "These types are not explicitly listed in [Section 3.3 of the spec]
+   (https://www.w3.org/TR/activitystreams-vocabulary/#object-types), but are 
+   mentioned in narrative"
+  #{"Link"})
 

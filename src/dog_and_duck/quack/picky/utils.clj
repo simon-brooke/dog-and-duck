@@ -40,6 +40,12 @@
   [x]
   (if x true false))
 
+(defn xsd-non-negative-integer?
+  "Return `true` if `value` matches the pattern for an 
+   [xsd:nonNegativeInteger](https://www.w3.org/TR/xmlschema11-2/#nonNegativeInteger), else `false`"
+  [x]
+  (and (integer? x)(>= x 0)))
+
 (defn has-type?
   "Return `true` if object `x` has a type in `acceptable`, else `false`.
    
