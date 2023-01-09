@@ -13,8 +13,8 @@
             (file-seq (file "resources/activitystreams-test-documents"))))
 
 (def r
-  (remove
-   empty?
+  (reduce
+   concat-non-empty
    (map
     #(try
        (let [contents (read-str (slurp %))
@@ -29,8 +29,7 @@
                         ;;                             (keywordize-keys obj)))
                         ;;                          contents))
                           )]
-         (when-not (empty? faults)
-           [(.getName %) faults]))
+         (map (fn [f] (assoc f :document (.getName %))) faults))
        (catch Exception any
          [(.getName %) (str "Exception "
                             (.getName (.getClass any))
@@ -46,6 +45,20 @@
         #(and (.isFile %) (.endsWith (.getName %) ".json"))
         (file-seq (file "resources/activitystreams-test-documents"))))
 
-(count r)
-(last r)
-(clojure.pprint/pprint (last r))
+;; (count r)
+;; (last r)
+;; (clojure.pprint/pprint (last r))
+
+(defn distribution
+  "Distribution of values of function `f` when applied to `vals`.
+   
+   I *know* there's a library function that does this, probably better, but I
+   don't remember what it's called!"
+  [f vals]
+  (loop [result {} values vals]
+    (cond (empty? values) result
+          :else (let [r (apply f (list (first values)))
+                      i (if (result r) (inc (result r)) 1)]
+                  (recur (assoc result r i) (rest values))))))
+
+(distribution :fault r)
