@@ -1,4 +1,4 @@
-(defproject dog-and-duck "0.1.0-SNAPSHOT"
+(defproject dog-and-duck "0.1.0"
   :cloverage {:output "docs/cloverage"
               :codecov? true
               :emma-xml? true}

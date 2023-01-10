@@ -18,7 +18,49 @@ Let us proceed.
 
 ## Status
 
-This is a long way pre-alpha. Everything will change. Feel free to play, but do so at your own risk. Contributions welcome.
+This is still pre-alpha. Everything will change. There's still a lot of code that was written when I was feeling my way around the problems, which is redundant and should now be pruned. Feel free to play, but do so at your own risk. Contributions welcome.
+
+## Usage
+
+At present, only the duck-typing validator works. To play with it, build the uberjar (or download it from github) and run it with
+
+```
+java -jar target/dog-and-duck-0.1.0-standalone.jar -i resources/activitystreams-test-documents/vocabulary-ex10-jsonld.json -f html -o report.html -s info
+```
+
+The full range of command-line switches is as follows:
+```
+    -i, --input SOURCE    standard input   The file or URL to validate
+    -o, --output DEST     standard output  The file to write to, defaults to standard out
+    -f, --format FORMAT   :edn             The format to output, one of `edn` `csv` `html`
+    -l, --language LANG   en-GB            The ISO 639-1 code for the language to output
+    -s, --severity LEVEL  :info            The minimum severity of faults to report
+    -h, --help                             Print this message and exit
+```
+
+Note, though, that internationalisation files for languages other than British English have not yet been written, and that one is not complete.
+
+The following severity levels are understood:
+
+   0. `info` things which are not actuallys fault, but issues noted during
+      validation;
+   1. `minor` things which I consider to be faults, but which
+      don't actually breach the spec;
+   2. `should` instances where the spec says something *SHOULD*
+      be done, which isn't;
+   3. `must` instances where the spec says something *MUST*
+      be done, which isn't;
+   4. `critical` instances where I believe the fault means that
+      the object cannot be meaningfully processed.
+
+Note that it is almost certain that in some places I have misinterpreted the spec. Of all 205 documents in the [activitystreams-test-documents repository](https://github.com/w3c-social/activitystreams-test-documents), not a single one passes validation, and that must be wrong.
+
+Nevertheless I think that this is a basis on which a useful validator can be built. Feedback and contributions welcome.
+
+## Documentation
+
+Full documentation is [here](https://simon-brooke.github.io/dog-and-duck/).
+
 
 ## Architecture
 
@@ -85,18 +127,6 @@ Enhanced tools for moderators (I have as yet absolutely no idea what this looks 
 ### Scratch
 
 What the dog does when bored. Essentially, a place where I can learn how to make this stuff work, but perhaps eventually an ActivityPub server in its own right.
-
-## Usage
-
-At present, only the duck-typing functions work. To play with them, use
-
-```clojure
-(require '[dog-and-duck.quack.quack :as q])
-```
-
-## Documentation
-
-Full documentation is [here](https://simon-brooke.github.io/dog-and-duck/).
 
 ## Building
 

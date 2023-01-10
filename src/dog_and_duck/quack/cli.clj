@@ -27,7 +27,7 @@
     :default :edn
     :parse-fn #(keyword %)
     :validate [#(#{:csv :edn :html} %) "Expect one of `edn` `csv` `html`"]]
-   ["-l" "--language LANG" "The ISO 639-1 language code for the language to output"
+   ["-l" "--language LANG" "The ISO 639-1 code for the language to output"
     :default (-> (locale/get-default) locale/to-language-tag)]
    ["-s" "--severity LEVEL" "The minimum severity of faults to report"
     :default :info
