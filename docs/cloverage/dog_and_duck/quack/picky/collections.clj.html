@@ -8,16 +8,16 @@
                 001&nbsp;&nbsp;(ns&nbsp;dog-and-duck.quack.picky.collections
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                002&nbsp;&nbsp;&nbsp;&nbsp;(:require&nbsp;[dog-and-duck.quack.picky.utils&nbsp;:refer&nbsp;[concat-non-empty
+                002&nbsp;&nbsp;&nbsp;&nbsp;(:require&nbsp;[dog-and-duck.quack.picky.objects&nbsp;:refer&nbsp;[object-faults
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cond-make-fault-object
+                003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;object-reference-or-faults]]
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;object-faults
+                004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[dog-and-duck.quack.picky.utils&nbsp;:refer&nbsp;[concat-non-empty
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                005&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;object-reference-or-faults]]))
+                005&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cond-make-fault-object]]))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
                 006&nbsp;&nbsp;
@@ -85,23 +85,23 @@
 <span class="not-tracked" title="0 out of 0 forms covered">
                 027&nbsp;&nbsp;&nbsp;&nbsp;[x&nbsp;type]
                 </span><br/>
-<span class="not-covered" title="0 out of 2 forms covered">
+<span class="covered" title="2 out of 2 forms covered">
                 028&nbsp;&nbsp;&nbsp;&nbsp;(concat-non-empty
                 </span><br/>
-<span class="not-covered" title="0 out of 4 forms covered">
+<span class="covered" title="4 out of 4 forms covered">
                 029&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-faults&nbsp;x&nbsp;type)
                 </span><br/>
-<span class="not-covered" title="0 out of 8 forms covered">
+<span class="covered" title="8 out of 8 forms covered">
                 030&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;(object-reference-or-faults&nbsp;x&nbsp;type&nbsp;:critical&nbsp;:expected-collection)
                 </span><br/>
-<span class="not-covered" title="0 out of 11 forms covered">
+<span class="covered" title="9 out of 9 forms covered">
                 031&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond-make-fault-object&nbsp;(integer?&nbsp;(:totalItems&nbsp;x))&nbsp;:should&nbsp;:no-total-items)
                 </span><br/>
-<span class="not-covered" title="0 out of 8 forms covered">
-                032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults&nbsp;(:first&nbsp;x)&nbsp;nil&nbsp;:must&nbsp;:no-first-page)
+<span class="covered" title="11 out of 11 forms covered">
+                032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults&nbsp;(:first&nbsp;x)&nbsp;(str&nbsp;type&nbsp;&quot;Page&quot;)&nbsp;:must&nbsp;:no-first-page)
                 </span><br/>
-<span class="not-covered" title="0 out of 8 forms covered">
-                033&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults&nbsp;(:last&nbsp;x)&nbsp;nil&nbsp;:should&nbsp;:no-last-page))))
+<span class="covered" title="11 out of 11 forms covered">
+                033&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults&nbsp;(:last&nbsp;x)&nbsp;(str&nbsp;type&nbsp;&quot;Page&quot;)&nbsp;:should&nbsp;:no-last-page))))
                 </span><br/>
 <span class="blank" title="0 out of 0 forms covered">
                 034&nbsp;&nbsp;
@@ -118,62 +118,71 @@
 <span class="not-tracked" title="0 out of 0 forms covered">
                 038&nbsp;&nbsp;&nbsp;&nbsp;[x&nbsp;type]
                 </span><br/>
-<span class="not-covered" title="0 out of 2 forms covered">
+<span class="covered" title="2 out of 2 forms covered">
                 039&nbsp;&nbsp;&nbsp;&nbsp;(concat-non-empty
                 </span><br/>
-<span class="not-covered" title="0 out of 4 forms covered">
+<span class="covered" title="4 out of 4 forms covered">
                 040&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-faults&nbsp;x&nbsp;type)
                 </span><br/>
-<span class="not-covered" title="0 out of 2 forms covered">
-                041&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons
+<span class="covered" title="2 out of 2 forms covered">
+                041&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(concat
                 </span><br/>
-<span class="not-covered" title="0 out of 8 forms covered">
-                042&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;(object-reference-or-faults&nbsp;x&nbsp;type&nbsp;:critical&nbsp;:expected-collection)
+<span class="covered" title="11 out of 11 forms covered">
+                042&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;(cond-make-fault-object&nbsp;(integer?&nbsp;(:totalItems&nbsp;x))&nbsp;:should&nbsp;:no-total-items)
                 </span><br/>
-<span class="not-covered" title="0 out of 11 forms covered">
-                043&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond-make-fault-object&nbsp;(integer?&nbsp;(:totalItems&nbsp;x))&nbsp;:should&nbsp;:no-total-items)
+<span class="covered" title="9 out of 9 forms covered">
+                043&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond-make-fault-object&nbsp;(coll?&nbsp;(:items&nbsp;x))&nbsp;:must&nbsp;:no-items-collection))
                 </span><br/>
-<span class="not-covered" title="0 out of 11 forms covered">
-                044&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond-make-fault-object&nbsp;(coll?&nbsp;(:items&nbsp;x))&nbsp;:must&nbsp;:no-items-collection))
-                </span><br/>
-<span class="not-covered" title="0 out of 12 forms covered">
-                045&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(map&nbsp;#(object-reference-or-faults&nbsp;%&nbsp;nil&nbsp;:must&nbsp;:not-object-reference)&nbsp;(:items&nbsp;x)))))
-                </span><br/>
-<span class="blank" title="0 out of 0 forms covered">
-                046&nbsp;&nbsp;
+<span class="covered" title="2 out of 2 forms covered">
+                044&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reduce
                 </span><br/>
 <span class="covered" title="1 out of 1 forms covered">
-                047&nbsp;&nbsp;(defn&nbsp;collection-page-faults
+                045&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;concat
+                </span><br/>
+<span class="covered" title="12 out of 12 forms covered">
+                046&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(map&nbsp;#(object-reference-or-faults&nbsp;%&nbsp;nil&nbsp;:must&nbsp;:not-object-reference)&nbsp;(:items&nbsp;x))))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                047&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                048&nbsp;&nbsp;(defn&nbsp;collection-page-faults
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                048&nbsp;&nbsp;&nbsp;&nbsp;[x&nbsp;type]
-                </span><br/>
-<span class="not-covered" title="0 out of 2 forms covered">
-                049&nbsp;&nbsp;&nbsp;&nbsp;(concat-non-empty
-                </span><br/>
-<span class="not-covered" title="0 out of 4 forms covered">
-                050&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(simple-collection-faults&nbsp;x&nbsp;type)
-                </span><br/>
-<span class="not-covered" title="0 out of 2 forms covered">
-                051&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list
-                </span><br/>
-<span class="not-covered" title="0 out of 7 forms covered">
-                052&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults&nbsp;(:partOf&nbsp;x)
-                </span><br/>
-<span class="not-covered" title="0 out of 7 forms covered">
-                053&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(apply&nbsp;str&nbsp;(drop-last&nbsp;4&nbsp;type))
+                049&nbsp;&nbsp;&nbsp;&nbsp;&quot;Return&nbsp;a&nbsp;list&nbsp;of&nbsp;faults&nbsp;found&nbsp;in&nbsp;`x`&nbsp;considered&nbsp;as&nbsp;a&nbsp;collection&nbsp;page
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                054&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:should
+                050&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;object&nbsp;of&nbsp;this&nbsp;sub-`type`,&nbsp;or&nbsp;`nil`&nbsp;if&nbsp;none&nbsp;are&nbsp;found.&quot;
                 </span><br/>
 <span class="not-tracked" title="0 out of 0 forms covered">
-                055&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:n-part-of)
+                051&nbsp;&nbsp;&nbsp;&nbsp;[x&nbsp;type]
                 </span><br/>
-<span class="not-covered" title="0 out of 8 forms covered">
-                056&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults&nbsp;(:next&nbsp;x)&nbsp;type&nbsp;:minor&nbsp;:no-next-page)
+<span class="covered" title="2 out of 2 forms covered">
+                052&nbsp;&nbsp;&nbsp;&nbsp;(concat-non-empty
                 </span><br/>
-<span class="not-covered" title="0 out of 8 forms covered">
-                057&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults&nbsp;(:prev&nbsp;x)&nbsp;type&nbsp;:minor&nbsp;:no-prev-page))))
+<span class="covered" title="4 out of 4 forms covered">
+                053&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(simple-collection-faults&nbsp;x&nbsp;type)
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                054&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                055&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults&nbsp;(:partOf&nbsp;x)
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                056&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(apply&nbsp;str&nbsp;(drop-last&nbsp;4&nbsp;type))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                057&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:should
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                058&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:n-part-of)
+                </span><br/>
+<span class="covered" title="8 out of 8 forms covered">
+                059&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults&nbsp;(:next&nbsp;x)&nbsp;type&nbsp;:minor&nbsp;:no-next-page)
+                </span><br/>
+<span class="covered" title="8 out of 8 forms covered">
+                060&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults&nbsp;(:prev&nbsp;x)&nbsp;type&nbsp;:minor&nbsp;:no-prev-page))))
                 </span><br/>
  </body>
 </html>

@@ -1,0 +1,425 @@
+<html>
+ <head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="../../coverage.css"/>  <title> dog_and_duck/quack/cli.clj </title>
+ </head>
+ <body>
+<span class="covered" title="1 out of 1 forms covered">
+                001&nbsp;&nbsp;(ns&nbsp;dog-and-duck.quack.cli
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                002&nbsp;&nbsp;&nbsp;&nbsp;(:require&nbsp;[clojure.data.json&nbsp;:refer&nbsp;[read-str]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clojure.java.io&nbsp;:refer&nbsp;[resource]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clojure.pprint&nbsp;:refer&nbsp;[pprint]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                005&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clojure.string&nbsp;:refer&nbsp;[join]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                006&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clojure.tools.cli&nbsp;:refer&nbsp;[parse-opts]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                007&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clojure.walk&nbsp;:refer&nbsp;[keywordize-keys]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                008&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[dog-and-duck.quack.picky.constants&nbsp;:refer&nbsp;[severity]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                009&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[dog-and-duck.quack.picky.objects&nbsp;:refer&nbsp;[object-faults]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                010&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[dog-and-duck.quack.picky.utils&nbsp;:refer&nbsp;[filter-severity]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                011&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[hiccup.core&nbsp;:refer&nbsp;[html]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                012&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[scot.weft.i18n.core&nbsp;:refer&nbsp;[get-message&nbsp;*config*]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                013&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[trptr.java-wrapper.locale&nbsp;:as&nbsp;locale])
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                014&nbsp;&nbsp;&nbsp;&nbsp;(:gen-class))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                015&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                016&nbsp;&nbsp;(def&nbsp;^:const&nbsp;stylesheet-url
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                017&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;TODO:&nbsp;fix&nbsp;this&nbsp;to&nbsp;github&nbsp;pages&nbsp;before&nbsp;go&nbsp;live
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                018&nbsp;&nbsp;&nbsp;&nbsp;&quot;https:&#x2F;&#x2F;simon-brooke.github.io&#x2F;dog-and-duck&#x2F;style.css&quot;)
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                019&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                020&nbsp;&nbsp;(def&nbsp;cli-options
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                021&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;An&nbsp;option&nbsp;with&nbsp;a&nbsp;required&nbsp;argument
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                022&nbsp;&nbsp;&nbsp;&nbsp;[[&quot;-i&quot;&nbsp;&quot;--input&nbsp;SOURCE&quot;&nbsp;&quot;The&nbsp;file&nbsp;or&nbsp;URL&nbsp;to&nbsp;validate&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                023&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:default&nbsp;&quot;standard&nbsp;input&quot;]
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&quot;-o&quot;&nbsp;&quot;--output&nbsp;DEST&quot;&nbsp;&quot;The&nbsp;file&nbsp;to&nbsp;write&nbsp;to,&nbsp;defaults&nbsp;to&nbsp;standard&nbsp;out&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                025&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:default&nbsp;&quot;standard&nbsp;output&quot;]
+                </span><br/>
+<span class="covered" title="9 out of 9 forms covered">
+                026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&quot;-f&quot;&nbsp;&quot;--format&nbsp;FORMAT&quot;&nbsp;&quot;The&nbsp;format&nbsp;to&nbsp;output,&nbsp;one&nbsp;of&nbsp;`edn`&nbsp;`csv`&nbsp;`html`&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                027&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:default&nbsp;:edn
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                028&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:parse-fn&nbsp;#(keyword&nbsp;%)
+                </span><br/>
+<span class="partial" title="3 out of 9 forms covered">
+                029&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validate&nbsp;[#(#{:csv&nbsp;:edn&nbsp;:html}&nbsp;%)&nbsp;&quot;Expect&nbsp;one&nbsp;of&nbsp;`edn`&nbsp;`csv`&nbsp;`html`&quot;]]
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                030&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&quot;-l&quot;&nbsp;&quot;--language&nbsp;LANG&quot;&nbsp;&quot;The&nbsp;ISO&nbsp;639-1&nbsp;code&nbsp;for&nbsp;the&nbsp;language&nbsp;to&nbsp;output&quot;
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                031&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:default&nbsp;(-&gt;&nbsp;(locale&#x2F;get-default)&nbsp;locale&#x2F;to-language-tag)]
+                </span><br/>
+<span class="covered" title="9 out of 9 forms covered">
+                032&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&quot;-s&quot;&nbsp;&quot;--severity&nbsp;LEVEL&quot;&nbsp;&quot;The&nbsp;minimum&nbsp;severity&nbsp;of&nbsp;faults&nbsp;to&nbsp;report&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                033&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:default&nbsp;:info
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                034&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:parse-fn&nbsp;#(keyword&nbsp;%)
+                </span><br/>
+<span class="partial" title="5 out of 8 forms covered">
+                035&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validate&nbsp;[#(severity&nbsp;%)&nbsp;(join&nbsp;&quot;&nbsp;&quot;
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                036&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                037&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Expected&nbsp;one&nbsp;of&quot;
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                038&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(map&nbsp;name&nbsp;severity)))]]
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                039&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&quot;-h&quot;&nbsp;&quot;--help&quot;]])
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                040&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                041&nbsp;&nbsp;(defn&nbsp;validate
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                042&nbsp;&nbsp;&nbsp;&nbsp;[source]
+                </span><br/>
+<span class="not-covered" title="0 out of 6 forms covered">
+                043&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;(str&nbsp;&quot;Reading&nbsp;&quot;&nbsp;source))
+                </span><br/>
+<span class="not-covered" title="0 out of 6 forms covered">
+                044&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[input&nbsp;(read-str&nbsp;(slurp&nbsp;source))]
+                </span><br/>
+<span class="not-covered" title="0 out of 11 forms covered">
+                045&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;(map?&nbsp;input)&nbsp;(object-faults&nbsp;(keywordize-keys&nbsp;input))
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                046&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(coll?&nbsp;input)
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                047&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(every?&nbsp;map?&nbsp;input))&nbsp;(map&nbsp;#(object-faults
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                048&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(keywordize-keys&nbsp;%)
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                049&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input)))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                050&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                051&nbsp;&nbsp;(defn&nbsp;output-csv
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                052&nbsp;&nbsp;&nbsp;&nbsp;[faults]
+                </span><br/>
+<span class="not-covered" title="0 out of 10 forms covered">
+                053&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[cols&nbsp;(set&nbsp;(reduce&nbsp;concat&nbsp;(map&nbsp;keys&nbsp;faults)))]
+                </span><br/>
+<span class="not-covered" title="0 out of 15 forms covered">
+                054&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(with-out-str
+                </span><br/>
+<span class="not-covered" title="0 out of 9 forms covered">
+                055&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;(join&nbsp;&quot;,&nbsp;&quot;&nbsp;(map&nbsp;name&nbsp;cols)))
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                056&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(map
+                </span><br/>
+<span class="not-covered" title="0 out of 12 forms covered">
+                057&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#(println&nbsp;(join&nbsp;&quot;,&nbsp;&quot;&nbsp;(map&nbsp;(fn&nbsp;[p]&nbsp;(p&nbsp;%))&nbsp;cols)))
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                058&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;faults))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                059&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                060&nbsp;&nbsp;(defn&nbsp;html-header-row
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                061&nbsp;&nbsp;&nbsp;&nbsp;[cols]
+                </span><br/>
+<span class="not-covered" title="0 out of 16 forms covered">
+                062&nbsp;&nbsp;&nbsp;&nbsp;(apply&nbsp;vector&nbsp;(cons&nbsp;:tr&nbsp;(map&nbsp;#(vector&nbsp;:th&nbsp;(name&nbsp;%))&nbsp;cols))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                063&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                064&nbsp;&nbsp;(defn&nbsp;html-fault-row
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                065&nbsp;&nbsp;&nbsp;&nbsp;[fault&nbsp;cols]
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                066&nbsp;&nbsp;&nbsp;&nbsp;(apply
+                </span><br/>
+<span class="not-covered" title="0 out of 14 forms covered">
+                067&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vector&nbsp;(cons&nbsp;:tr&nbsp;(map&nbsp;(fn&nbsp;[col]&nbsp;(vector&nbsp;:td&nbsp;(col&nbsp;fault)))&nbsp;cols))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                068&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                069&nbsp;&nbsp;(defn-&nbsp;version-string&nbsp;[]
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                070&nbsp;&nbsp;&nbsp;&nbsp;(join
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                071&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;&nbsp;&quot;
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                072&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&quot;dog-and-duck&#x2F;quack&quot;
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                073&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(try
+                </span><br/>
+<span class="not-covered" title="0 out of 21 forms covered">
+                074&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(some-&gt;&gt;
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                075&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(resource&nbsp;&quot;META-INF&#x2F;maven&#x2F;dog-and-duck&#x2F;dog-and-duck&#x2F;pom.properties&quot;)
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                076&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;slurp
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                077&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(re-find&nbsp;#&quot;version=(.*)&quot;)
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                078&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;second)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                079&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(catch&nbsp;Exception&nbsp;_&nbsp;nil))]))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                080&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                081&nbsp;&nbsp;(defn&nbsp;output-html
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                082&nbsp;&nbsp;&nbsp;&nbsp;[faults&nbsp;opts]
+                </span><br/>
+<span class="not-covered" title="0 out of 13 forms covered">
+                083&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[source-name&nbsp;(if&nbsp;(=&nbsp;(:input&nbsp;opts)&nbsp;*in*)&nbsp;&quot;Standard&nbsp;input&quot;&nbsp;(str&nbsp;(:input&nbsp;opts)))
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                084&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;title&nbsp;(join&nbsp;&quot;&nbsp;&quot;&nbsp;[(get-message&nbsp;:validation-report-for)&nbsp;source-name])
+                </span><br/>
+<span class="not-covered" title="0 out of 9 forms covered">
+                085&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cols&nbsp;(set&nbsp;(reduce&nbsp;concat&nbsp;(map&nbsp;keys&nbsp;faults)))
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                086&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;version&nbsp;(version-string)]
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                087&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(str
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                088&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;&lt;!DOCTYPE&nbsp;html&gt;&quot;
+                </span><br/>
+<span class="not-covered" title="0 out of 130 forms covered">
+                089&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(html
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                090&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:html
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                091&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:head
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                092&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:title&nbsp;title]
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                093&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:meta&nbsp;{:name&nbsp;&quot;generator&quot;&nbsp;:content&nbsp;version}]
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                094&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:link&nbsp;{:rel&nbsp;&quot;stylesheet&quot;&nbsp;:media&nbsp;&quot;screen&quot;&nbsp;:href&nbsp;stylesheet-url&nbsp;:type&nbsp;&quot;text&#x2F;css&quot;}]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                095&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:body
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                096&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:h1&nbsp;title]
+                </span><br/>
+<span class="not-covered" title="0 out of 10 forms covered">
+                097&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:p&nbsp;(join&nbsp;&quot;&nbsp;&quot;&nbsp;(remove&nbsp;nil?&nbsp;[(get-message&nbsp;:generated-on)
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                098&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(java.time.LocalDateTime&#x2F;now)
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                099&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(get-message&nbsp;:by)
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;version]))]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                101&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if-not
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                102&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(empty?&nbsp;faults)
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                103&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(apply
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                104&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vector
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                105&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:table
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                106&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(html-header-row&nbsp;cols)
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                107&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(map
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                108&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#(html-fault-row&nbsp;%&nbsp;cols)
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                109&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;faults))
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                110&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[:p&nbsp;(get-message&nbsp;:no-faults-found)])]]))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                111&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                112&nbsp;&nbsp;(defn&nbsp;output
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                113&nbsp;&nbsp;&nbsp;&nbsp;[content&nbsp;options]
+                </span><br/>
+<span class="not-covered" title="0 out of 7 forms covered">
+                114&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[faults&nbsp;(filter-severity&nbsp;content&nbsp;(:severity&nbsp;options))]
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                115&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(spit&nbsp;(:output&nbsp;options)
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                116&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(case&nbsp;(:format&nbsp;options)
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                117&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:html&nbsp;(output-html&nbsp;faults&nbsp;options)
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                118&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:csv&nbsp;(output-csv&nbsp;faults)
+                </span><br/>
+<span class="not-covered" title="0 out of 18 forms covered">
+                119&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(with-out-str&nbsp;(pprint&nbsp;faults))))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                120&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                121&nbsp;&nbsp;(defn&nbsp;-main&nbsp;[&amp;&nbsp;args]
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                122&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[opts&nbsp;(parse-opts&nbsp;args&nbsp;cli-options)
+                </span><br/>
+<span class="not-covered" title="0 out of 7 forms covered">
+                123&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;options&nbsp;(assoc&nbsp;(:options&nbsp;opts)
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                124&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:input&nbsp;(if&nbsp;(=&nbsp;(:input&nbsp;(:options&nbsp;opts))&nbsp;&quot;standard&nbsp;input&quot;)
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                125&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*in*
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                126&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(:input&nbsp;(:options&nbsp;opts)))
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                127&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:output&nbsp;(if&nbsp;(=&nbsp;(:output&nbsp;(:options&nbsp;opts))&nbsp;&quot;standard&nbsp;output&quot;)
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*out*
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                129&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(:output&nbsp;(:options&nbsp;opts))))]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                130&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;(println&nbsp;options)
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                131&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(:help&nbsp;options)
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                132&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;(:summary&nbsp;opts)))
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                133&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(:errors&nbsp;opts)
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                134&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(println&nbsp;(:errors&nbsp;opts)))
+                </span><br/>
+<span class="not-covered" title="0 out of 13 forms covered">
+                135&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when-not&nbsp;(or&nbsp;(:help&nbsp;options)&nbsp;(:errors&nbsp;options))
+                </span><br/>
+<span class="not-covered" title="0 out of 16 forms covered">
+                136&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(binding&nbsp;[*config*&nbsp;(assoc&nbsp;*config*&nbsp;:default-language&nbsp;(:language&nbsp;options))]
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                137&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(output
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                138&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(validate&nbsp;(:input&nbsp;options))
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                139&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;options)))))
+                </span><br/>
+ </body>
+</html>

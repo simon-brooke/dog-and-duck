@@ -42,7 +42,7 @@ Note, though, that internationalisation files for languages other than British E
 
 The following severity levels are understood:
 
-   0. `info` things which are not actuallys fault, but issues noted during
+   0. `info` things which are not actually faults, but issues noted during
       validation;
    1. `minor` things which I consider to be faults, but which
       don't actually breach the spec;

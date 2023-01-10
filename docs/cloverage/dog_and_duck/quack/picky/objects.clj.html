@@ -1,0 +1,1574 @@
+<html>
+ <head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="../../../coverage.css"/>  <title> dog_and_duck/quack/picky/objects.clj </title>
+ </head>
+ <body>
+<span class="covered" title="1 out of 1 forms covered">
+                001&nbsp;&nbsp;(ns&nbsp;dog-and-duck.quack.picky.objects
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                002&nbsp;&nbsp;&nbsp;&nbsp;(:require&nbsp;[clojure.data.json&nbsp;:as&nbsp;json]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[clojure.set&nbsp;:refer&nbsp;[union]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                004&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[dog-and-duck.quack.picky.constants&nbsp;:refer&nbsp;[actor-types
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                005&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;noun-types
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                006&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;re-rfc5646]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                007&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[dog-and-duck.quack.picky.control-variables&nbsp;:refer&nbsp;[*reify-refs*]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                008&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[dog-and-duck.quack.picky.time&nbsp;:refer&nbsp;[date-time-property-or-fault
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                009&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xsd-date-time?
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                010&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xsd-duration?]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                011&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[dog-and-duck.quack.picky.utils&nbsp;:refer&nbsp;[concat-non-empty
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                012&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cond-make-fault-object
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                013&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;has-activity-type?
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                014&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;has-context?
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                015&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;has-type?
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                016&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;has-type-or-fault
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                017&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;make-fault-object
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                018&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nil-if-empty
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                019&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;object-or-uri?
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;truthy?
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                021&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xsd-non-negative-integer?]]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                022&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[taoensso.timbre&nbsp;:refer&nbsp;[info&nbsp;warn]])
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                023&nbsp;&nbsp;&nbsp;&nbsp;(:import&nbsp;[java.io&nbsp;FileNotFoundException]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                024&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[java.net&nbsp;URI&nbsp;URISyntaxException]))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                025&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                026&nbsp;&nbsp;(defn-&nbsp;xsd-float?
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                027&nbsp;&nbsp;&nbsp;&nbsp;[pv]
+                </span><br/>
+<span class="not-covered" title="0 out of 10 forms covered">
+                028&nbsp;&nbsp;&nbsp;&nbsp;(or&nbsp;(integer?&nbsp;pv)&nbsp;(float?&nbsp;pv)))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                029&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                030&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copyright&nbsp;(C)&nbsp;Simon&nbsp;Brooke,&nbsp;2022
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                031&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                032&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;program&nbsp;is&nbsp;free&nbsp;software;&nbsp;you&nbsp;can&nbsp;redistribute&nbsp;it&nbsp;and&#x2F;or
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                033&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;modify&nbsp;it&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                034&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;published&nbsp;by&nbsp;the&nbsp;Free&nbsp;Software&nbsp;Foundation;&nbsp;either&nbsp;version&nbsp;2
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                035&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;License,&nbsp;or&nbsp;(at&nbsp;your&nbsp;option)&nbsp;any&nbsp;later&nbsp;version.
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                036&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                037&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;program&nbsp;is&nbsp;distributed&nbsp;in&nbsp;the&nbsp;hope&nbsp;that&nbsp;it&nbsp;will&nbsp;be&nbsp;useful,
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                038&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;but&nbsp;WITHOUT&nbsp;ANY&nbsp;WARRANTY;&nbsp;without&nbsp;even&nbsp;the&nbsp;implied&nbsp;warranty&nbsp;of
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                039&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MERCHANTABILITY&nbsp;or&nbsp;FITNESS&nbsp;FOR&nbsp;A&nbsp;PARTICULAR&nbsp;PURPOSE.&nbsp;&nbsp;See&nbsp;the
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                040&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License&nbsp;for&nbsp;more&nbsp;details.
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                041&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                042&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You&nbsp;should&nbsp;have&nbsp;received&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                043&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;along&nbsp;with&nbsp;this&nbsp;program;&nbsp;if&nbsp;not,&nbsp;write&nbsp;to&nbsp;the&nbsp;Free&nbsp;Software
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                044&nbsp;&nbsp;;;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Foundation,&nbsp;Inc.,&nbsp;51&nbsp;Franklin&nbsp;Street,&nbsp;Fifth&nbsp;Floor,&nbsp;Boston,&nbsp;MA&nbsp;&nbsp;02110-1301,&nbsp;USA.
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                045&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                046&nbsp;&nbsp;(def&nbsp;object-expected-properties
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                047&nbsp;&nbsp;&nbsp;&nbsp;&quot;Requirements&nbsp;of&nbsp;properties&nbsp;of&nbsp;object,&nbsp;cribbed&nbsp;from
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                048&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitystreams-vocabulary&#x2F;#properties
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                049&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                050&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Note&nbsp;the&nbsp;following&nbsp;sub-key&nbsp;value&nbsp;types:
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                051&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                052&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;`:collection`&nbsp;opposite&nbsp;of&nbsp;`:functional`:&nbsp;if&nbsp;true,&nbsp;value&nbsp;should&nbsp;be&nbsp;a
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                053&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;collection&nbsp;(in&nbsp;the&nbsp;Clojure&nbsp;sense),&nbsp;not&nbsp;a&nbsp;single&nbsp;object;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                054&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;`:functional`&nbsp;if&nbsp;true,&nbsp;value&nbsp;should&nbsp;be&nbsp;a&nbsp;single&nbsp;object;&nbsp;if&nbsp;false,&nbsp;may
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                055&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;a&nbsp;single&nbsp;object&nbsp;or&nbsp;a&nbsp;sequence&nbsp;of&nbsp;objects,&nbsp;but&nbsp;each&nbsp;must&nbsp;pass&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                056&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;validation&nbsp;checks;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                057&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;`:if-invalid`&nbsp;a&nbsp;sequence&nbsp;of&nbsp;two&nbsp;keywords,&nbsp;first&nbsp;indicating&nbsp;severity,
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                058&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;second&nbsp;being&nbsp;a&nbsp;message&nbsp;key;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                059&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;`:if-missing`&nbsp;a&nbsp;sequence&nbsp;of&nbsp;two&nbsp;keywords,&nbsp;first&nbsp;indicating&nbsp;severity,
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                060&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;second&nbsp;being&nbsp;a&nbsp;message&nbsp;key;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                061&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;`:required`&nbsp;a&nbsp;boolean,&nbsp;or&nbsp;a&nbsp;function&nbsp;of&nbsp;one&nbsp;argument&nbsp;returning&nbsp;a&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                062&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;boolean,&nbsp;in&nbsp;which&nbsp;case&nbsp;the&nbsp;function&nbsp;will&nbsp;be&nbsp;applied&nbsp;to&nbsp;the&nbsp;object
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                063&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;having&nbsp;the&nbsp;property;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                064&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;`:validator`&nbsp;a&nbsp;function&nbsp;of&nbsp;one&nbsp;argument&nbsp;returning&nbsp;a&nbsp;boolean,&nbsp;which&nbsp;will&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                065&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;applied&nbsp;to&nbsp;the&nbsp;value&nbsp;or&nbsp;values&nbsp;of&nbsp;the&nbsp;identified&nbsp;property.&quot;
+                </span><br/>
+<span class="covered" title="68 out of 68 forms covered">
+                066&nbsp;&nbsp;&nbsp;&nbsp;{:accuracy&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                067&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-number]
+                </span><br/>
+<span class="partial" title="1 out of 14 forms covered">
+                068&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(and&nbsp;(xsd-float?&nbsp;pv)
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                069&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&gt;=&nbsp;pv&nbsp;0)
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                070&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&lt;=&nbsp;pv&nbsp;100)))}
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                071&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:actor&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                072&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-actor]
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                073&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-missing&nbsp;[:must&nbsp;:no-actor]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                074&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:required&nbsp;has-activity-type?
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                075&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                076&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:altitude&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                077&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-number]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                078&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;xsd-float?}
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                079&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:anyOf&nbsp;{:collection&nbsp;true
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                080&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:functional&nbsp;false
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                081&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;a&nbsp;Question&nbsp;should&nbsp;have&nbsp;a&nbsp;`:oneOf`&nbsp;or&nbsp;`:anyOf`,&nbsp;but&nbsp;at&nbsp;this&nbsp;layer
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                082&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;that&#x27;s&nbsp;hard&nbsp;to&nbsp;check.
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                083&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-option]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                084&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                085&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:attachment&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                086&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-attachment]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                087&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                088&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:attributedTo&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                089&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-attribution]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                090&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                091&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:audience&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                092&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-audience]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                093&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                094&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:bcc&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                095&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-audience]&nbsp;;;&nbsp;do&nbsp;we&nbsp;need&nbsp;a&nbsp;separate&nbsp;message&nbsp;for&nbsp;bcc,&nbsp;cc,&nbsp;etc?
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                096&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                097&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:cc&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                098&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-audience]&nbsp;;;&nbsp;do&nbsp;we&nbsp;need&nbsp;a&nbsp;separate&nbsp;message&nbsp;for&nbsp;bcc,&nbsp;cc,&nbsp;etc?
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                099&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:closed&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                101&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-closed]
+                </span><br/>
+<span class="partial" title="1 out of 15 forms covered">
+                102&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(truthy?&nbsp;(or&nbsp;(object-or-uri?&nbsp;pv)
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                103&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(xsd-date-time?&nbsp;pv)
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                104&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(#{&quot;true&quot;&nbsp;&quot;false&quot;}&nbsp;pv))))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                105&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:content&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                106&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-content]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                107&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;string?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                108&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:context&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                109&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-context]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                110&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                111&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:current&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                112&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-missing&nbsp;[:minor&nbsp;:paged-collection-no-current]
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                113&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:paged-collection-invalid-current]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                114&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:required&nbsp;(fn&nbsp;[x]&nbsp;;;&nbsp;if&nbsp;an&nbsp;object&nbsp;is&nbsp;a&nbsp;collection&nbsp;which&nbsp;has&nbsp;pages,
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                115&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;it&nbsp;ought&nbsp;to&nbsp;have&nbsp;a&nbsp;`:current`&nbsp;page.&nbsp;But&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                116&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;1.&nbsp;it&nbsp;isn&#x27;t&nbsp;required&nbsp;to,&nbsp;and
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                117&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;2.&nbsp;there&#x27;s&nbsp;no&nbsp;certain&nbsp;way&nbsp;of&nbsp;telling&nbsp;that&nbsp;it
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                118&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;&nbsp;&nbsp;&nbsp;does&nbsp;have&nbsp;pages&nbsp;-&nbsp;although&nbsp;if&nbsp;it&nbsp;has&nbsp;a
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                119&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;&nbsp;&nbsp;&nbsp;`:first`,&nbsp;then&nbsp;it&nbsp;is.
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                120&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and
+                </span><br/>
+<span class="covered" title="10 out of 10 forms covered">
+                121&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(or&nbsp;(has-type?&nbsp;x&nbsp;&quot;Collection&quot;)
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                122&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(has-type?&nbsp;x&nbsp;&quot;OrderedCollection&quot;))
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                123&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(:first&nbsp;x)))
+                </span><br/>
+<span class="partial" title="1 out of 7 forms covered">
+                124&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(object-or-uri?&nbsp;pv&nbsp;#{&quot;CollectionPage&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                125&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;OrderedCollectionPage&quot;}))}
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                126&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:deleted&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                127&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-missing&nbsp;[:minor&nbsp;:tombstone-missing-deleted]
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-deleted]
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                129&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:required&nbsp;(fn&nbsp;[x]&nbsp;(has-type?&nbsp;x&nbsp;&quot;Tombstone&quot;))
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                130&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;xsd-date-time?}
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                131&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:describes&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                132&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:required&nbsp;(fn&nbsp;[x]&nbsp;(has-type?&nbsp;x&nbsp;&quot;Profile&quot;))
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                133&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-describes]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                134&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;TODO:&nbsp;actually&nbsp;the&nbsp;spec&nbsp;says&nbsp;this&nbsp;MUST&nbsp;be&nbsp;an&nbsp;object&nbsp;and
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                135&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;not&nbsp;a&nbsp;URI,&nbsp;which&nbsp;it&nbsp;doesn&#x27;t&nbsp;say&nbsp;anywhere&nbsp;else,&nbsp;but&nbsp;this&nbsp;seems
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                136&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;to&nbsp;make&nbsp;no&nbsp;sense?
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                137&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                138&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:duration&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                139&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-duration]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                140&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;xsd-duration?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                141&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:endTime&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                142&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-date-time]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                143&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;xsd-date-time?}
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                144&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:first&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                145&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-missing&nbsp;[:minor&nbsp;:paged-collection-no-first]
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                146&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:paged-collection-invalid-first]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                147&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:required&nbsp;(fn&nbsp;[x]&nbsp;;;&nbsp;if&nbsp;an&nbsp;object&nbsp;is&nbsp;a&nbsp;collection&nbsp;which&nbsp;has&nbsp;pages,
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                148&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;it&nbsp;ought&nbsp;to&nbsp;have&nbsp;a&nbsp;`:first`&nbsp;page.&nbsp;But&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                149&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;1.&nbsp;it&nbsp;isn&#x27;t&nbsp;required&nbsp;to,&nbsp;and
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                150&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;2.&nbsp;there&#x27;s&nbsp;no&nbsp;certain&nbsp;way&nbsp;of&nbsp;telling&nbsp;that&nbsp;it
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                151&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;&nbsp;&nbsp;&nbsp;does&nbsp;have&nbsp;pages&nbsp;-&nbsp;although&nbsp;if&nbsp;it&nbsp;has&nbsp;a
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                152&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;&nbsp;&nbsp;&nbsp;`:last`,&nbsp;then&nbsp;it&nbsp;is.
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                153&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and
+                </span><br/>
+<span class="covered" title="12 out of 12 forms covered">
+                154&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(or&nbsp;(has-type?&nbsp;x&nbsp;&quot;Collection&quot;)
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                155&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(has-type?&nbsp;x&nbsp;&quot;OrderedCollection&quot;))
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                156&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(:last&nbsp;x)))
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                157&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(object-or-uri?&nbsp;pv&nbsp;#{&quot;CollectionPage&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                158&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;OrderedCollectionPage&quot;}))}
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                159&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:formerType&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                160&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-missing&nbsp;[:minor&nbsp;:tombstone-missing-former-type]
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                161&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-former-type]
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                162&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:required&nbsp;(fn&nbsp;[x]&nbsp;(has-type?&nbsp;x&nbsp;&quot;Tombstone&quot;))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                163&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;The&nbsp;narrative&nbsp;of&nbsp;the&nbsp;spec&nbsp;says&nbsp;this&nbsp;should&nbsp;be&nbsp;an&nbsp;`Object`,
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                164&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;but&nbsp;in&nbsp;all&nbsp;the&nbsp;provided&nbsp;examples&nbsp;it&#x27;s&nbsp;a&nbsp;string.
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                165&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;string?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                166&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:generator&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                167&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-generator]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                168&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                169&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:height&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                170&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-non-negative]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                171&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;xsd-non-negative-integer?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                172&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:href&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                173&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-href]
+                </span><br/>
+<span class="partial" title="1 out of 7 forms covered">
+                174&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(try&nbsp;(uri?&nbsp;(URI.&nbsp;pv))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                175&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(catch&nbsp;URISyntaxException&nbsp;_&nbsp;false)))}
+                </span><br/>
+<span class="partial" title="3 out of 9 forms covered">
+                176&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:hreflang&nbsp;{:validator&nbsp;(fn&nbsp;[pv]&nbsp;(truthy?&nbsp;(re-matches&nbsp;re-rfc5646&nbsp;pv)))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                177&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:icon&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                178&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-icon]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                179&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;an&nbsp;icon&nbsp;is&nbsp;also&nbsp;expected&nbsp;to&nbsp;have&nbsp;a&nbsp;1:1&nbsp;aspect&nbsp;ratio,&nbsp;but&nbsp;that&#x27;s
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                180&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;too&nbsp;much&nbsp;detail&nbsp;at&nbsp;this&nbsp;level&nbsp;of&nbsp;verification
+                </span><br/>
+<span class="partial" title="1 out of 5 forms covered">
+                181&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(object-or-uri?&nbsp;pv&nbsp;&quot;Image&quot;))}
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                182&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:id&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                183&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-missing&nbsp;[:minor&nbsp;:no-id-transient]
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                184&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-id]
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                185&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(try&nbsp;(uri?&nbsp;(URI.&nbsp;pv))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                186&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(catch&nbsp;URISyntaxException&nbsp;_&nbsp;false)))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                187&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:image&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                188&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-image]
+                </span><br/>
+<span class="partial" title="1 out of 5 forms covered">
+                189&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(object-or-uri?&nbsp;pv&nbsp;&quot;Image&quot;))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                190&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:inReplyTo&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                191&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-in-reply-to]
+                </span><br/>
+<span class="partial" title="1 out of 5 forms covered">
+                192&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(object-or-uri?&nbsp;pv&nbsp;noun-types))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                193&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:instrument&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                194&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-instrument]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                195&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="9 out of 9 forms covered">
+                196&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:items&nbsp;{:collection&nbsp;true
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                197&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                198&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-items]
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                199&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-missing&nbsp;[:must&nbsp;:no-items-or-pages]
+                </span><br/>
+<span class="partial" title="19 out of 22 forms covered">
+                200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:required&nbsp;(fn&nbsp;[x]&nbsp;(or&nbsp;(has-type?&nbsp;x&nbsp;&quot;CollectionPage&quot;)
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                201&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(has-type?&nbsp;x&nbsp;&quot;Collection&quot;)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                202&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;if&nbsp;it&#x27;s&nbsp;a&nbsp;collection&nbsp;and&nbsp;has&nbsp;pages,
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                203&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;it&nbsp;doesn&#x27;t&nbsp;need&nbsp;items.
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                204&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;(:current&nbsp;x))
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                205&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;(:first&nbsp;x))
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                206&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;(:last&nbsp;x)))))
+                </span><br/>
+<span class="partial" title="11 out of 12 forms covered">
+                207&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(and&nbsp;(coll?&nbsp;pv)&nbsp;(every?&nbsp;object-or-uri?&nbsp;pv)))}
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                208&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:last&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                209&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-missing&nbsp;[:minor&nbsp;:paged-collection-no-last]
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                210&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:paged-collection-invalid-last]
+                </span><br/>
+<span class="partial" title="6 out of 9 forms covered">
+                211&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:required&nbsp;(fn&nbsp;[x]&nbsp;(if&nbsp;(and
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                212&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(string?&nbsp;x)
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                213&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(try&nbsp;(uri?&nbsp;(URI.&nbsp;x))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                214&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(catch&nbsp;URISyntaxException&nbsp;_&nbsp;false)))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                215&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                216&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;if&nbsp;an&nbsp;object&nbsp;is&nbsp;a&nbsp;collection&nbsp;which&nbsp;has&nbsp;pages,
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                217&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;it&nbsp;ought&nbsp;to&nbsp;have&nbsp;a&nbsp;`:last`&nbsp;page.&nbsp;But&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                218&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;1.&nbsp;it&nbsp;isn&#x27;t&nbsp;required&nbsp;to,&nbsp;and
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                219&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;2.&nbsp;there&#x27;s&nbsp;no&nbsp;certain&nbsp;way&nbsp;of&nbsp;telling&nbsp;that&nbsp;it
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                220&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;&nbsp;&nbsp;&nbsp;does&nbsp;have&nbsp;pages&nbsp;-&nbsp;although&nbsp;if&nbsp;it&nbsp;has&nbsp;a
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                221&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;&nbsp;&nbsp;&nbsp;`:first`,&nbsp;then&nbsp;it&nbsp;is.
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                222&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                223&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(has-type?&nbsp;x&nbsp;#{&quot;Collection&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                224&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;OrderedCollection&quot;})
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                225&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(:first&nbsp;x))))
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                226&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(object-or-uri?&nbsp;pv&nbsp;#{&quot;CollectionPage&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                227&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;OrderedCollectionPage&quot;}))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                228&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:latitude&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                229&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-latitude]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                230&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;The&nbsp;XSD&nbsp;spec&nbsp;says&nbsp;this&nbsp;is&nbsp;an&nbsp;IEEE&nbsp;754-2008,&nbsp;and&nbsp;the&nbsp;IEEE
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                231&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;wants&nbsp;US$104&nbsp;for&nbsp;me&nbsp;to&nbsp;find&nbsp;out&nbsp;what&nbsp;that&nbsp;is.&nbsp;So&nbsp;I&nbsp;don&#x27;t
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                232&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;strictly&nbsp;know&nbsp;that&nbsp;an&nbsp;integer&nbsp;is&nbsp;valid&nbsp;here.
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                233&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;xsd-float?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                234&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:location&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                235&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-location]
+                </span><br/>
+<span class="partial" title="1 out of 6 forms covered">
+                236&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(object-or-uri?&nbsp;pv&nbsp;#{&quot;Place&quot;}))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                237&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:longitude&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                238&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-longitude]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                239&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;xsd-float?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                240&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:mediaType&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                241&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-mime-type]
+                </span><br/>
+<span class="partial" title="1 out of 7 forms covered">
+                242&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(truthy?&nbsp;(re-matches&nbsp;#&quot;\w+&#x2F;[-.\w]+(?:\+[-.\w]+)?&quot;&nbsp;pv)))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                243&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:name&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                244&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-name]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                245&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;string?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                246&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:next&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                247&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-next-page]
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                248&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(object-or-uri?&nbsp;pv&nbsp;#{&quot;CollectionPage&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                249&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;OrderedCollectionPage&quot;}))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                250&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:object&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                251&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-direct-object]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                252&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                253&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:oneOf&nbsp;{:collection&nbsp;true
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                254&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:functional&nbsp;false
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                255&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;a&nbsp;Question&nbsp;should&nbsp;have&nbsp;a&nbsp;`:oneOf`&nbsp;ot&nbsp;`:anyOf`,&nbsp;but&nbsp;at&nbsp;this&nbsp;layer
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                256&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;that&#x27;s&nbsp;hard&nbsp;to&nbsp;check.
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                257&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-option]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                258&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                259&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="9 out of 9 forms covered">
+                260&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:orderedItems&nbsp;{:collection&nbsp;true
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                261&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                262&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-items]
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                263&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-missing&nbsp;[:must&nbsp;:no-items-or-pages]
+                </span><br/>
+<span class="partial" title="20 out of 22 forms covered">
+                264&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:required&nbsp;(fn&nbsp;[x]&nbsp;(or&nbsp;(has-type?&nbsp;x&nbsp;&quot;OrderedCollectionPage&quot;)
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                265&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(has-type?&nbsp;x&nbsp;&quot;OrderedCollection&quot;)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                266&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;if&nbsp;it&#x27;s&nbsp;a&nbsp;collection&nbsp;and&nbsp;has&nbsp;pages,
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                267&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;it&nbsp;doesn&#x27;t&nbsp;need&nbsp;items.
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                268&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;(:current&nbsp;x))
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                269&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;(:first&nbsp;x))
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                270&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;(:last&nbsp;x)))))
+                </span><br/>
+<span class="partial" title="11 out of 12 forms covered">
+                271&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(and&nbsp;(coll?&nbsp;pv)&nbsp;(every?&nbsp;object-or-uri?&nbsp;pv)))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                272&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:origin&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                273&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-origin]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                274&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                275&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:partOf&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                276&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-missing&nbsp;[:must&nbsp;:missing-part-of]
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                277&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-part-of]
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                278&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:required&nbsp;(fn&nbsp;[x]&nbsp;(object-or-uri?&nbsp;x&nbsp;#{&quot;CollectionPage&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                279&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;OrderedCollectionPage&quot;}))
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                280&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(object-or-uri?&nbsp;pv&nbsp;#{&quot;Collection&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                281&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;OrderedCollection&quot;}))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                282&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:prev&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                283&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-prior-page]
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                284&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(object-or-uri?&nbsp;pv&nbsp;#{&quot;CollectionPage&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                285&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;OrderedCollectionPage&quot;}))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                286&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:preview&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                287&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-preview]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                288&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;probably&nbsp;likely&nbsp;to&nbsp;be&nbsp;an&nbsp;Image&nbsp;or&nbsp;Video,&nbsp;but&nbsp;that&nbsp;isn&#x27;t&nbsp;stated.
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                289&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                290&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:published&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                291&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-date-time]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                292&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;xsd-date-time?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                293&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:replies&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                294&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-replies]
+                </span><br/>
+<span class="partial" title="1 out of 7 forms covered">
+                295&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(object-or-uri?&nbsp;pv&nbsp;#{&quot;Collection&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                296&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;OrderedCollection&quot;}))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                297&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:radius&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                298&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-positive-number]
+                </span><br/>
+<span class="partial" title="1 out of 11 forms covered">
+                299&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(and&nbsp;(xsd-float?&nbsp;pv)&nbsp;(&gt;&nbsp;pv&nbsp;0)))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                300&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:rel&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                301&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-link-relation]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                302&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;TODO:&nbsp;this&nbsp;is&nbsp;not&nbsp;really&nbsp;good&nbsp;enough.
+                </span><br/>
+<span class="partial" title="1 out of 7 forms covered">
+                303&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(truthy?&nbsp;(re-matches&nbsp;#&quot;[a-zA-A0-9_\-\.\:\?&#x2F;\\]*&quot;&nbsp;pv)))}
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                304&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:relationship&nbsp;{;;&nbsp;this&nbsp;exists&nbsp;in&nbsp;the&nbsp;spec,&nbsp;but&nbsp;it&nbsp;doesn&#x27;t&nbsp;seem&nbsp;to&nbsp;be&nbsp;required&nbsp;and&nbsp;it&#x27;s
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                305&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;extremely&nbsp;hazily&nbsp;specified.&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                306&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                307&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:result&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                308&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-result]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                309&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                310&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:startIndex&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                311&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-start-index]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                312&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;xsd-non-negative-integer?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                313&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:start-time&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                314&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-date-time]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                315&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;xsd-date-time?}
+                </span><br/>
+<span class="covered" title="7 out of 7 forms covered">
+                316&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:subject&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                317&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-subject]
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                318&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-missing&nbsp;[:minor&nbsp;:no-relationship-subject]
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                319&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:required&nbsp;(fn&nbsp;[x]&nbsp;(has-type?&nbsp;x&nbsp;&quot;Relationship&quot;))
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                320&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                321&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:summary&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                322&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-summary]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                323&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;TODO:&nbsp;HTML&nbsp;formatting&nbsp;is&nbsp;allowed,&nbsp;but&nbsp;other&nbsp;forms&nbsp;of&nbsp;formatting
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                324&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;are&nbsp;not.&nbsp;Can&nbsp;this&nbsp;be&nbsp;validated?
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                325&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;string?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                326&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:tag&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                327&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-tag]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                328&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                329&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:target&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                330&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-target]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                331&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;object-or-uri?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                332&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:to&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                333&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-to]
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                334&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(object-or-uri?&nbsp;pv&nbsp;actor-types))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                335&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:totalItems&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                336&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-total-items]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                337&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;xsd-non-negative-integer?}
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                338&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:type&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                339&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-missing&nbsp;[:minor&nbsp;:no-type]
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                340&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-type]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                341&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;strictly,&nbsp;it&#x27;s&nbsp;an&nbsp;`anyURI`,&nbsp;but&nbsp;realistically&nbsp;these&nbsp;are&nbsp;not&nbsp;checkable.
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                342&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;string?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                343&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:units&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                344&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-units]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                345&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;the&nbsp;narrative&nbsp;says&nbsp;that&nbsp;`anyURI`,&nbsp;but&nbsp;actually&nbsp;unless&nbsp;it&#x27;s&nbsp;a&nbsp;recognised
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                346&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;unit&nbsp;the&nbsp;property&nbsp;is&nbsp;useless.&nbsp;These&nbsp;are&nbsp;the&nbsp;units&nbsp;explicitly&nbsp;specified.
+                </span><br/>
+<span class="partial" title="1 out of 10 forms covered">
+                347&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(#{&quot;cm&quot;&nbsp;&quot;feet&quot;&nbsp;&quot;inches&quot;&nbsp;&quot;km&quot;&nbsp;&quot;m&quot;&nbsp;&quot;miles&quot;}&nbsp;pv))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                348&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:updated&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                349&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-updated]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                350&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;xsd-date-time?}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                351&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:url&nbsp;{:functional&nbsp;false
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                352&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-url-property]
+                </span><br/>
+<span class="partial" title="1 out of 5 forms covered">
+                353&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;(fn&nbsp;[pv]&nbsp;(object-or-uri?&nbsp;pv&nbsp;&quot;Link&quot;))}
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                354&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:width&nbsp;{:functional&nbsp;true
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                355&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:if-invalid&nbsp;[:must&nbsp;:invalid-width]
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                356&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:validator&nbsp;xsd-non-negative-integer?}})
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                357&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                358&nbsp;&nbsp;(defn&nbsp;check-property-required&nbsp;[obj&nbsp;prop&nbsp;clause]
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                359&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[required&nbsp;(:required&nbsp;clause)
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                360&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[severity&nbsp;token]&nbsp;(:if-missing&nbsp;clause)]
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                361&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;required
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                362&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when
+                </span><br/>
+<span class="covered" title="15 out of 15 forms covered">
+                363&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(apply&nbsp;required&nbsp;(list&nbsp;obj))&nbsp;(not&nbsp;(obj&nbsp;prop)))
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                364&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-fault-object&nbsp;severity&nbsp;token)))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                365&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                366&nbsp;&nbsp;(defn&nbsp;check-property-valid
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                367&nbsp;&nbsp;&nbsp;&nbsp;[obj&nbsp;prop&nbsp;clause]
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                368&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;(info&nbsp;&quot;obj&quot;&nbsp;obj&nbsp;&quot;prop&quot;&nbsp;prop&nbsp;&quot;clause&quot;&nbsp;clause)
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                369&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[val&nbsp;(obj&nbsp;prop)
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                370&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;validator&nbsp;(:validator&nbsp;clause)
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                371&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[severity&nbsp;token]&nbsp;(:if-invalid&nbsp;clause)]
+                </span><br/>
+<span class="covered" title="8 out of 8 forms covered">
+                372&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;(and&nbsp;val&nbsp;validator)
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                373&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond-make-fault-object
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                374&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(apply&nbsp;validator&nbsp;(list&nbsp;val))
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                375&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;severity&nbsp;token))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                376&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                377&nbsp;&nbsp;(defn&nbsp;check-property&nbsp;[obj&nbsp;prop]
+                </span><br/>
+<span class="covered" title="14 out of 14 forms covered">
+                378&nbsp;&nbsp;&nbsp;&nbsp;(assert&nbsp;(map?&nbsp;obj))
+                </span><br/>
+<span class="partial" title="5 out of 14 forms covered">
+                379&nbsp;&nbsp;&nbsp;&nbsp;(assert&nbsp;(keyword?&nbsp;prop))
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                380&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[clause&nbsp;(object-expected-properties&nbsp;prop)]
+                </span><br/>
+<span class="partial" title="7 out of 8 forms covered">
+                381&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(nil-if-empty
+                </span><br/>
+<span class="covered" title="9 out of 9 forms covered">
+                382&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(remove&nbsp;nil?
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                383&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list
+                </span><br/>
+<span class="covered" title="15 out of 15 forms covered">
+                384&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(check-property-required&nbsp;obj&nbsp;prop&nbsp;clause)
+                </span><br/>
+<span class="covered" title="15 out of 15 forms covered">
+                385&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(check-property-valid&nbsp;obj&nbsp;prop&nbsp;clause))))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                386&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                387&nbsp;&nbsp;(defn&nbsp;properties-faults
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                388&nbsp;&nbsp;&nbsp;&nbsp;&quot;Return&nbsp;a&nbsp;lost&nbsp;of&nbsp;faults&nbsp;found&nbsp;on&nbsp;properties&nbsp;of&nbsp;the&nbsp;object&nbsp;`x`,&nbsp;or
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                389&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`nil`&nbsp;if&nbsp;none&nbsp;are.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                390&nbsp;&nbsp;&nbsp;&nbsp;[x]
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                391&nbsp;&nbsp;&nbsp;&nbsp;(apply&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                392&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;concat-non-empty
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                393&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[props&nbsp;(set&nbsp;(keys&nbsp;x))
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                394&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;required&nbsp;(set
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                395&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(filter
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                396&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#((object-expected-properties&nbsp;%)&nbsp;:required)
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                397&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(keys&nbsp;object-expected-properties)))]
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                398&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(map
+                </span><br/>
+<span class="covered" title="5 out of 5 forms covered">
+                399&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fn&nbsp;[p]&nbsp;(check-property&nbsp;x&nbsp;p))
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                400&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(union&nbsp;props&nbsp;required)))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                401&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                402&nbsp;&nbsp;(defn&nbsp;object-faults
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                403&nbsp;&nbsp;&nbsp;&nbsp;&quot;Return&nbsp;a&nbsp;list&nbsp;of&nbsp;faults&nbsp;found&nbsp;in&nbsp;object&nbsp;`x`,&nbsp;or&nbsp;`nil`&nbsp;if&nbsp;none&nbsp;are.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                404&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                405&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;`expected-type`&nbsp;is&nbsp;also&nbsp;passed,&nbsp;verify&nbsp;that&nbsp;`x`&nbsp;has&nbsp;`expected-type`.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                406&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`expected-type`&nbsp;may&nbsp;be&nbsp;passed&nbsp;as&nbsp;a&nbsp;string&nbsp;or&nbsp;as&nbsp;a&nbsp;set&nbsp;of&nbsp;strings.&nbsp;Detailed
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                407&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;verification&nbsp;of&nbsp;the&nbsp;particular&nbsp;features&nbsp;of&nbsp;types&nbsp;is&nbsp;not&nbsp;done&nbsp;here.&quot;
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                408&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                409&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;TODO:&nbsp;many&nbsp;more&nbsp;properties&nbsp;which&nbsp;are&nbsp;nor&nbsp;required,&nbsp;nevertheless&nbsp;have&nbsp;required
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                410&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;property&nbsp;TYPES&nbsp;as&nbsp;detailed&nbsp;in
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                411&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;https:&#x2F;&#x2F;www.w3.org&#x2F;TR&#x2F;activitystreams-vocabulary&#x2F;#properties
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                412&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;if&nbsp;these&nbsp;properties&nbsp;are&nbsp;present,&nbsp;these&nbsp;types&nbsp;should&nbsp;be&nbsp;checked.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                413&nbsp;&nbsp;&nbsp;&nbsp;([x]
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                414&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(concat-non-empty
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                415&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(remove&nbsp;empty?
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                416&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                417&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when-not&nbsp;(map?&nbsp;x)
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                418&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-fault-object&nbsp;:critical&nbsp;:not-an-object))
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                419&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when-not
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                420&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(has-context?&nbsp;x)
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                421&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-fault-object&nbsp;:should&nbsp;:no-context))
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                422&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when-not&nbsp;(:type&nbsp;x)
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                423&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-fault-object&nbsp;:minor&nbsp;:no-type))
+                </span><br/>
+<span class="covered" title="14 out of 14 forms covered">
+                424&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when-not&nbsp;(and&nbsp;(map?&nbsp;x)&nbsp;(contains?&nbsp;x&nbsp;:id))
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                425&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-fault-object&nbsp;:minor&nbsp;:no-id-transient))))
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                426&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(properties-faults&nbsp;x)))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                427&nbsp;&nbsp;&nbsp;&nbsp;([x&nbsp;expected-type]
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                428&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(concat-non-empty
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                429&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-faults&nbsp;x)
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                430&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;expected-type
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                431&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list
+                </span><br/>
+<span class="covered" title="6 out of 6 forms covered">
+                432&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(has-type-or-fault&nbsp;x&nbsp;expected-type&nbsp;:critical&nbsp;:unexpected-type))))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                433&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                434&nbsp;&nbsp;(def&nbsp;maybe-reify
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                435&nbsp;&nbsp;&nbsp;&nbsp;&quot;If&nbsp;`*reify-refs*`&nbsp;is&nbsp;`true`,&nbsp;return&nbsp;the&nbsp;object&nbsp;at&nbsp;this&nbsp;`target`&nbsp;URI.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                436&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns&nbsp;`nil`&nbsp;if
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                437&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                438&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;`*reify-refs*`&nbsp;is&nbsp;false;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                439&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;the&nbsp;object&nbsp;was&nbsp;not&nbsp;found;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                440&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.&nbsp;access&nbsp;to&nbsp;the&nbsp;object&nbsp;was&nbsp;not&nbsp;permitted.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                441&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                442&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Consequently,&nbsp;use&nbsp;with&nbsp;care.&quot;
+                </span><br/>
+<span class="covered" title="2 out of 2 forms covered">
+                443&nbsp;&nbsp;&nbsp;&nbsp;(memoize
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                444&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fn&nbsp;[target]
+                </span><br/>
+<span class="partial" title="4 out of 6 forms covered">
+                445&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(try&nbsp;(let&nbsp;[uri&nbsp;(URI.&nbsp;target)]
+                </span><br/>
+<span class="partial" title="2 out of 3 forms covered">
+                446&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;*reify-refs*
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                447&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(json&#x2F;read-str&nbsp;(slurp&nbsp;uri))))
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                448&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(catch&nbsp;URISyntaxException&nbsp;_
+                </span><br/>
+<span class="not-covered" title="0 out of 18 forms covered">
+                449&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(warn&nbsp;&quot;Reification&nbsp;target&quot;&nbsp;target&nbsp;&quot;was&nbsp;not&nbsp;a&nbsp;valid&nbsp;URI.&quot;)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                450&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nil)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                451&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(catch&nbsp;FileNotFoundException&nbsp;_
+                </span><br/>
+<span class="not-covered" title="0 out of 18 forms covered">
+                452&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(warn&nbsp;&quot;Reification&nbsp;target&quot;&nbsp;target&nbsp;&quot;was&nbsp;not&nbsp;found.&quot;)
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                453&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nil)))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                454&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                455&nbsp;&nbsp;(defn&nbsp;maybe-reify-or-faults
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                456&nbsp;&nbsp;&nbsp;&nbsp;&quot;If&nbsp;`*reify-refs*`&nbsp;is&nbsp;`true`,&nbsp;runs&nbsp;basic&nbsp;checks&nbsp;on&nbsp;the&nbsp;object&nbsp;at&nbsp;this&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                457&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`target`&nbsp;URI,&nbsp;if&nbsp;it&nbsp;is&nbsp;found,&nbsp;or&nbsp;a&nbsp;list&nbsp;containing&nbsp;a&nbsp;fault&nbsp;object&nbsp;with
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                458&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this&nbsp;`severity`&nbsp;and&nbsp;`token`&nbsp;if&nbsp;it&nbsp;is&nbsp;not.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                459&nbsp;&nbsp;&nbsp;&nbsp;[value&nbsp;expected-type&nbsp;severity&nbsp;token]
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                460&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[object&nbsp;(maybe-reify&nbsp;value)]
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                461&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;object
+                </span><br/>
+<span class="not-covered" title="0 out of 4 forms covered">
+                462&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-faults&nbsp;object&nbsp;expected-type)
+                </span><br/>
+<span class="partial" title="1 out of 7 forms covered">
+                463&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*reify-refs*&nbsp;(list&nbsp;(make-fault-object&nbsp;severity&nbsp;token)))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                464&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                465&nbsp;&nbsp;(defn&nbsp;object-reference-or-faults
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                466&nbsp;&nbsp;&nbsp;&nbsp;&quot;If&nbsp;this&nbsp;`value`&nbsp;is&nbsp;either&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                467&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                468&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;an&nbsp;object&nbsp;of&nbsp;`expected-type`;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                469&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;a&nbsp;URI&nbsp;referencing&nbsp;an&nbsp;object&nbsp;of&nbsp;&nbsp;`expected-type`;&nbsp;or
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                470&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.&nbsp;a&nbsp;link&nbsp;object&nbsp;referencing&nbsp;an&nbsp;object&nbsp;of&nbsp;&nbsp;`expected-type`
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                471&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                472&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;no&nbsp;faults&nbsp;are&nbsp;returned&nbsp;from&nbsp;validating&nbsp;the&nbsp;linked&nbsp;object,&nbsp;then&nbsp;return
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                473&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`nil`;&nbsp;else&nbsp;return&nbsp;a&nbsp;sequence&nbsp;comprising&nbsp;a&nbsp;fault&nbsp;object&nbsp;with&nbsp;this&nbsp;`severity`
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                474&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;`token`,&nbsp;prepended&nbsp;to&nbsp;the&nbsp;faults&nbsp;returned.
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                475&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                476&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;As&nbsp;with&nbsp;`has-type-or-fault`&nbsp;(q.v.),&nbsp;`expected-type`&nbsp;may&nbsp;be&nbsp;passed&nbsp;as&nbsp;a
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                477&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string,&nbsp;as&nbsp;a&nbsp;set&nbsp;of&nbsp;strings,&nbsp;or&nbsp;`nil`&nbsp;(indicating&nbsp;the&nbsp;type&nbsp;of&nbsp;the&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                478&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;referenced&nbsp;object&nbsp;should&nbsp;not&nbsp;be&nbsp;checked).
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                479&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                480&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**NOTE&nbsp;THAT**&nbsp;if&nbsp;`*reify-refs*`&nbsp;is&nbsp;`false`,&nbsp;referenced&nbsp;objects&nbsp;will&nbsp;not
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                481&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;actually&nbsp;be&nbsp;checked.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                482&nbsp;&nbsp;&nbsp;&nbsp;[value&nbsp;expected-type&nbsp;severity&nbsp;token]
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                483&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;[faults&nbsp;(cond
+                </span><br/>
+<span class="covered" title="9 out of 9 forms covered">
+                484&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(string?&nbsp;value)&nbsp;(maybe-reify-or-faults&nbsp;value&nbsp;severity&nbsp;token&nbsp;expected-type)
+                </span><br/>
+<span class="covered" title="8 out of 8 forms covered">
+                485&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(map?&nbsp;value)&nbsp;(if&nbsp;(has-type?&nbsp;value&nbsp;&quot;Link&quot;)
+                </span><br/>
+<span class="not-covered" title="0 out of 7 forms covered">
+                486&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                487&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;if&nbsp;we&nbsp;were&nbsp;looking&nbsp;for&nbsp;a&nbsp;link&nbsp;and&nbsp;we&#x27;ve&nbsp;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                488&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;;&nbsp;found&nbsp;a&nbsp;link,&nbsp;that&#x27;s&nbsp;OK.
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                489&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(=&nbsp;expected-type&nbsp;&quot;Link&quot;)&nbsp;nil
+                </span><br/>
+<span class="not-covered" title="0 out of 10 forms covered">
+                490&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(set?&nbsp;expected-type)&nbsp;(expected-type&nbsp;&quot;Link&quot;))&nbsp;nil
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                491&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(nil?&nbsp;expected-type)&nbsp;nil
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                492&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:else
+                </span><br/>
+<span class="not-covered" title="0 out of 2 forms covered">
+                493&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-reference-or-faults
+                </span><br/>
+<span class="not-covered" title="0 out of 6 forms covered">
+                494&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(:href&nbsp;value)&nbsp;expected-type&nbsp;severity&nbsp;token))
+                </span><br/>
+<span class="covered" title="4 out of 4 forms covered">
+                495&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(object-faults&nbsp;value&nbsp;expected-type))
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                496&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:else&nbsp;(throw
+                </span><br/>
+<span class="covered" title="3 out of 3 forms covered">
+                497&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(ex-info
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                498&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Argument&nbsp;`value`&nbsp;was&nbsp;not&nbsp;an&nbsp;object&nbsp;or&nbsp;a&nbsp;link&nbsp;to&nbsp;an&nbsp;object&quot;
+                </span><br/>
+<span class="covered" title="8 out of 8 forms covered">
+                499&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:arguments&nbsp;{:value&nbsp;value}
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                500&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:expected-type&nbsp;expected-type
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                501&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:severity&nbsp;severity
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                502&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:token&nbsp;token})))]
+                </span><br/>
+<span class="covered" title="10 out of 10 forms covered">
+                503&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(when&nbsp;faults&nbsp;(cons&nbsp;(make-fault-object&nbsp;severity&nbsp;token)&nbsp;faults))))
+                </span><br/>
+<span class="blank" title="0 out of 0 forms covered">
+                504&nbsp;&nbsp;
+                </span><br/>
+<span class="covered" title="1 out of 1 forms covered">
+                505&nbsp;&nbsp;(defn&nbsp;coll-object-reference-or-fault
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                506&nbsp;&nbsp;&nbsp;&nbsp;&quot;As&nbsp;object-reference-or-fault,&nbsp;except&nbsp;`value`&nbsp;argument&nbsp;may&nbsp;also&nbsp;be&nbsp;a&nbsp;list&nbsp;of
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                507&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;objects&nbsp;and&#x2F;or&nbsp;object&nbsp;references.&quot;
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                508&nbsp;&nbsp;&nbsp;&nbsp;[value&nbsp;expected-type&nbsp;severity&nbsp;token]
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                509&nbsp;&nbsp;&nbsp;&nbsp;(cond
+                </span><br/>
+<span class="not-covered" title="0 out of 9 forms covered">
+                510&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(map?&nbsp;value)&nbsp;(object-reference-or-faults&nbsp;value&nbsp;expected-type&nbsp;severity&nbsp;token)
+                </span><br/>
+<span class="not-covered" title="0 out of 5 forms covered">
+                511&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(coll?&nbsp;value)&nbsp;(concat-non-empty
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                512&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(map
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                513&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#(object-reference-or-faults
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                514&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%&nbsp;expected-type&nbsp;severity&nbsp;token)
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                515&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value))
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                516&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:else&nbsp;(throw
+                </span><br/>
+<span class="not-covered" title="0 out of 3 forms covered">
+                517&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(ex-info
+                </span><br/>
+<span class="not-tracked" title="0 out of 0 forms covered">
+                518&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Argument&nbsp;`value`&nbsp;was&nbsp;not&nbsp;an&nbsp;object,&nbsp;a&nbsp;link&nbsp;to&nbsp;an&nbsp;object,&nbsp;nor&nbsp;a&nbsp;list&nbsp;of&nbsp;these.&quot;
+                </span><br/>
+<span class="not-covered" title="0 out of 8 forms covered">
+                519&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:arguments&nbsp;{:value&nbsp;value}
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                520&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:expected-type&nbsp;expected-type
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                521&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:severity&nbsp;severity
+                </span><br/>
+<span class="not-covered" title="0 out of 1 forms covered">
+                522&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:token&nbsp;token}))))
+                </span><br/>
+ </body>
+</html>

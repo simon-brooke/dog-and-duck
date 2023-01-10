@@ -56,11 +56,11 @@
 ;; how we make a public/private key pair. But this key pair is not the one 
 ;; known to mastodon.scot as my key pair, so that doesn't get us very far...
 ;; I think.
-(let [rsa (pgp-gen/rsa-keypair-generator 2048)
-      kp (pgp-gen/generate-keypair rsa :rsa-general)
-      public (-> kp .getPublicKey .getEncoded)
-      private (-> kp .getPrivateKey .getPrivateKeyDataPacket .getEncoded)]
-  (println (str "Public key:  " public))
-  (println (str "Private key: " private))
-  )
+;; (let [rsa (pgp-gen/rsa-keypair-generator 2048)
+;;       kp (pgp-gen/generate-keypair rsa :rsa-general)
+;;       public (-> kp .getPublicKey .getEncoded)
+;;       private (-> kp .getPrivateKey .getPrivateKeyDataPacket .getEncoded)]
+;;   (println (str "Public key:  " public))
+;;   (println (str "Private key: " private))
+;;   )
 
