@@ -365,7 +365,7 @@
 
 (defn check-property-valid
   [obj prop clause]
-  (info "obj" obj "prop" prop "clause" clause)
+  ;; (info "obj" obj "prop" prop "clause" clause)
   (let [val (obj prop)
         validator (:validator clause)
         [severity token] (:if-invalid clause)]

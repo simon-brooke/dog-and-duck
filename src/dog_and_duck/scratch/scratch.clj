@@ -34,15 +34,15 @@
 ;;; Retrieve the account details from its home server
 ;;; (`keywordize-keys` is not necessary here but produces a more idiomatic clojure
 ;;; data structure)
-(def account
-  (-> account-handle
-      (webfinger/parse-handle)
-      (webfinger/fetch-user-id!)
-      (activitypub-net/fetch-user!)
-      (select-keys [:name :preferredUsername :inbox :summary])))
+;; (def account
+;;   (-> account-handle
+;;       (webfinger/parse-handle)
+;;       (webfinger/fetch-user-id!)
+;;       (activitypub-net/fetch-user!)
+;;       (select-keys [:name :preferredUsername :inbox :summary])))
 
 ;; ;;; examine what you got back!
-(:inbox account)
+;; (:inbox account)
 
 ;; (-> account
 ;;     :inbox

@@ -15,10 +15,13 @@
 ;;;     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 ;; Actual fault messages to which fault codes resolve: English language version.
-{:expected-collection "A collection was expected, but was not found."
+{:by "by"
+ :expected-collection "A collection was expected, but was not found."
+ :generated-on "Generated on"
  :id-not-https "Publicly facing content SHOULD use HTTPS URIs"
  :id-not-uri "identifiers must be publicly dereferencable URIs"
  :no-context "Section 3 of the ActivityPub specification states Implementers SHOULD include the ActivityPub context in their object definitions`."
+ :no-faults-found "No faults were found."
  :no-id-persistent "Persistent objects MUST have unique global identifiers."
  :no-id-transient "The ActivityPub specification allows objects without `id` fields only if they are intentionally transient; even so it is preferred that the object should have an explicit null id."
  :no-inbox "Actor objects MUST have an `inbox` property, whose value MUST be a reference to an ordered collection."
@@ -28,4 +31,5 @@
  :not-actor-type "The `type` value of the object was not a recognised actor type."
  :not-valid-date-time "A date/time of format required for `xsd:dateTime` was expected but was not found."
  :null-id-persistent "Persistent objects MUST have non-null identifiers."
- :not-an-object "ActivityStreams object must be JSON objects."}
+ :not-an-object "ActivityStreams object must be JSON objects."
+ :validation-report-for "Validation report for"}

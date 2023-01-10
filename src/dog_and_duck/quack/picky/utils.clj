@@ -115,13 +115,20 @@
   "Return a list of reports taken from these `reports` where the severity
    of the report is greater than this or equal to this `severity`."
   [reports severity]
-  (cond (nil? reports) nil
+  (cond (nil? (severity-filters severity)) (throw
+                                             (ex-info
+                                              "Argument `severity` was not a valid severity key"
+                                              {:arguments {:reports reports
+                                                           :severity severity}}))
+    (empty? reports) nil
         (and
          (coll? reports)
          (every? map? reports)
-         (every? :severity reports)) (remove
-                                      #((severity-filters severity) (:severity %))
-                                      reports)
+         (every? :severity reports))(remove
+                                     #(if  (:severity %)
+                                        ((severity-filters severity) (:severity %))
+                                        false)
+                                     reports)
         :else
         (throw
          (ex-info

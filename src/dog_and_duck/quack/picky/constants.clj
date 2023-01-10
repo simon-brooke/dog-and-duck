@@ -90,7 +90,7 @@
   "The set of object types we will accept as nouns.
    
    There's an [explicit set of allowed 'object types']
-   (https://www.w3.org/TR/activitystreams-vocabulary/#activity-types), but by 
+   (https://www.w3.org/TR/activitystreams-vocabulary/#object-types), but by 
    implication it is not exhaustive."
   #{"Article" 
     "Audio" 

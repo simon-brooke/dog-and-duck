@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../../../clj-activitypub"
+		},
+		{
+			"path": "../../../internationalisation"
 		}
 	],
 	"settings": {}
